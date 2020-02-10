@@ -1,0 +1,33 @@
+{
+  "name": "xapi-js",
+  "version": "0.0.1",
+  "description": "An XAPI JS library for communicating with an LRS.",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CookieCookson/XAPI-JS.git"
+  },
+  "keywords": [
+    "xapi",
+    "tincan",
+    "javascript",
+    "typescript"
+  ],
+  "author": "Christian Cook",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CookieCookson/XAPI-JS/issues"
+  },
+  "homepage": "https://github.com/CookieCookson/XAPI-JS",
+  "devDependencies": {
+    "typescript": "^3.7.5"
+  }
+}
