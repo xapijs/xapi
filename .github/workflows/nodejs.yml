@@ -29,3 +29,6 @@ jobs:
     - run: npm test
       env:
         CI: true
+        LRS_ENDPOINT: ${{LRS_ENDPOINT}}
+        LRS_USERNAME: ${{LRS_USERNAME}}
+        LRS_PASSWORD: ${{LRS_PASSWORD}}
