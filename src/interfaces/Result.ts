@@ -1,4 +1,4 @@
-import { Extensions } from "./Extensions";
+import { Extensions } from "./";
 
 export interface Result {
   score?: {

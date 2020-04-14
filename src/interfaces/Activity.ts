@@ -2,6 +2,7 @@ import { Extensions } from "./";
 import { rfc5646LanguageCodes } from "../";
 
 export interface Activity {
+  objectType: "Activity";
   id: string;
   definition?: {
     type?: string;

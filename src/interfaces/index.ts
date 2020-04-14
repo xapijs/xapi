@@ -7,8 +7,13 @@ import { Context } from "./Context";
 import { ContextActivity } from "./ContextActivity";
 import { Extensions } from "./Extensions";
 import { Object } from "./Object";
+import { Result } from "./Result";
 import { Statement } from "./Statement";
 import { StatementRef } from "./StatementRef";
+import { GetStatementQuery, GetVoidedStatementQuery } from "./GetStatementQuery";
+import { GetStatementsQuery } from "./GetStatementsQuery";
+import { StatementsResponse } from "./StatementsResponse";
+import { Timestamp } from "./Timestamp";
 import { Verb } from "./Verb";
 
 export {
@@ -21,7 +26,13 @@ export {
   ContextActivity,
   Extensions,
   Object,
+  Result,
   Statement,
   StatementRef,
+  GetStatementQuery,
+  GetVoidedStatementQuery,
+  GetStatementsQuery,
+  StatementsResponse,
+  Timestamp,
   Verb
 };

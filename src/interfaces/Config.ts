@@ -1,4 +1,4 @@
-import { Actor } from "./Actor";
+import { Actor } from "./";
 
 export interface Config {
   attemptIRI?: string;

@@ -1,4 +1,4 @@
-import { Statement } from "./interfaces/Statement";
+import { Statement, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Actor, StatementRef } from "./";
 
 export class LRSConnection {
   private endpoint: string;
@@ -15,25 +15,49 @@ export class LRSConnection {
     this.headers = headers;
   }
 
-  public getStatements(): Promise<{ statements: Statement[]; more: string }> {
-    return this.request(`${this.endpoint}statements`);
+  public getStatement(query: GetStatementQuery): Promise<Statement> {
+    return this.request(query);
   }
 
-  public getStatement(statementId: string): Promise<Statement> {
-    return this.request(
-      `${this.endpoint}statements?statementId=${statementId}`
-    );
+  public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement> {
+    return this.request(query);
+  }
+
+  public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
+    return this.request(query);
   }
 
   public sendStatement(statement: Statement): Promise<string[]> {
-    return this.request(`${this.endpoint}statements`, {
+    return this.request({}, {
       method: "POST",
       body: JSON.stringify(statement)
     });
   }
 
-  private request(input: RequestInfo, init?: RequestInit | undefined): any {
-    return fetch(input, {
+  public voidStatement(actor: Actor, statementId: string): Promise<string[]> {
+    const voidStatement: Statement = {
+      actor,
+      verb: {
+        id: "http://adlnet.gov/expapi/verbs/voided",
+        display: {
+            "en-US": "voided"
+        }
+      },
+      object: {
+        objectType: "StatementRef",
+        id: statementId
+      } as StatementRef
+    }
+    return this.request({}, {
+      method: "POST",
+      body: JSON.stringify(voidStatement)
+    });
+  }
+
+  private request(params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
+    const queryString: string = Object.keys(params).map(key => key + "=" + params[key]).join("&");
+    const request: RequestInfo = `${this.endpoint}statements${queryString ? "?" + queryString : ""}`;
+    return fetch(request, {
       headers: this.headers,
       ...init
     }).then(response => {

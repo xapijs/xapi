@@ -83,8 +83,8 @@ export class SCORMProfile {
       return undefined;
     }
     return {
+      objectType: "Activity",
       id: this.config.lessonIRI as string,
-
       definition: {
         ...(this.config.lessonTitle
           ? {
