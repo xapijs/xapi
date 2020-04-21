@@ -1,6 +1,6 @@
 {
   "name": "xapi-js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An XAPI JS library for communicating with an LRS.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

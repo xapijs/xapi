@@ -1,3 +1,7 @@
+# 0.0.3 (21 Apr 2020)
+- Extended documentation for xAPI Wrapper
+- Added `getMoreStatements()` method
+
 # 0.0.2 (14 Apr 2020)
 - Added Jest unit tests for LRSConnection
 - Added `voidStatement()` and `getVoidedStatement()` methods
