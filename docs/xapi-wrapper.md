@@ -20,9 +20,9 @@ lrsConnection.sendStatement(myStatement);
 
 ### LRSConnection
 ___
-new LRSConnection ( endpoint : string , auth ? : string ) : LRSConnection
+new [LRSConnection](/src/LRSConnection.ts) ( endpoint : string , auth ? : string ) : [LRSConnection](/src/LRSConnection.ts)
 ___
-To read or write data to the LRS, you will need to create an instance of `LRSConnection`.
+To read or write data to the LRS, you will need to create an instance of [LRSConnection](/src/LRSConnection.ts).
 
 #### Example
 ```ts
@@ -39,7 +39,7 @@ const lrsConnection = new LRSConnection(endpoint, auth);
 |auth|string|false|The `Authorization` header value to be appended to all requests.|
 
 #### Returns
-This returns an `LRSConnection` object which you can use to communicate with the LRS. See the methods below for all ways you can send and receive statements.
+This returns an [LRSConnection](/src/LRSConnection.ts) object which you can use to communicate with the LRS. See the methods below for all ways you can send and receive statements.
 
 ### sendStatement
 ___
@@ -63,7 +63,7 @@ This method returns a `Promise` with the success containing an array of statemen
 
 ### getStatement
 ___
-getStatement ( query : GetStatementQuery ) : Promise < Statement >
+getStatement ( query : [GetStatementQuery](/src/interfaces/GetStatementQuery.ts) ) : Promise < [Statement](/src/interfaces/Statement.ts) >
 ___
 To receive a single statement, you must use the `getStatement` method and pass the statement ID in the query. Optionally, you can provide additional parameters to the query to change the data format returned from the LRS.
 
@@ -130,7 +130,43 @@ lrsConnection.getStatements(query).then((response: StatementsResponse) => {
 This method returns a `Promise` containing a [StatementsResponse](/src/interfaces/StatementsResponse.ts) object.
 
 ### voidStatement
-// TODO
+___
+voidStatement ( actor : [Actor](/src/interfaces/Actor.ts) , statementId : string ) : Promise < string [] >
+___
+Voids a statement in the LRS by the supplied Actor.
+
+#### Example
+```ts
+const actor: Actor = { ... };
+lrsConnection.voidStatement(actor, "abcdefgh-1234"});
+```
+
+#### Parameters
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|actor|[Actor](/src/interfaces/Actor.ts)|true|The Actor who is voiding the statement e.g. an administrator.|
+|statementId|string|true|The statement to be voided.|
+
+#### Returns
+This method returns a `Promise` containing an array of statement ID strings of the void statement.
 
 ### getVoidedStatement
-// TODO
+___
+getVoidedStatement ( query : [GetVoidedStatementQuery](/src/interfaces/GetStatementQuery.ts) ) : Promise < [Statement](/src/interfaces/statement.ts) >
+___
+To receive a single voided statement, you must use the `getVoidedStatement` method and pass the original statement ID in the query (not the original statement's void statement id). Optionally, you can provide additional parameters to the query to change the data format returned from the LRS.
+
+#### Example
+```ts
+lrsConnection.getVoidedStatement({statementId: "abcdefgh-1234"}).then((voidStatement: Statement) => {
+  // do stuff with `voidStatement`
+});
+```
+
+#### Parameters
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|query|[GetVoidedStatementQuery](/src/interfaces/GetStatementQuery.ts)|true|An object containing the statement query. Must contain the `voidedStatementId`.|
+
+#### Returns
+This method returns a `Promise` containing the [Statement](/src/interfaces/Statement.ts) of the supplied `voidedSatementId`.
