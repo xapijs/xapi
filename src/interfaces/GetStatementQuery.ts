@@ -2,14 +2,14 @@ export interface GetStatementQuery extends BaseGetStatementQuery {
   /**
    * The UUID of the statement.
    */
-  statementId?: string;
+  statementId: string;
 }
 
 export interface GetVoidedStatementQuery extends BaseGetStatementQuery {
   /**
    * The original UUID of the statement before it was voided.
    */
-  voidedStatementId?: string;
+  voidedStatementId: string;
 }
 
 interface BaseGetStatementQuery {
