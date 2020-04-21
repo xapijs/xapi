@@ -1,4 +1,5 @@
 import { Statement, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Actor, StatementRef } from "./";
+import { getSearchQueryParamsAsObject } from "./lib/getSearchQueryParamsAsObject";
 
 export class LRSConnection {
   private endpoint: string;
@@ -25,6 +26,11 @@ export class LRSConnection {
 
   public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
     return this.request(query);
+  }
+
+  public getMoreStatements(more: string): Promise<StatementsResponse> {
+    let params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
+    return this.request(params);
   }
 
   public sendStatement(statement: Statement): Promise<string[]> {
