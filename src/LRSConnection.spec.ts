@@ -75,3 +75,13 @@ test("can query a single statement using the limit property", () => {
         return expect(result.statements).toHaveLength(1);
     });
 });
+
+test("can get more statements using the more property", () => {
+    return lrsConnection.getStatements({
+        limit: 1
+    }).then((result) => {
+        return lrsConnection.getMoreStatements(result.more);
+    }).then((result) => {
+        return expect(result.statements).toBeTruthy();
+    });
+});

@@ -104,8 +104,30 @@ lrsConnection.getStatements(query).then((response: StatementsResponse) => {
 #### Returns
 This method returns a `Promise` containing a [StatementsResponse](/src/interfaces/StatementsResponse.ts) object.
 
-NOTE: At the moment there is no way to use the result of the `more` property.
+### getMoreStatements
+___
+getMoreStatements ( more : string ) : Promise < [StatementsResponse](/src/interfaces/StatementsResponse.ts) >
+___
+To be used in conjunction with `getStatements`. If the `more` property is populated on your initial request, more data is available. Send the value of the `more` property to this method to get the next page of statements.
 
+#### Example
+```ts
+const query: GetStatementsQuery = { ... };
+lrsConnection.getStatements(query).then((response: StatementsResponse) => {
+  // data
+  lrsConnection.getMoreStatements(response.more).then((response: StatementsResponse) => {
+    // more data
+  });
+});
+```
+
+#### Parameters
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|more|string|true|The `more` property passed from the `getStatements`/`getMoreStatements` query response.|
+
+#### Returns
+This method returns a `Promise` containing a [StatementsResponse](/src/interfaces/StatementsResponse.ts) object.
 
 ### voidStatement
 // TODO
