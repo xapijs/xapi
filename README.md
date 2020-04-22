@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/CookieCookson/xAPI-JS/workflows/Node.js%20CI/badge.svg)
+
 # xAPI JS
 ## Overview
 An XAPI JS library for communicating with an LRS.
