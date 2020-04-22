@@ -1,15 +1,11 @@
-import { rfc5646LanguageCodes } from "../";
+import { LanguageMap } from "./LanguageMap";
 
 export interface ContextActivity {
   objectType?: "Activity";
   id: string;
   definition?: {
-    name?: {
-      [languageCode in rfc5646LanguageCodes]: string;
-    };
-    description?: {
-      [languageCode in rfc5646LanguageCodes]: string;
-    };
+    name?: LanguageMap;
+    description?: LanguageMap;
     type: string;
   };
 }

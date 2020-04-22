@@ -1,8 +1,6 @@
-import { rfc5646LanguageCodes } from "../";
+import { LanguageMap } from "./LanguageMap";
 
 export interface Verb {
   id: string;
-  display: {
-    [languageCode in rfc5646LanguageCodes]: string;
-  };
+  display: LanguageMap;
 }
