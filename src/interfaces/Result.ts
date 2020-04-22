@@ -1,12 +1,14 @@
 import { Extensions } from "./";
 
+export interface ResultScore {
+  scaled: number;
+  raw?: number;
+  min?: number;
+  max?: number;
+};
+
 export interface Result {
-  score?: {
-    scaled?: number;
-    raw?: number;
-    min?: number;
-    max?: number;
-  };
+  score?: ResultScore;
   success?: boolean;
   completion?: boolean;
   response?: string;

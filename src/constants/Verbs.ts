@@ -55,4 +55,10 @@ export class Verbs {
       "en-US": "responded"
     }
   };
+  public static readonly COMMENTED: Verb = {
+    id: "http://adlnet.gov/expapi/verbs/commented",
+    display:{
+       "en-US":"commented"
+    }
+  };
 }

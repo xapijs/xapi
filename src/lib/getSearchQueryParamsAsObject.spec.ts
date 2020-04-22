@@ -1,4 +1,5 @@
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
+import { Actor } from "../";
 
 test("converts querystring into object", () => {
   return expect(getSearchQueryParamsAsObject("?test=test")).toMatchObject({
@@ -12,4 +13,13 @@ test("converts relative URL with querystring into object", () => {
   });
 })
 
-
+test("can parse JSON objects in querystring", () => {
+  let actor: Actor = {
+    objectType: "Agent",
+    mbox: "test@test.com"
+  }
+  let strinifyEncoded: string = encodeURIComponent(JSON.stringify(actor))
+  return expect(getSearchQueryParamsAsObject(`?actor=${strinifyEncoded}`)).toMatchObject({
+    actor: actor
+  });
+})

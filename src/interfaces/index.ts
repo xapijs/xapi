@@ -2,7 +2,6 @@ import { Actor } from "./Actor";
 import { Agent } from "./Actor/Agent";
 import { Group } from "./Actor/Group";
 import { Activity } from "./Activity";
-import { Config } from "./Config";
 import { Context } from "./Context";
 import { ContextActivity } from "./ContextActivity";
 import { Extensions } from "./Extensions";
@@ -19,7 +18,6 @@ import { Verb } from "./Verb";
 export {
   Actor,
   Agent,
-  Config,
   Context,
   Group,
   Activity,
