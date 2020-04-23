@@ -8,9 +8,9 @@ import {
 import { LRSConnection } from "../../LRSConnection";
 import { Verbs } from "../../constants";
 import { SCORMProfileConfig } from "./SCORMProfileConfig";
-import { InteractionActivity, InteractionActivityDefinition } from "./Interactions";
+import { InteractionActivity, InteractionActivityDefinition } from "./Interfaces/Interactions";
 import { ResultScore } from "../../interfaces/Result";
-import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Objectives";
+import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Interfaces/Objectives";
 
 /**
  * Experience API SCORM Profile
@@ -185,7 +185,7 @@ export class SCORMProfile {
   }
 
   private get attemptActivity(): ContextActivity | undefined {
-    if (!this.config.courseIRI) {
+    if (!this.config.courseIRI || !this.config.attemptIRI) {
       return undefined;
     }
     const attemptTitle = this.config.courseTitle ? {
@@ -246,7 +246,6 @@ export class SCORMProfile {
       timestamp: new Date().toISOString(),
       ...statement
     };
-    console.info(combinedStatement);
     return this.connection.sendStatement(combinedStatement as Statement);
   }
 }
