@@ -15,14 +15,14 @@ const testAgent: Agent = {
 const testStatement: Statement = {
     actor: testAgent,
     verb: {
-        id: "http://adlnet.gov/expapi/verbs/tested",
+        id: "http://example.com/verbs/tested",
         display: {
             "en-GB": "tested"
         }
     },
     object: {
         objectType: "Activity",
-        id: "https://github.com/CookieCookson/xAPI-JS"
+        id: "https://github.com/CookieCookson/xAPI-JS/LRSConnection"
     }
 }
 
