@@ -1,5 +1,5 @@
 import { SCORMProfile } from "./SCORMProfile";
-import { SCORMProfileConfig } from "./SCORMProfileConfig";
+import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
 import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 // import { uuidv4 } from "../../lib/uuidv4";
 

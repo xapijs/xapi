@@ -1,5 +1,5 @@
 import { SCORMProfile } from "./SCORMProfile";
-import { SCORMProfileConfig } from "./SCORMProfileConfig";
+import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
 import { Agent } from "../..";
 import { InteractionActivityDefinition } from "./Interfaces/Interactions";
 import { Verbs } from "../../constants";
