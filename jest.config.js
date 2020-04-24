@@ -1,6 +1,6 @@
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = {
-  preset: 'ts-jest',
-  setupFiles: ['./jest.setup.js']
+  preset: "ts-jest",
+  setupFiles: ["./jest.setup.js"]
 };

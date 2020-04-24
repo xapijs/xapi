@@ -1,11 +1,11 @@
 export function getSearchQueryParamsAsObject(str: string): {[key: string]: any} {
-  let obj: {[key: string]: string} = {};
+  const obj: {[key: string]: any} = {};
   str
     .split("?")[1]
     .split("&")
     .forEach((n: string) => {
-      let item: string[] = n.split("=");
-      let decodedItem: string = decodeURIComponent(item[1]);
+      const item: string[] = n.split("=");
+      const decodedItem: string = decodeURIComponent(item[1]);
       try {
         obj[item[0]] = JSON.parse(decodedItem);
       } catch {

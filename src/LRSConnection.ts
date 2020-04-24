@@ -1,4 +1,4 @@
-import { Statement, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Actor, StatementRef } from "./";
+import { Statement, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Actor } from "./";
 import { getSearchQueryParamsAsObject } from "./lib/getSearchQueryParamsAsObject";
 
 export class LRSConnection {
@@ -7,7 +7,7 @@ export class LRSConnection {
 
   public constructor(endpoint: string, auth: string) {
     this.endpoint = endpoint;
-    let headers: Headers = new Headers();
+    const headers: Headers = new Headers();
     headers.append("X-Experience-API-Version", "1.0.0");
     headers.append("Content-Type", "application/json");
     if (auth) {
@@ -29,7 +29,7 @@ export class LRSConnection {
   }
 
   public getMoreStatements(more: string): Promise<StatementsResponse> {
-    let params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
+    const params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
     return this.request(params);
   }
 
@@ -52,8 +52,8 @@ export class LRSConnection {
       object: {
         objectType: "StatementRef",
         id: statementId
-      } as StatementRef
-    }
+      }
+    };
     return this.request({}, {
       method: "POST",
       body: JSON.stringify(voidStatement)

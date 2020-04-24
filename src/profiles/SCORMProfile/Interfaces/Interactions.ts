@@ -19,7 +19,7 @@ interface TrueFalseInteractionActivityDefinition extends BaseInteractionActivity
 
 interface ChoiceInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "choice";
-  choices: InteractionComponent[]
+  choices: InteractionComponent[];
 }
 
 interface FillInInteractionActivityDefinition extends BaseInteractionActivityDefinition {
@@ -32,7 +32,7 @@ interface LongFillInInteractionActivityDefinition extends BaseInteractionActivit
 
 interface LikertInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "likert";
-  scale: InteractionComponent[]
+  scale: InteractionComponent[];
 }
 
 interface MatchingInteractionActivityDefinition extends BaseInteractionActivityDefinition {

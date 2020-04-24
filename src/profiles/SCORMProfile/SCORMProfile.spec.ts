@@ -14,7 +14,7 @@ const testAgent: Agent = {
   objectType: "Agent",
   name: "Jest",
   mbox: "mailto:hello@example.com"
-}
+};
 const config: SCORMProfileConfig = {
   entry: "ab-initio",
   endpoint: endpoint,
@@ -337,7 +337,7 @@ test("can report objective", () => {
 });
 
 test("can score", () => {
-  let score: ResultScore = {
+  const score: ResultScore = {
     scaled: 1
   };
   return expect(scorm.score(score)).resolves.toHaveLength(1);
