@@ -7,7 +7,7 @@ import {
 } from "../../interfaces";
 import { LRSConnection } from "../../LRSConnection";
 import { Verbs } from "../../constants";
-import { SCORMProfileConfig } from "./SCORMProfileConfig";
+import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
 import { InteractionActivity, InteractionActivityDefinition } from "./Interfaces/Interactions";
 import { ResultScore } from "../../interfaces/Result";
 import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Interfaces/Objectives";
