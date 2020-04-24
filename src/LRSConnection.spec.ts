@@ -10,7 +10,7 @@ const testAgent: Agent = {
     objectType: "Agent",
     name: "Jest",
     mbox: "mailto:hello@example.com"
-}
+};
 
 const testStatement: Statement = {
     actor: testAgent,
@@ -24,17 +24,17 @@ const testStatement: Statement = {
         objectType: "Activity",
         id: "https://github.com/CookieCookson/xAPI-JS/LRSConnection"
     }
-}
+};
 
 test("can create a statement", () => {
     return expect(lrsConnection.sendStatement(testStatement)).resolves.toHaveLength(1);
-})
+});
 
 test("can get a single statement", () => {
     return lrsConnection.sendStatement(testStatement).then((result) => {
         return lrsConnection.getStatement({
             statementId: result[0]
-        })
+        });
     }).then((statement) => {
         return expect(statement).toHaveProperty("id");
     });
@@ -51,7 +51,7 @@ test("can void a single statement", () => {
 test("can get a voided statement", () => {
     let statementId: string;
     return lrsConnection.sendStatement(testStatement).then((result) => {
-        statementId = result[0]
+        statementId = result[0];
         return lrsConnection.voidStatement(testAgent, statementId);
     }).then(() => {
         return lrsConnection.getVoidedStatement({
@@ -59,7 +59,7 @@ test("can get a voided statement", () => {
         });
     }).then((voidedStatement) => {
         return expect(voidedStatement).toHaveProperty("id");
-    })
+    });
 });
 
 test("can get an array of statements", () => {

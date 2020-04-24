@@ -23,8 +23,8 @@ export class SCORMProfile {
   constructor(config: SCORMProfileConfig) {
     this.config = config;
     this.connection = new LRSConnection(
-      this.config.endpoint || '',
-      this.config.auth || ''
+      this.config.endpoint || "",
+      this.config.auth || ""
     );
   }
 
@@ -39,7 +39,7 @@ export class SCORMProfile {
       result: {
         response: comments
       }
-    })
+    });
   }
 
   // https://adl.gitbooks.io/scorm-profile-xapi/content/xapi-scorm-profile.html#scorm-activity-profile-comment-object
@@ -94,7 +94,7 @@ export class SCORMProfile {
         response: response
       },
       object: interactionActivity
-    })
+    });
   }
 
   // https://adl.gitbooks.io/scorm-profile-xapi/content/xapi-scorm-profile.html#objectives
@@ -107,7 +107,7 @@ export class SCORMProfile {
     return this.request({
       verb: verb,
       object: objectiveActivity
-    })
+    });
   }
 
   // https://adl.gitbooks.io/scorm-profile-xapi/content/xapi-scorm-profile.html#score
@@ -164,15 +164,15 @@ export class SCORMProfile {
   }
 
   private get statementContext(): Context {
-    let scormProfileCategory: ContextActivity = {
+    const scormProfileCategory: ContextActivity = {
       id: "https://w3id.org/xapi/scorm",
       definition: {
         type: "http://adlnet.gov/expapi/activities/profile"
       }
     };
-    let attemptActivity: ContextActivity | undefined = this.attemptActivity;
-    let courseActivity: ContextActivity | undefined = this.courseActivity;
-    let context: Context = {
+    const attemptActivity: ContextActivity | undefined = this.attemptActivity;
+    const courseActivity: ContextActivity | undefined = this.courseActivity;
+    const context: Context = {
       contextActivities: {
         category: [scormProfileCategory],
         grouping: [
@@ -239,7 +239,7 @@ export class SCORMProfile {
   }
 
   private request(statement: Partial<Statement>): Promise<string[]> {
-    let combinedStatement: Partial<Statement> = {
+    const combinedStatement: Partial<Statement> = {
       actor: this.config.actor,
       object: this.statementObject,
       context: this.statementContext,

@@ -5,7 +5,7 @@ export interface ResultScore {
   raw?: number;
   min?: number;
   max?: number;
-};
+}
 
 export interface Result {
   score?: ResultScore;
