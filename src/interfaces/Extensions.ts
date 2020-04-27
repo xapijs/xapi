@@ -1,3 +1,3 @@
 export interface Extensions {
-  [uri: string]: string;
+  [uri: string]: any;
 }
