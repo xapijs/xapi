@@ -1,4 +1,4 @@
-import { Statement, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Actor } from "./";
+import { Statement, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Actor, Agent } from "./";
 import { getSearchQueryParamsAsObject } from "./lib/getSearchQueryParamsAsObject";
 
 export class LRSConnection {
@@ -16,25 +16,27 @@ export class LRSConnection {
     this.headers = headers;
   }
 
+  // Statements API
+  // TODO: Break out APIs into different classes
   public getStatement(query: GetStatementQuery): Promise<Statement> {
-    return this.request(query);
+    return this.request("statements", query);
   }
 
   public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement> {
-    return this.request(query);
+    return this.request("statements", query);
   }
 
   public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
-    return this.request(query);
+    return this.request("statements", query);
   }
 
   public getMoreStatements(more: string): Promise<StatementsResponse> {
     const params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
-    return this.request(params);
+    return this.request("statements", params);
   }
 
   public sendStatement(statement: Statement): Promise<string[]> {
-    return this.request({}, {
+    return this.request("statements", {}, {
       method: "POST",
       body: JSON.stringify(statement)
     });
@@ -54,15 +56,53 @@ export class LRSConnection {
         id: statementId
       }
     };
-    return this.request({}, {
+    return this.request("statements", {}, {
       method: "POST",
       body: JSON.stringify(voidStatement)
     });
   }
 
-  private request(params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
+  // State API
+  // TODO: Write tests
+  public getStates(agent: Agent, activityId: string): Promise<string[]> {
+    return this.request("activities/state", {
+      agent: agent,
+      activityId: activityId
+    });
+  }
+
+  public getState(agent: Agent, activityId: string, stateId: string): Promise<{[key: string]: any}> {
+    return this.request("activities/state", {
+      agent: agent,
+      activityId: activityId,
+      stateId: stateId
+    });
+  }
+
+  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
+    return this.request("activities/state", {
+      agent: agent,
+      activityId: activityId,
+      stateId: stateId
+    }, {
+      method: "POST",
+      body: JSON.stringify(state)
+    });
+  }
+
+  public deleteState(agent: Agent, activityId: string, stateId: string): Promise<void> {
+    return this.request("activities/state", {
+      agent: agent,
+      activityId: activityId,
+      stateId: stateId
+    }, {
+      method: "DELETE"
+    });
+  }
+
+  private request(path: string, params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
     const queryString: string = Object.keys(params).map(key => key + "=" + params[key]).join("&");
-    const request: RequestInfo = `${this.endpoint}statements${queryString ? "?" + queryString : ""}`;
+    const request: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
     return fetch(request, {
       headers: this.headers,
       ...init
