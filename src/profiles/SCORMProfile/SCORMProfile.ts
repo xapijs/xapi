@@ -9,7 +9,7 @@ import { LRSConnection } from "../../LRSConnection";
 import { Verbs } from "../../constants";
 import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
 import { InteractionActivity, InteractionActivityDefinition } from "./Interfaces/Interactions";
-import { ResultScore } from "../../interfaces/Result";
+import { ResultScore, Result } from "../../interfaces/Result";
 import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Interfaces/Objectives";
 
 /**
@@ -63,21 +63,26 @@ export class SCORMProfile {
   }
 
   // https://adl.gitbooks.io/scorm-profile-xapi/content/xapi-scorm-profile.html#exit
-  public exit(): Promise<string[]> {
+  public exit(duration?: string, successStatus?: boolean, completionStatus?: boolean, score?: ResultScore): Promise<string[]> {
+    const result: Result = {
+      ...(duration ? {duration: duration} : {}),
+      ...(typeof successStatus === "boolean" ? {success: successStatus} : {}),
+      ...(typeof completionStatus === "boolean" ? {completion: completionStatus} : {}),
+      ...(score ? {score: score} : {})
+    };
     return this.request({
-      verb: Verbs.TERMINATED
-      // TODO: pass result.duration for Session Time
-      // See https://adl.gitbooks.io/scorm-profile-xapi/content/xapi-scorm-profile.html#session-time
-      // TODO: pass result.success, result.completion and result.score
-      // See https://adl.gitbooks.io/scorm-profile-xapi/content/xapi-scorm-profile.html#terminate-a-sco
+      verb: Verbs.TERMINATED,
+      ...(Object.keys(result).length ? {result: result} : {})
     });
   }
 
-  public suspend(): Promise<string[]> {
+  public suspend(duration?: string): Promise<string[]> {
+    const result: Result = {
+      ...(duration ? {duration: duration} : {})
+    };
     return this.request({
-      verb: Verbs.SUSPENDED
-      // TODO: pass result.duration for Session Time
-      // See https://adl.gitbooks.io/scorm-profile-xapi/content/xapi-scorm-profile.html#session-time
+      verb: Verbs.SUSPENDED,
+      ...(Object.keys(result).length ? {result: result} : {})
     });
   }
 

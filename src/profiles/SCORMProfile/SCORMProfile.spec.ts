@@ -45,8 +45,36 @@ test("can exit", () => {
   return expect(scorm.exit()).resolves.toHaveLength(1);
 });
 
+test("can exit with duration", () => {
+  return expect(scorm.exit("PT1H30M15S")).resolves.toHaveLength(1);
+});
+
+test("can exit with success", () => {
+  return expect(scorm.exit(undefined, true)).resolves.toHaveLength(1);
+});
+
+test("can exit with completion", () => {
+  return expect(scorm.exit(undefined, undefined, true)).resolves.toHaveLength(1);
+});
+
+test("can exit with score", () => {
+  return expect(scorm.exit(undefined, undefined, undefined, {
+    scaled: 1
+  })).resolves.toHaveLength(1);
+});
+
+test("can exit with duration, success, completion and score", () => {
+  return expect(scorm.exit("PT1H30M15S", true, true, {
+    scaled: 1
+  })).resolves.toHaveLength(1);
+});
+
 test("can suspend", () => {
   return expect(scorm.suspend()).resolves.toHaveLength(1);
+});
+
+test("can suspend with duration", () => {
+  return expect(scorm.suspend("PT1H30M15S")).resolves.toHaveLength(1);
 });
 
 test("can report true/false interaction", () => {
