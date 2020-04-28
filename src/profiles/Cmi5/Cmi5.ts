@@ -54,9 +54,9 @@ export class Cmi5 {
     return this.getAuthToken(this.launchParameters.fetch).then((response) => {
       const authToken: string = response["auth-token"];
       this.connection = new LRSConnection(this.launchParameters.endpoint, authToken);
-      return this.connection.getStates(this.launchParameters.actor, this.launchParameters.activityId);
+      return this.connection.getActivityStates(this.launchParameters.actor, this.launchParameters.activityId);
     }).then((states) => {
-      return this.connection.getState(this.launchParameters.actor, this.launchParameters.activityId, states[0]);
+      return this.connection.getActivityState(this.launchParameters.actor, this.launchParameters.activityId, states[0]);
     }).then((state) => {
       this.lmsLaunchData = state["LMS.LaunchData"];
     }).then(() => {
