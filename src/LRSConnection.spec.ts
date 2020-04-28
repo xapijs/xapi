@@ -1,5 +1,4 @@
-import { LRSConnection, Agent, Statement } from "./";
-import { Activity } from "./interfaces";
+import { LRSConnection, Agent, Statement, Activity } from "./";
 
 const endpoint: string = process.env.LRS_ENDPOINT || "";
 const username: string = process.env.LRS_USERNAME || "";

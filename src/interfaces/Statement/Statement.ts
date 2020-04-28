@@ -1,4 +1,4 @@
-import { Actor, Verb, Object, Result, Context } from "./";
+import { Actor, Verb, Object, Result, Context } from ".";
 
 export interface Statement {
   actor: Actor;

@@ -1,5 +1,4 @@
-import { Actor, Group, ContextActivity, StatementRef, Extensions } from "./";
-import { RFC5646LanguageCodes } from "../";
+import { Actor, Group, ContextActivity, StatementRef, Extensions, RFC5646LanguageCodes } from ".";
 
 export interface Context {
   registration?: string;

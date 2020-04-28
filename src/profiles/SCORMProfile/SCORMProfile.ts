@@ -3,13 +3,14 @@ import {
   ContextActivity,
   Activity,
   Context,
-  Verb
-} from "../../interfaces";
+  Verb,
+  ResultScore,
+  Result
+} from "../../interfaces/Statement";
 import { LRSConnection } from "../../LRSConnection";
 import { Verbs } from "../../constants";
 import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
 import { InteractionActivity, InteractionActivityDefinition } from "./Interfaces/Interactions";
-import { ResultScore, Result } from "../../interfaces/Result";
 import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Interfaces/Objectives";
 
 /**
