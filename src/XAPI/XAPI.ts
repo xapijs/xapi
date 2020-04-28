@@ -1,9 +1,9 @@
+import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces";
 import { Statement, Actor, Agent } from "./interfaces/Statement";
-import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/LRSConnection";
 import { Verbs, Endpoint } from "./constants";
-import { getSearchQueryParamsAsObject } from "./lib/getSearchQueryParamsAsObject";
+import { getSearchQueryParamsAsObject } from "../lib/getSearchQueryParamsAsObject";
 
-export class LRSConnection {
+export class XAPI {
   private endpoint: string;
   private headers: Headers;
 

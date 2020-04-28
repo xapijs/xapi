@@ -1,4 +1,4 @@
-import { Verb } from "../";
+import { Verb } from "../interfaces/Statement/Verb";
 
 export class Verbs {
   public static readonly INITIALIZED: Verb = {

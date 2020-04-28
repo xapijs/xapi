@@ -1,6 +1,4 @@
-import { Context, ContextActivity, Verb, Statement, Agent, ResultScore } from "../../interfaces/Statement";
-import { LRSConnection } from "../../LRSConnection";
-import { Verbs } from "../../constants";
+import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs } from "../../XAPI";
 import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
 
@@ -58,7 +56,7 @@ export class Cmi5 {
   private launchParameters: LaunchParameters;
   private lmsLaunchData!: LaunchData;
   private learnerPreferences!: LearnerPreferences; 
-  private connection!: LRSConnection;
+  private connection!: XAPI;
   private initialisedDate!: Date;
 
   constructor() {
@@ -69,7 +67,7 @@ export class Cmi5 {
     this.initialisedDate = new Date();
     return this.getAuthToken(this.launchParameters.fetch).then((response) => {
       const authToken: string = response["auth-token"];
-      this.connection = new LRSConnection(this.launchParameters.endpoint, authToken);
+      this.connection = new XAPI(this.launchParameters.endpoint, authToken);
       return this.connection.getActivityStates(this.launchParameters.actor, this.launchParameters.activityId);
     }).then((states) => {
       return this.connection.getActivityState(this.launchParameters.actor, this.launchParameters.activityId, states[0]);

@@ -1,14 +1,14 @@
 import {
+  XAPI,
   Statement,
   ContextActivity,
   Activity,
   Context,
   Verb,
   ResultScore,
-  Result
-} from "../../interfaces/Statement";
-import { LRSConnection } from "../../LRSConnection";
-import { Verbs } from "../../constants";
+  Result,
+  Verbs
+} from "../../XAPI";
 import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
 import { InteractionActivity, InteractionActivityDefinition } from "./Interfaces/Interactions";
 import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Interfaces/Objectives";
@@ -19,11 +19,11 @@ import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Interfaces/Obj
  */
 export class SCORMProfile {
   private config: SCORMProfileConfig;
-  private connection: LRSConnection;
+  private connection: XAPI;
 
   constructor(config: SCORMProfileConfig) {
     this.config = config;
-    this.connection = new LRSConnection(
+    this.connection = new XAPI(
       this.config.endpoint || "",
       this.config.auth || ""
     );
