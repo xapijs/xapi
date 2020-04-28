@@ -1,4 +1,4 @@
-import { Actor } from "../../..";
+import { Actor } from "../../../interfaces/Statement/Actor";
 
 export interface SCORMProfileConfig {
   attemptIRI?: string;

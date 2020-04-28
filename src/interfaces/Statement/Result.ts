@@ -1,4 +1,4 @@
-import { Extensions } from "./";
+import { Extensions } from ".";
 
 export interface ResultScore {
   scaled: number;

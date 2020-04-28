@@ -1,7 +1,7 @@
-import { Statement, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Actor, Agent } from "./";
+import { Statement, Actor, Agent } from "./interfaces/Statement";
+import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/LRSConnection";
+import { Verbs, Endpoint } from "./constants";
 import { getSearchQueryParamsAsObject } from "./lib/getSearchQueryParamsAsObject";
-import { Verbs } from "./constants";
-import { Endpoint } from "./constants/Endpoint";
 
 export class LRSConnection {
   private endpoint: string;

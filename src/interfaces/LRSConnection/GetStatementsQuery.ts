@@ -4,8 +4,7 @@
  * Reference: https://docs.learninglocker.net/http-xapi-statements/
  *  */
 
-import { Agent } from "./";
-import { Timestamp } from "./";
+import { Agent, Timestamp } from "../Statement";
 
 export interface GetStatementsQuery {
   /**

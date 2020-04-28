@@ -1,10 +1,9 @@
 import { SCORMProfile } from "./SCORMProfile";
 import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
-import { Agent } from "../..";
 import { InteractionActivityDefinition } from "./Interfaces/Interactions";
-import { Verbs } from "../../constants";
 import { ObjectiveActivityDefinition } from "./Interfaces/Objectives";
-import { ResultScore } from "../../interfaces/Result";
+import { Agent, ResultScore } from "../../interfaces/Statement";
+import { Verbs } from "../../constants";
 
 const endpoint: string = process.env.LRS_ENDPOINT || "";
 const username: string = process.env.LRS_USERNAME || "";

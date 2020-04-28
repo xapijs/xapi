@@ -1,9 +1,8 @@
-import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
+import { Context, ContextActivity, Verb, Statement, Agent, ResultScore } from "../../interfaces/Statement";
 import { LRSConnection } from "../../LRSConnection";
-import { Statement, Agent, Verbs } from "../..";
-import { ResultScore } from "../../interfaces/Result";
+import { Verbs } from "../../constants";
+import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
-import { Context, ContextActivity, Verb } from "../../interfaces";
 
 interface LaunchParameters {
   endpoint: string;

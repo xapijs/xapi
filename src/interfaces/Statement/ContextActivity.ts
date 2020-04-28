@@ -1,4 +1,4 @@
-import { LanguageMap } from "./LanguageMap";
+import { LanguageMap } from ".";
 
 export interface ContextActivity {
   objectType?: "Activity";
