@@ -59,17 +59,16 @@ export class LRSConnection {
   }
 
   // Activity State API
-  // TODO: Write tests
   public getActivityStates(agent: Agent, activityId: string): Promise<string[]> {
     return this.request(Endpoint.ACTIVITY_STATE, {
-      agent: agent,
+      agent: JSON.stringify(agent),
       activityId: activityId
     });
   }
 
   public getActivityState(agent: Agent, activityId: string, stateId: string): Promise<{[key: string]: any}> {
     return this.request(Endpoint.ACTIVITY_STATE, {
-      agent: agent,
+      agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId
     });
@@ -77,7 +76,7 @@ export class LRSConnection {
 
   public setActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
     return this.request(Endpoint.ACTIVITY_STATE, {
-      agent: agent,
+      agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId
     }, {
@@ -88,7 +87,7 @@ export class LRSConnection {
 
   public deleteActivityState(agent: Agent, activityId: string, stateId: string): Promise<void> {
     return this.request(Endpoint.ACTIVITY_STATE, {
-      agent: agent,
+      agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId
     }, {
@@ -133,8 +132,9 @@ export class LRSConnection {
   // Agent Profile API
   // TODO: Write tests
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
+
     return this.request(Endpoint.AGENT_PROFILE, {
-      agent: agent,
+      agent: JSON.stringify(agent),
       profileId: profileId
     }, {
       method: "POST",
@@ -144,20 +144,20 @@ export class LRSConnection {
 
   public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
     return this.request(Endpoint.AGENT_PROFILE, {
-      agent: agent,
+      agent: JSON.stringify(agent),
       profileId: profileId
     });
   }
 
   public getAgentProfiles(agent: Agent): Promise<string[]> {
     return this.request(Endpoint.AGENT_PROFILE, {
-      agent: agent
+      agent: JSON.stringify(agent)
     });
   }
 
   public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
     return this.request(Endpoint.AGENT_PROFILE, {
-      agent: agent,
+      agent: JSON.stringify(agent),
       profileId: profileId
     }, {
       method: "DELETE"
@@ -172,7 +172,12 @@ export class LRSConnection {
       ...init
     }).then(response => {
       if (response.ok) {
-        return response.json();
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return response.json();
+        } else {
+          return response.text();
+        }
       } else {
         return response.text().then(error => Promise.reject(error));
       }
