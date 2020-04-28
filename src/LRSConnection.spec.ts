@@ -96,8 +96,13 @@ describe("activity state api", () => {
     const testState: {[key: string]: any} = {
         test: "test"
     };
+
     test("can create activity state", () => {
         return expect(lrsConnection.createActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+    });
+
+    test("can set activity state", () => {
+        return expect(lrsConnection.setActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
     });
 
     test("can get all activity states", () => {
@@ -118,8 +123,13 @@ describe("activity profile api", () => {
     const testProfile: {[key: string]: any} = {
         test: "test"
     };
+
     test("can create activity profile", () => {
         return expect(lrsConnection.createActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
+    });
+
+    test("can set activity profile", () => {
+        return expect(lrsConnection.setActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
     });
 
     test("can get all activity profiles", () => {
@@ -140,8 +150,13 @@ describe("agent profile api", () => {
     const testProfile: {[key: string]: any} = {
         test: "test"
     };
+
     test("can create agent profile", () => {
         return expect(lrsConnection.createAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
+    });
+
+    test("can set agent profile", () => {
+        return expect(lrsConnection.setAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
     });
 
     test("can get all agent profiles", () => {
