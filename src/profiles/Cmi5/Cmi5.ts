@@ -5,10 +5,7 @@ import { ResultScore } from "../../interfaces/Result";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
 import { Context, ContextActivity, Verb } from "../../interfaces";
 
-// TODO: Write tests
-// TODO: 11.0 xAPI Agent Profile Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#110-xapi-agent-profile-data-model
-
-interface Cmi5LaunchParameters {
+interface LaunchParameters {
   endpoint: string;
   fetch: string;
   actor: Agent;
@@ -16,7 +13,7 @@ interface Cmi5LaunchParameters {
   activityId: string;
 }
 
-interface Cmi5LaunchData {
+interface LaunchData {
   contextTemplate: Context;
   launchMode: "Normal" | "Browse" | "Review";
   launchParameters?: string;
@@ -24,6 +21,11 @@ interface Cmi5LaunchData {
   moveOn: "Passed" | "Completed" | "CompletedAndPassed" | "CompletedOrPassed" | "NotApplicable";
   returnURL?: string;
   entitlementKey?: { courseStructure: string; alternate: string };
+}
+
+interface LearnerPreferences {
+  languagePreference?: string;
+  audioPreference?: "on" | "off";
 }
 
 interface AuthTokenResponse {
@@ -39,18 +41,29 @@ class Cmi5DefinedVerbs {
   public static readonly TERMINATED: Verb = Verbs.TERMINATED;
 }
 
+class Cmi5ContextActivity {
+  public static readonly MOVE_ON: ContextActivity = {
+    id: "https://w3id.org/xapi/cmi5/context/categories/moveon"
+  };
+  public static readonly CMI5: ContextActivity = {
+    id: "https://w3id.org/xapi/cmi5/context/categories/cmi5"
+  };
+}
+
 /**
  * Experience API cmi5 Profile (Quartz - 1st Edition)
  * Reference: https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md
  */
+// TODO: Write tests
 export class Cmi5 {
-  private launchParameters: Cmi5LaunchParameters;
-  private lmsLaunchData!: Cmi5LaunchData;
+  private launchParameters: LaunchParameters;
+  private lmsLaunchData!: LaunchData;
+  private learnerPreferences!: LearnerPreferences; 
   private connection!: LRSConnection;
   private initialisedDate!: Date;
 
   constructor() {
-    this.launchParameters = getSearchQueryParamsAsObject(window.location.href) as Cmi5LaunchParameters;
+    this.launchParameters = getSearchQueryParamsAsObject(window.location.href) as LaunchParameters;
   }
 
   public initialize(): Promise<string[]> {
@@ -63,6 +76,12 @@ export class Cmi5 {
       return this.connection.getActivityState(this.launchParameters.actor, this.launchParameters.activityId, states[0]);
     }).then((state) => {
       this.lmsLaunchData = state["LMS.LaunchData"];
+    }).then(() => {
+      return this.connection.getAgentProfiles(this.launchParameters.actor);
+    }).then((profiles) => {
+      return this.connection.getAgentProfile(this.launchParameters.actor, profiles[0]);
+    }).then((profile) => {
+      this.learnerPreferences = profile.cmi5LearnerPreferences;
     }).then(() => {
       // 9.3.2 Initialized - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#932-initialized
       return this.request({
@@ -86,9 +105,7 @@ export class Cmi5 {
       // 9.6.2.2 moveOn Category Activity
       context: {
         contextActivities: {
-          category: {
-            id: "https://w3id.org/xapi/cmi5/context/categories/moveon"
-          }
+          category: Cmi5ContextActivity.MOVE_ON
         }
       }
     });
@@ -111,9 +128,7 @@ export class Cmi5 {
       // 9.6.2.2 moveOn Category Activity
       context: {
         contextActivities: {
-          category: {
-            id: "https://w3id.org/xapi/cmi5/context/categories/moveon"
-          }
+          category: Cmi5ContextActivity.MOVE_ON
         }
       }
     });
@@ -136,9 +151,7 @@ export class Cmi5 {
       // 9.6.2.2 moveOn Category Activity
       context: {
         contextActivities: {
-          category: {
-            id: "https://w3id.org/xapi/cmi5/context/categories/moveon"
-          }
+          category: Cmi5ContextActivity.MOVE_ON
         }
       }
     });
@@ -153,6 +166,11 @@ export class Cmi5 {
         duration: calculateISO8601Duration(this.initialisedDate, new Date())
       }
     });
+  }
+
+  // 11.0 xAPI Agent Profile Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#110-xapi-agent-profile-data-model
+  public getLearnerPreferences(): LearnerPreferences {
+    return this.learnerPreferences;
   }
 
   private getAuthToken(fetchUrl: string): Promise<AuthTokenResponse> {
@@ -174,9 +192,7 @@ export class Cmi5 {
     const context: Context = this.lmsLaunchData.contextTemplate;
     const categoryContextActivities: ContextActivity[] = [
       // 9.6.2.1 cmi5 Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9621-cmi5-category-activity
-      {
-        id: "https://w3id.org/xapi/cmi5/context/categories/cmi5"
-      }
+      Cmi5ContextActivity.CMI5
     ];
     if (this.lmsLaunchData.contextTemplate.contextActivities?.category) {
       categoryContextActivities.push(this.lmsLaunchData.contextTemplate.contextActivities.category as ContextActivity);
