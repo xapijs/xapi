@@ -134,3 +134,25 @@ describe("activity profile api", () => {
         return expect(lrsConnection.deleteActivityProfile(testActivity.id, testProfileId)).resolves.toBeDefined();
     });
 });
+
+describe("agent profile api", () => {
+    const testProfileId: string = `${testActivity.id}/profiles/test`;
+    const testProfile: {[key: string]: any} = {
+        test: "test"
+    };
+    test("can create agent profile", () => {
+        return expect(lrsConnection.createAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
+    });
+
+    test("can get all agent profiles", () => {
+        return expect(lrsConnection.getAgentProfiles(testAgent)).resolves.toHaveLength(1);
+    });
+
+    test("can get an agent profile", () => {
+        return expect(lrsConnection.getAgentProfile(testAgent, testProfileId)).resolves.toMatchObject(testProfile);
+    });
+
+    test("can delete an agent profile", () => {
+        return expect(lrsConnection.deleteAgentProfile(testAgent, testProfileId)).resolves.toBeDefined();
+    });
+});

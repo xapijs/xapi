@@ -129,7 +129,6 @@ export class LRSConnection {
   }
 
   // Agent Profile API
-  // TODO: Write tests
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
 
     return this.request(Endpoint.AGENT_PROFILE, {
