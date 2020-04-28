@@ -10,7 +10,8 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.js"
   },
   "repository": {
     "type": "git",
