@@ -94,7 +94,7 @@ describe("statement api", () => {
 describe("activity state api", () => {
     const testStateId: string = `${testActivity.id}/states/test`;
     const testState: {[key: string]: any} = {
-        test: "true"
+        test: "test"
     };
     test("can create activity state", () => {
         return expect(lrsConnection.createActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
@@ -110,5 +110,27 @@ describe("activity state api", () => {
 
     test("can delete an activity state", () => {
         return expect(lrsConnection.deleteActivityState(testAgent, testActivity.id, testStateId)).resolves.toBeDefined();
+    });
+});
+
+describe("activity profile api", () => {
+    const testProfileId: string = `${testActivity.id}/profiles/test`;
+    const testProfile: {[key: string]: any} = {
+        test: "test"
+    };
+    test("can create activity profile", () => {
+        return expect(lrsConnection.createActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
+    });
+
+    test("can get all activity profiles", () => {
+        return expect(lrsConnection.getActivityProfiles(testActivity.id)).resolves.toHaveLength(1);
+    });
+
+    test("can get an activity profile", () => {
+        return expect(lrsConnection.getActivityProfile(testActivity.id, testProfileId)).resolves.toMatchObject(testProfile);
+    });
+
+    test("can delete an activity profile", () => {
+        return expect(lrsConnection.deleteActivityProfile(testActivity.id, testProfileId)).resolves.toBeDefined();
     });
 });
