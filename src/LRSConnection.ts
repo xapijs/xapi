@@ -59,6 +59,28 @@ export class LRSConnection {
   }
 
   // Activity State API
+  public createActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
+    return this.request(Endpoint.ACTIVITY_STATE, {
+      agent: JSON.stringify(agent),
+      activityId: activityId,
+      stateId: stateId
+    }, {
+      method: "POST",
+      body: JSON.stringify(state)
+    });
+  }
+
+  public setActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
+    return this.request(Endpoint.ACTIVITY_STATE, {
+      agent: JSON.stringify(agent),
+      activityId: activityId,
+      stateId: stateId
+    }, {
+      method: "PUT",
+      body: JSON.stringify(state)
+    });
+  }
+
   public getActivityStates(agent: Agent, activityId: string): Promise<string[]> {
     return this.request(Endpoint.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
@@ -71,17 +93,6 @@ export class LRSConnection {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId
-    });
-  }
-
-  public createActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoint.ACTIVITY_STATE, {
-      agent: JSON.stringify(agent),
-      activityId: activityId,
-      stateId: stateId
-    }, {
-      method: "POST",
-      body: JSON.stringify(state)
     });
   }
 
@@ -106,16 +117,26 @@ export class LRSConnection {
     });
   }
 
-  public getActivityProfile(activityId: string, profileId: string): Promise<{[key: string]: any}> {
+  public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Endpoint.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
+    }, {
+      method: "PUT",
+      body: JSON.stringify(profile)
     });
   }
 
   public getActivityProfiles(activityId: string): Promise<string[]> {
     return this.request(Endpoint.ACTIVITY_PROFILE, {
       activityId: activityId
+    });
+  }
+
+  public getActivityProfile(activityId: string, profileId: string): Promise<{[key: string]: any}> {
+    return this.request(Endpoint.ACTIVITY_PROFILE, {
+      activityId: activityId,
+      profileId: profileId
     });
   }
 
@@ -130,7 +151,6 @@ export class LRSConnection {
 
   // Agent Profile API
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-
     return this.request(Endpoint.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
@@ -140,16 +160,26 @@ export class LRSConnection {
     });
   }
 
-  public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
+  public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Endpoint.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
+    }, {
+      method: "PUT",
+      body: JSON.stringify(profile)
     });
   }
 
   public getAgentProfiles(agent: Agent): Promise<string[]> {
     return this.request(Endpoint.AGENT_PROFILE, {
       agent: JSON.stringify(agent)
+    });
+  }
+
+  public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
+    return this.request(Endpoint.AGENT_PROFILE, {
+      agent: JSON.stringify(agent),
+      profileId: profileId
     });
   }
 
