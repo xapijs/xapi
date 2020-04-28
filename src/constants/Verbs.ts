@@ -61,4 +61,10 @@ export class Verbs {
        "en-US":"commented"
     }
   };
+  public static readonly VOIDED: Verb = {
+    id: "http://adlnet.gov/expapi/verbs/voided",
+    display: {
+        "en-US": "voided"
+    }
+  };
 }

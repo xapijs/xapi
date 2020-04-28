@@ -1,4 +1,4 @@
-export type rfc5646LanguageCodes =
+export type RFC5646LanguageCodes =
   | "af"
   | "af-ZA"
   | "ar"
