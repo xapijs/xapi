@@ -39,6 +39,10 @@ class Cmi5DefinedVerbs {
   public static readonly TERMINATED: Verb = Verbs.TERMINATED;
 }
 
+/**
+ * Experience API cmi5 Profile (Quartz - 1st Edition)
+ * Reference: https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md
+ */
 export class Cmi5 {
   private launchParameters: Cmi5LaunchParameters;
   private lmsLaunchData!: Cmi5LaunchData;
