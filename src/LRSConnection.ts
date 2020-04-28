@@ -130,6 +130,40 @@ export class LRSConnection {
     });
   }
 
+  // Agent Profile API
+  // TODO: Write tests
+  public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
+    return this.request(Endpoint.AGENT_PROFILE, {
+      agent: agent,
+      profileId: profileId
+    }, {
+      method: "POST",
+      body: JSON.stringify(profile)
+    });
+  }
+
+  public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
+    return this.request(Endpoint.AGENT_PROFILE, {
+      agent: agent,
+      profileId: profileId
+    });
+  }
+
+  public getAgentProfiles(agent: Agent): Promise<string[]> {
+    return this.request(Endpoint.AGENT_PROFILE, {
+      agent: agent
+    });
+  }
+
+  public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
+    return this.request(Endpoint.AGENT_PROFILE, {
+      agent: agent,
+      profileId: profileId
+    }, {
+      method: "DELETE"
+    });
+  }
+
   private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
     const queryString: string = Object.keys(params).map(key => key + "=" + params[key]).join("&");
     const request: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;

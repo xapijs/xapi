@@ -1,5 +1,6 @@
 export enum Endpoint {
-  STATEMENTS = "statements",
   ACTIVITY_STATE = "activity/state",
-  ACTIVITY_PROFILE = "activity/profile"
+  ACTIVITY_PROFILE = "activity/profile",
+  AGENT_PROFILE = "agents/profile",
+  STATEMENTS = "statements"
 }
