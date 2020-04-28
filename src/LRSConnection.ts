@@ -74,7 +74,7 @@ export class LRSConnection {
     });
   }
 
-  public setActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
+  public createActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
     return this.request(Endpoint.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,

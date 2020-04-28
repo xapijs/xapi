@@ -97,7 +97,7 @@ describe("activity state api", () => {
         test: "true"
     };
     test("can create activity state", () => {
-        return expect(lrsConnection.setActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+        return expect(lrsConnection.createActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
     });
 
     test("can get all activity states", () => {
