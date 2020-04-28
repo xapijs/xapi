@@ -2,14 +2,15 @@
   "name": "xapi-js",
   "version": "0.0.3",
   "description": "An XAPI JS library for communicating with an LRS.",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "files": [
-    "lib/**/*"
+    "dist/**/*"
   ],
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
     "test": "jest",
     "lint": "eslint . --ext .ts,.js"
   },
@@ -42,6 +43,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "jest": "^25.2.4",
+    "rimraf": "^3.0.2",
     "ts-jest": "^25.3.0",
     "typescript": "^3.7.5"
   }
