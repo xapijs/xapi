@@ -1,4 +1,4 @@
-import { ActivityDefinition, Activity } from "../../../interfaces/Statement/Activity";
+import { ActivityDefinition, Activity } from "../../../XAPI/interfaces/Statement/Activity";
 
 export interface ObjectiveActivityDefinition extends ActivityDefinition {
   type: "http://adlnet.gov/expapi/activities/objective";

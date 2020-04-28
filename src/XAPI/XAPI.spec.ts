@@ -1,10 +1,10 @@
-import { LRSConnection, Agent, Statement, Activity } from "./";
+import { XAPI, Agent, Statement, Activity } from ".";
 
 const endpoint: string = process.env.LRS_ENDPOINT || "";
 const username: string = process.env.LRS_USERNAME || "";
 const password: string = process.env.LRS_PASSWORD || "";
 const auth: string = `Basic ${btoa(username + ":" + password)}`;
-const lrsConnection: LRSConnection = new LRSConnection(endpoint, auth);
+const xapi: XAPI = new XAPI(endpoint, auth);
 
 const testAgent: Agent = {
     objectType: "Agent",
@@ -14,7 +14,7 @@ const testAgent: Agent = {
 
 const testActivity: Activity = {
     objectType: "Activity",
-    id: "https://github.com/CookieCookson/xAPI-JS/LRSConnection"
+    id: "https://github.com/CookieCookson/xAPI-JS/XAPI"
 };
 
 const testStatement: Statement = {
@@ -30,12 +30,12 @@ const testStatement: Statement = {
 
 describe("statement api", () => {
     test("can create a statement", () => {
-        return expect(lrsConnection.sendStatement(testStatement)).resolves.toHaveLength(1);
+        return expect(xapi.sendStatement(testStatement)).resolves.toHaveLength(1);
     });
 
     test("can get a single statement", () => {
-        return lrsConnection.sendStatement(testStatement).then((result) => {
-            return lrsConnection.getStatement({
+        return xapi.sendStatement(testStatement).then((result) => {
+            return xapi.getStatement({
                 statementId: result[0]
             });
         }).then((statement) => {
@@ -44,8 +44,8 @@ describe("statement api", () => {
     });
 
     test("can void a single statement", () => {
-        return lrsConnection.sendStatement(testStatement).then((result) => {
-            return lrsConnection.voidStatement(testAgent, result[0]);
+        return xapi.sendStatement(testStatement).then((result) => {
+            return xapi.voidStatement(testAgent, result[0]);
         }).then((voidResult) => {
             return expect(voidResult).toHaveLength(1);
         });
@@ -53,11 +53,11 @@ describe("statement api", () => {
 
     test("can get a voided statement", () => {
         let statementId: string;
-        return lrsConnection.sendStatement(testStatement).then((result) => {
+        return xapi.sendStatement(testStatement).then((result) => {
             statementId = result[0];
-            return lrsConnection.voidStatement(testAgent, statementId);
+            return xapi.voidStatement(testAgent, statementId);
         }).then(() => {
-            return lrsConnection.getVoidedStatement({
+            return xapi.getVoidedStatement({
                 voidedStatementId: statementId
             });
         }).then((voidedStatement) => {
@@ -66,13 +66,13 @@ describe("statement api", () => {
     });
 
     test("can get an array of statements", () => {
-        return lrsConnection.getStatements().then((result) => {
+        return xapi.getStatements().then((result) => {
             return expect(result.statements).toBeTruthy();
         });
     });
 
     test("can query a single statement using the limit property", () => {
-        return lrsConnection.getStatements({
+        return xapi.getStatements({
             limit: 1
         }).then((result) => {
             return expect(result.statements).toHaveLength(1);
@@ -80,10 +80,10 @@ describe("statement api", () => {
     });
 
     test("can get more statements using the more property", () => {
-        return lrsConnection.getStatements({
+        return xapi.getStatements({
             limit: 1
         }).then((result) => {
-            return lrsConnection.getMoreStatements(result.more);
+            return xapi.getMoreStatements(result.more);
         }).then((result) => {
             return expect(result.statements).toBeTruthy();
         });
@@ -97,23 +97,23 @@ describe("activity state api", () => {
     };
 
     test("can create activity state", () => {
-        return expect(lrsConnection.createActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+        return expect(xapi.createActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
     });
 
     test("can set activity state", () => {
-        return expect(lrsConnection.setActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+        return expect(xapi.setActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
     });
 
     test("can get all activity states", () => {
-        return expect(lrsConnection.getActivityStates(testAgent, testActivity.id)).resolves.toHaveLength(1);
+        return expect(xapi.getActivityStates(testAgent, testActivity.id)).resolves.toHaveLength(1);
     });
 
     test("can get an activity state", () => {
-        return expect(lrsConnection.getActivityState(testAgent, testActivity.id, testStateId)).resolves.toMatchObject(testState);
+        return expect(xapi.getActivityState(testAgent, testActivity.id, testStateId)).resolves.toMatchObject(testState);
     });
 
     test("can delete an activity state", () => {
-        return expect(lrsConnection.deleteActivityState(testAgent, testActivity.id, testStateId)).resolves.toBeDefined();
+        return expect(xapi.deleteActivityState(testAgent, testActivity.id, testStateId)).resolves.toBeDefined();
     });
 });
 
@@ -124,23 +124,23 @@ describe("activity profile api", () => {
     };
 
     test("can create activity profile", () => {
-        return expect(lrsConnection.createActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
+        return expect(xapi.createActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
     });
 
     test("can set activity profile", () => {
-        return expect(lrsConnection.setActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
+        return expect(xapi.setActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
     });
 
     test("can get all activity profiles", () => {
-        return expect(lrsConnection.getActivityProfiles(testActivity.id)).resolves.toHaveLength(1);
+        return expect(xapi.getActivityProfiles(testActivity.id)).resolves.toHaveLength(1);
     });
 
     test("can get an activity profile", () => {
-        return expect(lrsConnection.getActivityProfile(testActivity.id, testProfileId)).resolves.toMatchObject(testProfile);
+        return expect(xapi.getActivityProfile(testActivity.id, testProfileId)).resolves.toMatchObject(testProfile);
     });
 
     test("can delete an activity profile", () => {
-        return expect(lrsConnection.deleteActivityProfile(testActivity.id, testProfileId)).resolves.toBeDefined();
+        return expect(xapi.deleteActivityProfile(testActivity.id, testProfileId)).resolves.toBeDefined();
     });
 });
 
@@ -151,22 +151,22 @@ describe("agent profile api", () => {
     };
 
     test("can create agent profile", () => {
-        return expect(lrsConnection.createAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
+        return expect(xapi.createAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
     });
 
     test("can set agent profile", () => {
-        return expect(lrsConnection.setAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
+        return expect(xapi.setAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
     });
 
     test("can get all agent profiles", () => {
-        return expect(lrsConnection.getAgentProfiles(testAgent)).resolves.toHaveLength(1);
+        return expect(xapi.getAgentProfiles(testAgent)).resolves.toHaveLength(1);
     });
 
     test("can get an agent profile", () => {
-        return expect(lrsConnection.getAgentProfile(testAgent, testProfileId)).resolves.toMatchObject(testProfile);
+        return expect(xapi.getAgentProfile(testAgent, testProfileId)).resolves.toMatchObject(testProfile);
     });
 
     test("can delete an agent profile", () => {
-        return expect(lrsConnection.deleteAgentProfile(testAgent, testProfileId)).resolves.toBeDefined();
+        return expect(xapi.deleteAgentProfile(testAgent, testProfileId)).resolves.toBeDefined();
     });
 });

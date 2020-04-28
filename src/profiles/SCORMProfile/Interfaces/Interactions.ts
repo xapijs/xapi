@@ -1,4 +1,4 @@
-import { Activity, ActivityDefinition, LanguageMap } from "../../../interfaces/Statement";
+import { Activity, ActivityDefinition, LanguageMap } from "../../../XAPI/interfaces/Statement";
 
 interface BaseInteractionActivityDefinition extends ActivityDefinition {
   type: "http://adlnet.gov/expapi/activities/cmi.interaction";
