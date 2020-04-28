@@ -31,7 +31,7 @@ interface AuthTokenResponse {
 }
 
 // 9.3 Verbs - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#93-verbs
-class Cmi5Verbs {
+class Cmi5DefinedVerbs {
   public static readonly INITIALIZED: Verb = Verbs.INITIALIZED;
   public static readonly COMPLETED: Verb = Verbs.COMPLETED;
   public static readonly PASSED: Verb = Verbs.PASSED;
@@ -62,7 +62,7 @@ export class Cmi5 {
     }).then(() => {
       // 9.3.2 Initialized - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#932-initialized
       return this.request({
-        verb: Cmi5Verbs.INITIALIZED
+        verb: Cmi5DefinedVerbs.INITIALIZED
       });
     });
   }
@@ -72,7 +72,7 @@ export class Cmi5 {
     if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
     return this.request({
       // 9.3.3 Completed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#933-completed
-      verb: Cmi5Verbs.COMPLETED,
+      verb: Cmi5DefinedVerbs.COMPLETED,
       result: {
         // 9.5.3 Completion - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#953-completion
         completion: true,
@@ -95,7 +95,7 @@ export class Cmi5 {
     if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
     return this.request({
       // 9.3.4 Passed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#934-passed
-      verb: Cmi5Verbs.PASSED,
+      verb: Cmi5DefinedVerbs.PASSED,
       result: {
         // 9.5.1 Score - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#951-score
         ...(score ? { score: score } : {}),
@@ -120,7 +120,7 @@ export class Cmi5 {
     if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
     return this.request({
       // 9.3.5 Failed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#935-failed
-      verb: Cmi5Verbs.FAILED,
+      verb: Cmi5DefinedVerbs.FAILED,
       result: {
         // 9.5.1 Score - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#951-score
         ...(score ? { score: score } : {}),
@@ -143,7 +143,7 @@ export class Cmi5 {
   public terminate(): Promise<string[]> {
     return this.request({
       // 9.3.8 Terminated - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#938-terminated
-      verb: Cmi5Verbs.TERMINATED,
+      verb: Cmi5DefinedVerbs.TERMINATED,
       result: {
         // 9.5.4.1 Duration - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#terminated-statement
         duration: calculateISO8601Duration(this.initialisedDate, new Date())
