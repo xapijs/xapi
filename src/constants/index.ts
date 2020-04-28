@@ -1,4 +1,5 @@
+import { Endpoint } from "./Endpoint";
 import { Verbs } from "./Verbs";
-import { rfc5646LanguageCodes } from "./rfc5646LanguageCodes";
+import { RFC5646LanguageCodes } from "./RFC5646LanguageCodes";
 
-export { Verbs, rfc5646LanguageCodes };
+export { Endpoint, Verbs, RFC5646LanguageCodes };
