@@ -96,7 +96,6 @@ export class LRSConnection {
   }
 
   // Activity Profile API
-  // TODO: Write tests
   public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Endpoint.ACTIVITY_PROFILE, {
       activityId: activityId,
