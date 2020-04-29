@@ -231,7 +231,7 @@ export class Cmi5 {
       object: object,
       context: context
     };
-    const mergedStatement: Partial<Statement> = deepmerge.all([statement, cmi5DefinedStatementRequirements]);
+    const mergedStatement: Partial<Statement> = deepmerge.all([cmi5DefinedStatementRequirements, statement]);
     return this.sendCmi5AllowedStatement(mergedStatement);
   }
 
@@ -249,7 +249,7 @@ export class Cmi5 {
       timestamp: timestamp,
       context: context
     };
-    const mergedStatement: Partial<Statement> = deepmerge.all([statement, cmi5AllowedStatementRequirements]);
+    const mergedStatement: Partial<Statement> = deepmerge.all([cmi5AllowedStatementRequirements, statement]);
     return this.connection.sendStatement(mergedStatement as Statement);
   }
 }
