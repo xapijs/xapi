@@ -67,4 +67,10 @@ export class Verbs {
         "en-US": "voided"
     }
   };
+  public static readonly PROGRESSED: Verb = {
+    id: "http://adlnet.gov/expapi/verbs/progressed",
+    display: {
+      "en-US": "progressed"
+    }
+  }
 }
