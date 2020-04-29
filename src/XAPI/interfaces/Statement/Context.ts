@@ -5,10 +5,10 @@ export interface Context {
   instructor?: Actor;
   team?: Group;
   contextActivities?: {
-    parent?: ContextActivity | ContextActivity[];
-    grouping?: ContextActivity | ContextActivity[];
-    category?: ContextActivity | ContextActivity[];
-    other?: ContextActivity | ContextActivity[];
+    parent?: ContextActivity[];
+    grouping?: ContextActivity[];
+    category?: ContextActivity[];
+    other?: ContextActivity[];
   };
   statement?: StatementRef;
   revision?: string;
