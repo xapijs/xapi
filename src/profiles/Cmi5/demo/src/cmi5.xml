@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd">
+  <course id="https://github.com/CookieCookson/xAPI-JS/">
+    <title>
+      <langstring lang="en-US">XAPI JS cmi5 Demo</langstring>
+    </title>
+    <description>
+      <langstring lang="en-US">An example course using the XAPI JS library.</langstring>
+    </description>
+  </course>
+  <au id="https://github.com/CookieCookson/xAPI-JS/src/profiles/cmi5/demo" moveOn="Completed">
+    <title>
+      <langstring lang="en-US">XAPI JS cmi5 Demo</langstring>
+    </title>
+    <description>
+      <langstring lang="en-US">An example au using the cmi5 Profile.</langstring>
+    </description>
+    <url>index.html</url>
+  </au>
+</courseStructure>
