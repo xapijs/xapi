@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "commonjs",
     "declaration": true,
-    "outDir": "./dist",
-    "strict": true
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "dom",
+      "es2015"
+    ],
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es2017",
+    "outDir": "./dist"
+
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/demo"
   ]
 }

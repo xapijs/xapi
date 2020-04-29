@@ -1,6 +1,7 @@
-import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs } from "../../XAPI";
+import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, Object } from "../../XAPI";
 import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
+import { default as deepmerge } from "deepmerge";
 
 interface LaunchParameters {
   endpoint: string;
@@ -13,11 +14,12 @@ interface LaunchParameters {
 interface LaunchData {
   contextTemplate: Context;
   launchMode: "Normal" | "Browse" | "Review";
+  launchMethod?: "OwnWindow" | "AnyWindow";
   launchParameters?: string;
   masteryScore?: number;
   moveOn: "Passed" | "Completed" | "CompletedAndPassed" | "CompletedOrPassed" | "NotApplicable";
   returnURL?: string;
-  entitlementKey?: { courseStructure: string; alternate: string };
+  entitlementKey?: { courseStructure?: string; alternate?: string };
 }
 
 interface LearnerPreferences {
@@ -60,28 +62,35 @@ export class Cmi5 {
   private initialisedDate!: Date;
 
   constructor() {
-    this.launchParameters = getSearchQueryParamsAsObject(window.location.href) as LaunchParameters;
+    this.launchParameters = this.getLaunchParameters();
+    if (!this.launchParameters.fetch) {
+      throw Error("no fetch parameter found.");
+    } else if (!this.launchParameters.endpoint) {
+      throw Error("no endpoint parameter found");
+    } else if (!this.launchParameters.actor) {
+      throw Error("no actor parameter found.");
+    } else if (!this.launchParameters.activityId) {
+      throw Error("no activityId parameter found.");
+    } else if (!this.launchParameters.registration) {
+      throw Error("no registration parameter found.");
+    }
   }
 
   public initialize(): Promise<string[]> {
-    this.initialisedDate = new Date();
-    return this.getAuthToken(this.launchParameters.fetch).then((response) => {
+    return this.getAuthTokenFromLMS(this.launchParameters.fetch).then((response) => {
       const authToken: string = response["auth-token"];
-      this.connection = new XAPI(this.launchParameters.endpoint, authToken);
-      return this.connection.getActivityStates(this.launchParameters.actor, this.launchParameters.activityId);
-    }).then((states) => {
-      return this.connection.getActivityState(this.launchParameters.actor, this.launchParameters.activityId, states[0]);
-    }).then((state) => {
-      this.lmsLaunchData = state["LMS.LaunchData"];
+      this.connection = new XAPI(this.launchParameters.endpoint, `Basic ${authToken}`);
+      return this.getLaunchDataFromLMS();
+    }).then((launchData) => {
+      this.lmsLaunchData = launchData;
     }).then(() => {
-      return this.connection.getAgentProfiles(this.launchParameters.actor);
-    }).then((profiles) => {
-      return this.connection.getAgentProfile(this.launchParameters.actor, profiles[0]);
-    }).then((profile) => {
-      this.learnerPreferences = profile.cmi5LearnerPreferences;
+      return this.getLearnerPreferencesFromLMS();
+    }).then((learnerPreferences) => {
+      this.learnerPreferences = learnerPreferences;
     }).then(() => {
+      this.initialisedDate = new Date();
       // 9.3.2 Initialized - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#932-initialized
-      return this.request({
+      return this.sendCmi5DefinedStatement({
         verb: Cmi5DefinedVerbs.INITIALIZED
       });
     });
@@ -90,7 +99,7 @@ export class Cmi5 {
   public complete(): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
     if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
-    return this.request({
+    return this.sendCmi5DefinedStatement({
       // 9.3.3 Completed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#933-completed
       verb: Cmi5DefinedVerbs.COMPLETED,
       result: {
@@ -99,10 +108,12 @@ export class Cmi5 {
         // 9.5.4.1 Duration - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#completed-statement
         duration: calculateISO8601Duration(this.initialisedDate, new Date())
       },
-      // 9.6.2.2 moveOn Category Activity
       context: {
         contextActivities: {
-          category: Cmi5ContextActivity.MOVE_ON
+          category: [
+            // 9.6.2.2 moveOn Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9622-moveon-category-activity
+            Cmi5ContextActivity.MOVE_ON
+          ]
         }
       }
     });
@@ -111,7 +122,7 @@ export class Cmi5 {
   public pass(score?: ResultScore): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
     if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
-    return this.request({
+    return this.sendCmi5DefinedStatement({
       // 9.3.4 Passed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#934-passed
       verb: Cmi5DefinedVerbs.PASSED,
       result: {
@@ -122,10 +133,12 @@ export class Cmi5 {
         // 9.5.4.1 Duration - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#passed-statement
         duration: calculateISO8601Duration(this.initialisedDate, new Date())
       },
-      // 9.6.2.2 moveOn Category Activity
       context: {
         contextActivities: {
-          category: Cmi5ContextActivity.MOVE_ON
+          category: [
+            // 9.6.2.2 moveOn Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9622-moveon-category-activity
+            Cmi5ContextActivity.MOVE_ON
+          ]
         }
       }
     });
@@ -134,7 +147,7 @@ export class Cmi5 {
   public fail(score?: ResultScore): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
     if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
-    return this.request({
+    return this.sendCmi5DefinedStatement({
       // 9.3.5 Failed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#935-failed
       verb: Cmi5DefinedVerbs.FAILED,
       result: {
@@ -145,17 +158,19 @@ export class Cmi5 {
         // 9.5.4.1 Duration - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#failed-statement
         duration: calculateISO8601Duration(this.initialisedDate, new Date())
       },
-      // 9.6.2.2 moveOn Category Activity
       context: {
         contextActivities: {
-          category: Cmi5ContextActivity.MOVE_ON
+          category: [
+            // 9.6.2.2 moveOn Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9622-moveon-category-activity
+            Cmi5ContextActivity.MOVE_ON
+          ]
         }
       }
     });
   }
 
   public terminate(): Promise<string[]> {
-    return this.request({
+    return this.sendCmi5DefinedStatement({
       // 9.3.8 Terminated - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#938-terminated
       verb: Cmi5DefinedVerbs.TERMINATED,
       result: {
@@ -170,44 +185,71 @@ export class Cmi5 {
     return this.learnerPreferences;
   }
 
-  private getAuthToken(fetchUrl: string): Promise<AuthTokenResponse> {
-    return fetch(fetchUrl, {
-      method: "POST"
-    }) as unknown as Promise<AuthTokenResponse>;
+  private getLaunchParameters(): LaunchParameters {
+    return getSearchQueryParamsAsObject(window.location.href) as LaunchParameters;
   }
 
-  private request(statement: Partial<Statement>): Promise<string[]> {
-    // 9.2 Actor - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#92-actor
-    const actor: Agent = this.launchParameters.actor;
+  private getAuthTokenFromLMS(fetchUrl: string): Promise<AuthTokenResponse> {
+    return fetch(fetchUrl, {
+      method: "POST"
+    }).then(response => {
+        return response.json();
+    });
+  }
+
+  private getLaunchDataFromLMS(): Promise<LaunchData> {
+    return this.connection.getActivityState(this.launchParameters.actor, this.launchParameters.activityId, "LMS.LaunchData", this.launchParameters.registration)
+    .then((launchData) => {
+      return launchData as LaunchData;
+    });
+  }
+
+  private getLearnerPreferencesFromLMS(): Promise<LearnerPreferences> {
+    return this.connection.getAgentProfile(this.launchParameters.actor, "cmi5LearnerPreferences")
+    .then((learnerPreferences) => {
+      return learnerPreferences;
+    }, () => {
+      return {};
+    });
+  }
+
+  private sendCmi5DefinedStatement(statement: Partial<Statement>): Promise<string[]> {
     // 9.4 Object - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#94-object
-    const object: any = {
+    const object: Object = {
+      objectType: "Activity",
       id: this.launchParameters.activityId
     };
+    const context: Context = {
+      contextActivities: {
+        category: [
+          // 9.6.2.1 cmi5 Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9621-cmi5-category-activity
+          Cmi5ContextActivity.CMI5
+        ]
+      }
+    };
+    const cmi5DefinedStatementRequirements: Partial<Statement> = {
+      object: object,
+      context: context
+    };
+    const mergedStatement: Partial<Statement> = deepmerge.all([statement, cmi5DefinedStatementRequirements]);
+    return this.sendCmi5AllowedStatement(mergedStatement);
+  }
+
+  public sendCmi5AllowedStatement(statement: Partial<Statement>): Promise<string[]> {
+    // 9.2 Actor - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#92-actor
+    const actor: Agent = this.launchParameters.actor;
     // 9.7 Timestamp - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#97-timestamp
     const timestamp = new Date().toISOString();
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
-    const context: Context = this.lmsLaunchData.contextTemplate;
-    const categoryContextActivities: ContextActivity[] = [
-      // 9.6.2.1 cmi5 Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9621-cmi5-category-activity
-      Cmi5ContextActivity.CMI5
-    ];
-    if (this.lmsLaunchData.contextTemplate.contextActivities?.category) {
-      categoryContextActivities.push(this.lmsLaunchData.contextTemplate.contextActivities.category as ContextActivity);
-    }
-    if (statement.context?.contextActivities?.category) {
-      categoryContextActivities.push(statement.context.contextActivities.category as ContextActivity);
-    }
-    if (!context.contextActivities) {
-      context.contextActivities = {};
-    }
-    context.contextActivities.category = categoryContextActivities;
-    const combinedStatement: Partial<Statement> = {
-      ...statement,
+    const context: Context = Object.assign({}, this.lmsLaunchData.contextTemplate);
+    // 9.6.1 Registration - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#961-registration
+    context.registration = this.launchParameters.registration;
+    const cmi5AllowedStatementRequirements: Partial<Statement> = {
       actor: actor,
-      object: object,
-      context: context,
-      timestamp: timestamp
+      timestamp: timestamp,
+      context: context
     };
-    return this.connection.sendStatement(combinedStatement as Statement);
+    const mergedStatement: Partial<Statement> = deepmerge.all([statement, cmi5AllowedStatementRequirements]);
+    return this.connection.sendStatement(mergedStatement as Statement);
   }
 }
