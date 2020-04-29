@@ -56,13 +56,13 @@ class Cmi5ContextActivity {
 // TODO: Write tests
 export class Cmi5 {
   private launchParameters: LaunchParameters;
-  private lmsLaunchData!: LaunchData;
+  private launchData!: LaunchData;
   private learnerPreferences!: LearnerPreferences; 
   private connection!: XAPI;
   private initialisedDate!: Date;
 
   constructor() {
-    this.launchParameters = this.getLaunchParameters();
+    this.launchParameters = this.getLaunchParametersFromLMS();
     if (!this.launchParameters.fetch) {
       throw Error("no fetch parameter found.");
     } else if (!this.launchParameters.endpoint) {
@@ -82,7 +82,7 @@ export class Cmi5 {
       this.connection = new XAPI(this.launchParameters.endpoint, `Basic ${authToken}`);
       return this.getLaunchDataFromLMS();
     }).then((launchData) => {
-      this.lmsLaunchData = launchData;
+      this.launchData = launchData;
     }).then(() => {
       return this.getLearnerPreferencesFromLMS();
     }).then((learnerPreferences) => {
@@ -98,7 +98,7 @@ export class Cmi5 {
 
   public complete(): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
-    if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
+    if (this.launchData.launchMode !== "Normal") return Promise.reject();
     return this.sendCmi5DefinedStatement({
       // 9.3.3 Completed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#933-completed
       verb: Cmi5DefinedVerbs.COMPLETED,
@@ -121,7 +121,7 @@ export class Cmi5 {
 
   public pass(score?: ResultScore): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
-    if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
+    if (this.launchData.launchMode !== "Normal") return Promise.reject();
     return this.sendCmi5DefinedStatement({
       // 9.3.4 Passed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#934-passed
       verb: Cmi5DefinedVerbs.PASSED,
@@ -146,7 +146,7 @@ export class Cmi5 {
 
   public fail(score?: ResultScore): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
-    if (this.lmsLaunchData.launchMode !== "Normal") return Promise.reject();
+    if (this.launchData.launchMode !== "Normal") return Promise.reject();
     return this.sendCmi5DefinedStatement({
       // 9.3.5 Failed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#935-failed
       verb: Cmi5DefinedVerbs.FAILED,
@@ -180,12 +180,20 @@ export class Cmi5 {
     });
   }
 
+  public getLaunchParameters(): LaunchParameters {
+    return this.launchParameters;
+  }
+
+  public getLaunchData(): LaunchData {
+    return this.launchData;
+  }
+
   // 11.0 xAPI Agent Profile Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#110-xapi-agent-profile-data-model
   public getLearnerPreferences(): LearnerPreferences {
     return this.learnerPreferences;
   }
 
-  private getLaunchParameters(): LaunchParameters {
+  private getLaunchParametersFromLMS(): LaunchParameters {
     return getSearchQueryParamsAsObject(window.location.href) as LaunchParameters;
   }
 
@@ -241,7 +249,7 @@ export class Cmi5 {
     // 9.7 Timestamp - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#97-timestamp
     const timestamp = new Date().toISOString();
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
-    const context: Context = Object.assign({}, this.lmsLaunchData.contextTemplate);
+    const context: Context = Object.assign({}, this.launchData.contextTemplate);
     // 9.6.1 Registration - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#961-registration
     context.registration = this.launchParameters.registration;
     const cmi5AllowedStatementRequirements: Partial<Statement> = {
