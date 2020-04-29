@@ -1,0 +1,17 @@
+{
+  "name": "xapi-js-cmi5-demo",
+  "private": true,
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "build": "stencil build",
+    "start": "stencil build --dev --watch --serve"
+  },
+  "devDependencies": {
+    "@stencil/core": "^1.12.2"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "xapi-js": "file:../../../.."
+  }
+}
