@@ -59,48 +59,63 @@ export class XAPI {
   }
 
   // Activity State API
-  public createActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
+  public createActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
     return this.request(Endpoint.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
-      stateId: stateId
+      stateId: stateId,
+      ...(registration ? {
+        registration
+      } : {})
     }, {
       method: "POST",
       body: JSON.stringify(state)
     });
   }
 
-  public setActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}): Promise<void> {
+  public setActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
     return this.request(Endpoint.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
-      stateId: stateId
+      stateId: stateId,
+      ...(registration ? {
+        registration
+      } : {})
     }, {
       method: "PUT",
       body: JSON.stringify(state)
     });
   }
 
-  public getActivityStates(agent: Agent, activityId: string): Promise<string[]> {
-    return this.request(Endpoint.ACTIVITY_STATE, {
-      agent: JSON.stringify(agent),
-      activityId: activityId
-    });
-  }
-
-  public getActivityState(agent: Agent, activityId: string, stateId: string): Promise<{[key: string]: any}> {
+  public getActivityStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
     return this.request(Endpoint.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
-      stateId: stateId
+      ...(registration ? {
+        registration
+      } : {})
     });
   }
 
-  public deleteActivityState(agent: Agent, activityId: string, stateId: string): Promise<void> {
+  public getActivityState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
     return this.request(Endpoint.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
-      stateId: stateId
+      stateId: stateId,
+      ...(registration ? {
+        registration
+      } : {})
+    });
+  }
+
+  public deleteActivityState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
+    return this.request(Endpoint.ACTIVITY_STATE, {
+      agent: JSON.stringify(agent),
+      activityId: activityId,
+      stateId: stateId,
+      ...(registration ? {
+        registration
+      } : {})
     }, {
       method: "DELETE"
     });
@@ -193,7 +208,7 @@ export class XAPI {
   }
 
   private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
-    const queryString: string = Object.keys(params).map(key => key + "=" + params[key]).join("&");
+    const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
     const request: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
     return fetch(request, {
       headers: this.headers,
