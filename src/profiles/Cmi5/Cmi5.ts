@@ -1,4 +1,4 @@
-import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, Object } from "../../XAPI";
+import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, Object, InteractionActivityDefinition, LanguageMap } from "../../XAPI";
 import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
 import { default as deepmerge } from "deepmerge";
@@ -53,7 +53,6 @@ class Cmi5ContextActivity {
  * Experience API cmi5 Profile (Quartz - 1st Edition)
  * Reference: https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md
  */
-// TODO: Write tests
 export class Cmi5 {
   private launchParameters: LaunchParameters;
   private launchData!: LaunchData;
@@ -207,6 +206,47 @@ export class Cmi5 {
           "https://w3id.org/xapi/cmi5/result/extensions/progress": percent
         }
       }
+    });
+  }
+
+  public interactionTrueFalse(testId: string, questionId: string, answer: boolean, correctAnswer: boolean, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+    return this.interaction(testId, questionId, answer.toString(), {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "true-false",
+      correctResponsesPattern: correctAnswer ? ["true"] : ["false"],
+      ...(name? {name}: {}),
+      ...(description? {description}: {})
+    });
+  }
+
+  public interaction(testId: string, questionId: string, response: string, interactionDefinition: InteractionActivityDefinition/*, objectiveId?: string*/): Promise<string[]> {
+    return this.sendCmi5AllowedStatement({
+      verb: Verbs.ANSWERED,
+      result: {
+        response: response
+      },
+      object: {
+        objectType: "Activity",
+        // Best Practice #16 - AU should use a derived activity ID for “cmi.interaction” statements - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
+        id: `${this.launchParameters.activityId}/test/${testId}/question/${questionId}`,
+        definition: interactionDefinition
+      },
+      // context: {
+      //   contextActivities: {
+      //     parent: [
+            // TODO: Best Practice #1 - Use of Objectives - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
+            // {
+            // objectType: "Activity",
+            // id: `${this.launchParameters.activityId}/objectives/${objectiveId}`,
+            // definition: {
+            //   type: "http://adlnet.gov/expapi/activities/objective",
+            //   name: {
+            //     "en-US": "Shuttle Names"
+            //   }
+            // }
+      //     ]
+      //   }
+      // }
     });
   }
 
