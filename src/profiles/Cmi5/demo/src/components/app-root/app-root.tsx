@@ -1,5 +1,5 @@
 import { Component, h, State } from "@stencil/core";
-import { Cmi5, Verbs } from "xapi-js";
+import { Cmi5 } from "xapi-js";
 
 @Component({
   tag: "app-root",
@@ -47,18 +47,7 @@ export class AppRoot {
   }
 
   progress(percent: number) {
-    this.cmi5.sendCmi5AllowedStatement({
-      verb: Verbs.PROGRESSED,
-      object: {
-        objectType: "Activity",
-        id: this.cmi5.getLaunchParameters().activityId
-      },
-      result: {
-        extensions: {
-          "https://w3id.org/xapi/cmi5/result/extensions/progress": percent
-        }
-      }
-    });
+    this.cmi5.progress(percent);
   }
 
   /**
@@ -84,7 +73,7 @@ export class AppRoot {
           <button disabled={!this.initialized} onClick={(): void => this.pass()}>Pass</button>
           <button disabled={!this.initialized} onClick={(): void => this.fail()}>Fail</button>
           <button disabled={!this.initialized} onClick={(): void => this.terminate()}>Terminate</button>
-          <h2>"cmi5 allowed" Statement Examples</h2>
+          <h2>"cmi5 allowed" Statements</h2>
           <h3>Progress</h3>
           <button disabled={!this.initialized} onClick={(): void => this.progress(25)}>Progress 25%</button>
           <button disabled={!this.initialized} onClick={(): void => this.progress(50)}>Progress 50%</button>

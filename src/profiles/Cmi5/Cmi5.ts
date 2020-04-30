@@ -76,6 +76,20 @@ export class Cmi5 {
     }
   }
 
+  public getLaunchParameters(): LaunchParameters {
+    return this.launchParameters;
+  }
+
+  public getLaunchData(): LaunchData {
+    return this.launchData;
+  }
+
+  // 11.0 xAPI Agent Profile Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#110-xapi-agent-profile-data-model
+  public getLearnerPreferences(): LearnerPreferences {
+    return this.learnerPreferences;
+  }
+
+  // "cmi5 defined" Statements
   public initialize(): Promise<string[]> {
     return this.getAuthTokenFromLMS(this.launchParameters.fetch).then((response) => {
       const authToken: string = response["auth-token"];
@@ -180,17 +194,20 @@ export class Cmi5 {
     });
   }
 
-  public getLaunchParameters(): LaunchParameters {
-    return this.launchParameters;
-  }
-
-  public getLaunchData(): LaunchData {
-    return this.launchData;
-  }
-
-  // 11.0 xAPI Agent Profile Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#110-xapi-agent-profile-data-model
-  public getLearnerPreferences(): LearnerPreferences {
-    return this.learnerPreferences;
+  // "cmi5 allowed" Statements
+  public progress(percent: number): Promise<string[]> {
+    return this.sendCmi5AllowedStatement({
+      verb: Verbs.PROGRESSED,
+      object: {
+        objectType: "Activity",
+        id: this.launchParameters.activityId
+      },
+      result: {
+        extensions: {
+          "https://w3id.org/xapi/cmi5/result/extensions/progress": percent
+        }
+      }
+    });
   }
 
   private getLaunchParametersFromLMS(): LaunchParameters {
