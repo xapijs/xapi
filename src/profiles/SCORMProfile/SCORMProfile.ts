@@ -7,11 +7,13 @@ import {
   Verb,
   ResultScore,
   Result,
-  Verbs
+  Verbs,
+  ObjectiveActivityDefinition,
+  ObjectiveActivity,
+  InteractionActivity,
+  InteractionActivityDefinition
 } from "../../XAPI";
 import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
-import { InteractionActivity, InteractionActivityDefinition } from "./Interfaces/Interactions";
-import { ObjectiveActivityDefinition, ObjectiveActivity } from "./Interfaces/Objectives";
 
 /**
  * Experience API SCORM Profile

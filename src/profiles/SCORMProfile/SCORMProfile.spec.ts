@@ -1,8 +1,6 @@
 import { SCORMProfile } from "./SCORMProfile";
 import { SCORMProfileConfig } from "./Interfaces/SCORMProfileConfig";
-import { InteractionActivityDefinition } from "./Interfaces/Interactions";
-import { ObjectiveActivityDefinition } from "./Interfaces/Objectives";
-import { Agent, ResultScore, Verbs } from "../../XAPI";
+import { Agent, ResultScore, Verbs, ObjectiveActivityDefinition, InteractionActivityDefinition } from "../../XAPI";
 
 const endpoint: string = process.env.LRS_ENDPOINT || "";
 const username: string = process.env.LRS_USERNAME || "";
