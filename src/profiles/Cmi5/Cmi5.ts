@@ -1,4 +1,4 @@
-import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, Object, InteractionActivityDefinition, LanguageMap, InteractionComponent } from "../../XAPI";
+import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, StatementObject, InteractionActivityDefinition, LanguageMap, InteractionComponent } from "../../XAPI";
 import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
 import { default as deepmerge } from "deepmerge";
@@ -372,7 +372,7 @@ export class Cmi5 {
 
   private sendCmi5DefinedStatement(statement: Partial<Statement>): Promise<string[]> {
     // 9.4 Object - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#94-object
-    const object: Object = {
+    const object: StatementObject = {
       objectType: "Activity",
       id: this.launchParameters.activityId
     };
