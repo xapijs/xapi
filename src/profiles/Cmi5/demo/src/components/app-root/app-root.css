@@ -24,7 +24,8 @@ main {
   padding: 10px;
 }
 
-button {
+button,
+input[type="submit"] {
   background: #5851ff;
   color: white;
   margin: 8px;
@@ -41,12 +42,14 @@ button {
   cursor: pointer;
 }
   
-button:hover:not([disabled]) {
+button:hover:not(:disabled),
+input[type="submit"]:hover:not(:disabled) {
   box-shadow: 0 3px 6px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.1);
   transform: translateY(1px);
 }
 
-button[disabled] {
+button:disabled,
+input[type="submit"]:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

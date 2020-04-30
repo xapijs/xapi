@@ -6,8 +6,14 @@ import { Cmi5 } from "xapi-js";
   styleUrl: "app-root.css"
 })
 export class AppRoot {
-  cmi5: Cmi5 = new Cmi5();
   @State() initialized: boolean = false;
+  choices = {
+    choice1: false,
+    choice2: false,
+    choice3: false,
+    choice4: false
+  };
+  cmi5: Cmi5 = new Cmi5();
 
   initialize() {
     this.cmi5.initialize().then(() => {
@@ -58,6 +64,42 @@ export class AppRoot {
     })
   }
 
+  interactionChoice(event: Event) {
+    event.preventDefault();
+    this.cmi5.interactionChoice("test1", "first-two-choices", Object.keys(this.choices).filter((key) => {
+      return this.choices[key] === true;
+    }), ["choice1", "choice2"], [
+      {
+        id: "choice1",
+        description: {
+          "en-US": "Choice 1"
+        }
+      },
+      {
+        id: "choice2",
+        description: {
+          "en-US": "Choice 2"
+        }
+      },
+      {
+        id: "choice3",
+        description: {
+          "en-US": "Choice 3"
+        }
+      },
+      {
+        id: "choice4",
+        description: {
+          "en-US": "Choice 4"
+        }
+      }
+    ])
+  }
+
+  setChoice(key: string, value: boolean) {
+    this.choices[key] = value;
+  }
+
   /**
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    */
@@ -90,6 +132,15 @@ export class AppRoot {
           <p>Q1. In a boolean context, is <code>true</code> truthy?</p>
           <button onClick={() => this.interactionTrueFalse(true)} disabled={!this.initialized}>True (Correct)</button>
           <button onClick={() => this.interactionTrueFalse(false)} disabled={!this.initialized}>False (Incorrect)</button>
+          <h4>Choice</h4>
+          <p>Q2. What are the first two choices?</p>
+          <form onSubmit={(event) => this.interactionChoice(event)}>
+            <label><input type="checkbox" value="choice1" onInput={(event) => this.setChoice("choice1", (event.target as HTMLInputElement).checked)} />Choice 1</label>
+            <label><input type="checkbox" value="choice2" onInput={(event) => this.setChoice("choice2", (event.target as HTMLInputElement).checked)} />Choice 2</label>
+            <label><input type="checkbox" value="choice3" onInput={(event) => this.setChoice("choice3", (event.target as HTMLInputElement).checked)} />Choice 3</label>
+            <label><input type="checkbox" value="choice4" onInput={(event) => this.setChoice("choice4", (event.target as HTMLInputElement).checked)} />Choice 4</label>
+            <input type="submit" value="Submit" disabled={!this.initialized} />
+          </form>
         </main>
       </div>
     );

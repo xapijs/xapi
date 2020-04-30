@@ -6,7 +6,7 @@ interface BaseInteractionActivityDefinition extends ActivityDefinition {
   correctResponsesPattern: string[];
 }
 
-interface InteractionComponent {
+export interface InteractionComponent {
   id: string;
   description?: LanguageMap;
 }
