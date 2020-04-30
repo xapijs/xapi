@@ -62,7 +62,6 @@ export class AppRoot {
   }
 
   /**
-   * TODO: Move SCORMProfile cmi.interaction statements to XAPI/interfaces/Statement/
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    * TODO: Implement "Best Practice #16" - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
    */
