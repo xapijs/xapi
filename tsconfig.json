@@ -1,16 +1,11 @@
 {
   "compilerOptions": {
-    "declaration": true,
     "allowSyntheticDefaultImports": true,
-    "lib": [
-      "dom",
-      "es2015"
-    ],
     "moduleResolution": "node",
-    "module": "esnext",
-    "target": "es2017",
-    "outDir": "./dist"
-
+    "target": "es2015",
+    "module": "es2015",
+    "declarationDir": "./dist/types",
+    "declaration": true
   },
   "include": [
     "src"
