@@ -13,6 +13,7 @@ export class AppRoot {
     choice3: false,
     choice4: false
   };
+  fillIn: string = "";
   cmi5: Cmi5 = new Cmi5();
 
   initialize() {
@@ -93,11 +94,28 @@ export class AppRoot {
           "en-US": "Choice 4"
         }
       }
-    ])
+    ], {
+      "en-US": "First Two Choices"
+    }, {
+      "en-US": "What are the first two choices?"
+    })
   }
 
   setChoice(key: string, value: boolean) {
     this.choices[key] = value;
+  }
+
+  interactionFillIn(event: Event) {
+    event.preventDefault();
+    this.cmi5.interactionFillIn("test1", "hello", this.fillIn, "World", {
+      "en-US": "Hello"
+    }, {
+      "en-US": "Hello?"
+    });
+  }
+
+  setFillIn(value: string) {
+    this.fillIn = value;
   }
 
   /**
@@ -139,6 +157,12 @@ export class AppRoot {
             <label><input type="checkbox" value="choice2" onInput={(event) => this.setChoice("choice2", (event.target as HTMLInputElement).checked)} />Choice 2</label>
             <label><input type="checkbox" value="choice3" onInput={(event) => this.setChoice("choice3", (event.target as HTMLInputElement).checked)} />Choice 3</label>
             <label><input type="checkbox" value="choice4" onInput={(event) => this.setChoice("choice4", (event.target as HTMLInputElement).checked)} />Choice 4</label>
+            <input type="submit" value="Submit" disabled={!this.initialized} />
+          </form>
+          <h4>Fill In</h4>
+          <p>Q3. Hello?</p>
+          <form onSubmit={(event) => this.interactionFillIn(event)}>
+            <label><input type="text" onInput={(event) => this.setFillIn((event.target as HTMLInputElement).value)} /></label>
             <input type="submit" value="Submit" disabled={!this.initialized} />
           </form>
         </main>

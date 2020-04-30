@@ -232,14 +232,17 @@ export class Cmi5 {
     });
   }
 
-  // public interactionFillIn(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "fill-in",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
-  //   });
-  // }
+  public interactionFillIn(testId: string, questionId: string, answer: string, correctAnswer: string, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+    return this.interaction(testId, questionId, answer.toString(), {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "fill-in",
+      correctResponsesPattern: [
+        correctAnswer
+      ],
+      ...(name? {name}: {}),
+      ...(description? {description}: {})
+    });
+  }
 
   // public interactionLongFillIn(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
