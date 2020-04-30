@@ -1,9 +1,9 @@
-import { Actor, Verb, Object, Result, Context } from ".";
+import { Actor, Verb, StatementObject, Result, Context } from ".";
 
 export interface Statement {
   actor: Actor;
   verb: Verb;
-  object: Object;
+  object: StatementObject;
   result?: Result;
   context?: Context;
   timestamp?: string;

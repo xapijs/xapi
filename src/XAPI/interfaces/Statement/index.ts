@@ -4,7 +4,7 @@ export * from "./Context";
 export * from "./ContextActivity";
 export * from "./Extensions";
 export * from "./LanguageMap";
-export * from "./Object";
+export * from "./StatementObject";
 export * from "./Result";
 export * from "./RFC5646LanguageCodes";
 export * from "./Statement";
