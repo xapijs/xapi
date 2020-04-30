@@ -132,6 +132,8 @@ export class Cmi5 {
     });
   }
 
+  // TODO: Best Practice #4 - AU Mastery Score - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
+
   public pass(score?: ResultScore): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
     if (this.launchData.launchMode !== "Normal") return Promise.reject();
@@ -243,6 +245,7 @@ export class Cmi5 {
       ...(description? {description}: {})
     });
   }
+  // TODO: Finish writing interaction methods
 
   // public interactionLongFillIn(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
