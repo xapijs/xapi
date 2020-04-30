@@ -72,5 +72,11 @@ export class Verbs {
     display: {
       "en-US": "progressed"
     }
-  }
+  };
+  public static readonly ANSWERED: Verb = {
+    id: "http://adlnet.gov/expapi/verbs/answered",
+    display: {
+      "en-US": "answered"
+    }
+  };
 }
