@@ -15,8 +15,8 @@ npm install xapi-js
 ## Usage
 This library has been developed with both opinionated and unopinionated approaches to xAPI.
 
-To construct statements manually with full control, use the [xAPI Wrapper](/src/XAPI/README.md).
+To construct statements manually with full control, use the [xAPI](/src/XAPI/README.md) wrapper.
 
 To send off premade statements based off a profile, use the corresponding profile. Profiles currently supported:
+- [cmi5](src/profiles/Cmi5/Cmi5.ts)
 - [xAPI SCORM Profile (WIP)](/src/profiles/SCORMProfile/README.md)
-- cmi5 (WIP)
