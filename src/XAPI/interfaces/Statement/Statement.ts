@@ -10,4 +10,5 @@ export interface Statement {
   stored?: string;
   authority?: Actor;
   id?: string;
+  // TODO: Attachments - https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md#2411-attachments
 }
