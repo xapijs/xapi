@@ -249,7 +249,7 @@ export class AppRoot {
     ], {
       "en-US": "T-Rex Runner"
     }, {
-      "en-US": "The Chromium T-Rex Runner game"
+      "en-US": "Get a score of minimum 100 on T-Rex Runner"
     }, {
       start: this.gameStart,
       end: new Date()
@@ -351,7 +351,7 @@ export class AppRoot {
             </div>
           </form>
           <h5>Performance</h5>
-          <p>Q7. Get a score of minimum 200</p>
+          <p>Q7. Get a score of minimum 100 on T-Rex Runner</p>
           <game-trex-runner></game-trex-runner>
         </main>
       </div>
