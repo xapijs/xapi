@@ -1,7 +1,14 @@
 import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces";
 import { Statement, Actor, Agent } from "./interfaces/Statement";
-import { Verbs, Endpoint } from "./constants";
+import { Verbs } from "./constants";
 import { getSearchQueryParamsAsObject } from "../lib/getSearchQueryParamsAsObject";
+
+enum Endpoint {
+  ACTIVITY_STATE = "activities/state",
+  ACTIVITY_PROFILE = "activities/profile",
+  AGENT_PROFILE = "agents/profile",
+  STATEMENTS = "statements"
+}
 
 export class XAPI {
   private endpoint: string;

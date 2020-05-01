@@ -2,7 +2,7 @@
   "name": "xapi-js",
   "version": "0.0.3",
   "description": "An XAPI JS library for communicating with an LRS.",
-  "//main": "dist/xapi-js.umd.js",
+  "main": "dist/xapi-js.js",
   "module": "dist/xapi-js.esm.js",
   "typings": "dist/types/index.d.ts",
   "files": [

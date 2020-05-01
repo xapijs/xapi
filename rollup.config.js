@@ -21,11 +21,11 @@ export default {
     })
   ],
   output: [
-    // {
-    //   file: pkg.main,
-    //   format: "umd",
-    //   name: "xapijs"
-    // },
+    {
+      file: pkg.main,
+      format: "umd",
+      name: "xapijs"
+    },
     {
       file: pkg.module,
       format: "es"
