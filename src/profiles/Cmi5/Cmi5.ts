@@ -211,67 +211,82 @@ export class Cmi5 {
     });
   }
 
-  public interactionTrueFalse(testId: string, questionId: string, answer: boolean, correctAnswer: boolean, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+  public interactionTrueFalse(testId: string, questionId: string, answer: boolean, correctAnswer?: boolean, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
     return this.interaction(testId, questionId, answer.toString(), {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "true-false",
-      correctResponsesPattern: correctAnswer ? ["true"] : ["false"],
-      ...(name? {name}: {}),
-      ...(description? {description}: {})
+      ...(correctAnswer !== undefined ? {
+        correctResponsesPattern: correctAnswer ? ["true"] : ["false"]
+      }: {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
     });
   }
 
-  public interactionChoice(testId: string, questionId: string, answerIds: string[], correctAnswerIds: string[], choices: InteractionComponent[], name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+  public interactionChoice(testId: string, questionId: string, answerIds: string[], correctAnswerIds?: string[], choices?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
     return this.interaction(testId, questionId, answerIds.join("[,]"), {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "choice",
-      correctResponsesPattern: [
-        correctAnswerIds.join("[,]")
-      ],
-      choices: choices,
-      ...(name? {name}: {}),
-      ...(description? {description}: {})
+      ...(correctAnswerIds ? {
+        correctResponsesPattern: [
+          correctAnswerIds.join("[,]")
+        ]
+      } : {}),
+      ...(choices ? {choices} : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
     });
   }
 
-  public interactionFillIn(testId: string, questionId: string, answer: string, correctAnswer: string, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
-    return this.interaction(testId, questionId, answer.toString(), {
+  public interactionFillIn(testId: string, questionId: string, answers: string[], correctAnswers?: string[], name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+    return this.interaction(testId, questionId, answers.join("[,]"), {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "fill-in",
-      correctResponsesPattern: [
-        correctAnswer
-      ],
-      ...(name? {name}: {}),
-      ...(description? {description}: {})
+      ...(correctAnswers ? {
+        correctResponsesPattern: [
+          correctAnswers.join("[,]")
+        ]
+      } : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
     });
   }
-  // TODO: Finish writing interaction methods
 
-  // public interactionLongFillIn(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "long-fill-in",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
+  public interactionLongFillIn(testId: string, questionId: string, answers: string[], correctAnswers?: string[], name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+    return this.interaction(testId, questionId, answers.join("[,]"), {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "long-fill-in",
+      ...(correctAnswers ? {
+        correctResponsesPattern: [
+          correctAnswers.join("[,]")
+        ]
+      } : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
+    });
+  }
 
-  //   });
-  // }
-
-  // public interactionLikert(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "likert",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
-  //   });
-  // }
+  public interactionLikert(testId: string, questionId: string, answerId: string, correctAnswerId?: string, scale?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+    return this.interaction(testId, questionId, answerId, {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "likert",
+      ...(correctAnswerId ? {
+        correctResponsesPattern: [
+          correctAnswerId
+        ]
+      } : {}),
+      ...(scale ? {scale} : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
+    });
+  }
 
   // public interactionMatching(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "matching",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
+  //     ...(name ? {name} : {}),
+  //     ...(description ? {description} : {})
   //   });
   // }
 
@@ -279,8 +294,8 @@ export class Cmi5 {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "performance",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
+  //     ...(name ? {name} : {}),
+  //     ...(description ? {description} : {})
   //   });
   // }
 
@@ -288,8 +303,8 @@ export class Cmi5 {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "sequencing",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
+  //     ...(name ? {name} : {}),
+  //     ...(description ? {description} : {})
   //   });
   // }
 
@@ -297,8 +312,8 @@ export class Cmi5 {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "numeric",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
+  //     ...(name ? {name} : {}),
+  //     ...(description ? {description} : {})
   //   });
   // }
 
@@ -306,11 +321,12 @@ export class Cmi5 {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "other",
-  //     ...(name? {name}: {}),
-  //     ...(description? {description}: {})
+  //     ...(name ? {name} : {}),
+  //     ...(description ? {description} : {})
   //   });
   // }
 
+  // TODO: Pass duration as optional in result
   public interaction(testId: string, questionId: string, response: string, interactionDefinition: InteractionActivityDefinition/*, objectiveId?: string*/): Promise<string[]> {
     return this.sendCmi5AllowedStatement({
       verb: Verbs.ANSWERED,

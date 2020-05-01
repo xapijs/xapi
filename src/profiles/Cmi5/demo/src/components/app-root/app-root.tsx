@@ -14,6 +14,8 @@ export class AppRoot {
     choice4: false
   };
   fillIn: string = "";
+  longFillIn: string = "";
+  @State() likert: string;
   cmi5: Cmi5 = new Cmi5();
 
   initialize() {
@@ -107,7 +109,7 @@ export class AppRoot {
 
   interactionFillIn(event: Event) {
     event.preventDefault();
-    this.cmi5.interactionFillIn("test1", "hello", this.fillIn, "World", {
+    this.cmi5.interactionFillIn("test1", "hello", [this.fillIn], ["World"], {
       "en-US": "Hello"
     }, {
       "en-US": "Hello?"
@@ -116,6 +118,63 @@ export class AppRoot {
 
   setFillIn(value: string) {
     this.fillIn = value;
+  }
+
+  interactionLongFillIn(event: Event) {
+    event.preventDefault();
+    this.cmi5.interactionLongFillIn("test1", "hello-long", [this.longFillIn], ["World"], {
+      "en-US": "Hello (Long)"
+    }, {
+      "en-US": "Hello?"
+    });
+  }
+
+  setLongFillIn(value: string) {
+    this.longFillIn = value;
+  }
+
+  interactionLikert(event: Event) {
+    event.preventDefault();
+    this.cmi5.interactionLikert("test1", "highest-value", this.likert, "likert4", [
+      {
+        id: "likert0",
+        description: {
+          "en-US": "Very Unsatisfied"
+        }
+      },
+      {
+        id: "likert1",
+        description: {
+          "en-US": "Unsatisfied"
+        }
+      },
+      {
+        id: "likert2",
+        description: {
+          "en-US": "Neutral"
+        }
+      },
+      {
+        id: "likert3",
+        description: {
+          "en-US": "Satisfied"
+        }
+      },
+      {
+        id: "likert4",
+        description: {
+          "en-US": "Very Satisfied"
+        }
+      }
+    ], {
+      "en-US": "Highest Value"
+    }, {
+      "en-US": "What is the highest value on this scale?"
+    });
+  }
+
+  setLikert(value: string) {
+    this.likert = value;
   }
 
   /**
@@ -164,6 +223,24 @@ export class AppRoot {
           <form onSubmit={(event) => this.interactionFillIn(event)}>
             <label><input type="text" onInput={(event) => this.setFillIn((event.target as HTMLInputElement).value)} /></label>
             <input type="submit" value="Submit" disabled={!this.initialized} />
+          </form>
+          <h4>Long Fill In</h4>
+          <p>Q4. Hello?</p>
+          <form onSubmit={(event) => this.interactionLongFillIn(event)}>
+            <label><textarea onInput={(event) => this.setLongFillIn((event.target as HTMLTextAreaElement).value)}></textarea></label>
+            <input type="submit" value="Submit" disabled={!this.initialized} />
+          </form>
+          <h4>Likert</h4>
+          <p>Q5. What is the highest value on this scale?</p>
+          <form onSubmit={() => this.interactionLikert(event)}>
+            <ul>
+              <li><label><input type="radio" name="likert" value="likert0" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Very Unsatisfied</label></li>
+              <li><label><input type="radio" name="likert" value="likert1" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Unsatisfied</label></li>
+              <li><label><input type="radio" name="likert" value="likert2" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Neutral</label></li>
+              <li><label><input type="radio" name="likert" value="likert3" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Satisfied</label></li>
+              <li><label><input type="radio" name="likert" value="likert4" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Very Satisfied</label></li>
+            </ul>
+            <input type="submit" value="Submit" disabled={!this.initialized || !this.likert} />
           </form>
         </main>
       </div>
