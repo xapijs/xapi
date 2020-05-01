@@ -3,7 +3,7 @@ import { LanguageMap } from "../..";
 
 interface BaseInteractionActivityDefinition extends ActivityDefinition {
   type: "http://adlnet.gov/expapi/activities/cmi.interaction";
-  correctResponsesPattern: string[];
+  correctResponsesPattern?: string[];
 }
 
 export interface InteractionComponent {
@@ -13,12 +13,12 @@ export interface InteractionComponent {
 
 interface TrueFalseInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "true-false";
-  correctResponsesPattern: ["true"] | ["false"];
+  correctResponsesPattern?: ["true"] | ["false"];
 }
 
 interface ChoiceInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "choice";
-  choices: InteractionComponent[];
+  choices?: InteractionComponent[];
 }
 
 interface FillInInteractionActivityDefinition extends BaseInteractionActivityDefinition {
@@ -31,23 +31,23 @@ interface LongFillInInteractionActivityDefinition extends BaseInteractionActivit
 
 interface LikertInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "likert";
-  scale: InteractionComponent[];
+  scale?: InteractionComponent[];
 }
 
 interface MatchingInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "matching";
-  source: InteractionComponent[];
-  target: InteractionComponent[];
+  source?: InteractionComponent[];
+  target?: InteractionComponent[];
 }
 
 interface PerformanceInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "performance";
-  steps: InteractionComponent[];
+  steps?: InteractionComponent[];
 }
 
 interface SequencingInteractionActivityDefinition extends BaseInteractionActivityDefinition {
   interactionType: "sequencing";
-  choices: InteractionComponent[];
+  choices?: InteractionComponent[];
 }
 
 interface NumericInteractionActivityDefinition extends BaseInteractionActivityDefinition {
