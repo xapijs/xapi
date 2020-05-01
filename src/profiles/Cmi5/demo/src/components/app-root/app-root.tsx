@@ -16,6 +16,10 @@ export class AppRoot {
   fillIn: string = "";
   longFillIn: string = "";
   @State() likert: string;
+  @State() matching = {
+    apple: "",
+    carrot: ""
+  };
   cmi5: Cmi5 = new Cmi5();
 
   initialize() {
@@ -177,6 +181,53 @@ export class AppRoot {
     this.likert = value;
   }
 
+  interactionMatching(event: Event) {
+    event.preventDefault();
+    this.cmi5.interactionMatching("test1", "food-groups", this.matching, {
+      apple: "fruit",
+      carrot: "vegetable"
+    }, [
+      {
+        id: "apple",
+        description: {
+          "en-US": "Apple"
+        }
+      },
+      {
+        id: "carrot",
+        description: {
+          "en-US": "Carrot"
+        }
+      }
+    ], [
+      {
+        id: "fruit",
+        description: {
+          "en-US": "Fruit"
+        }
+      },
+      {
+        id: "vegetable",
+        description: {
+          "en-US": "Vegetable"
+        }
+      }
+    ], {
+      "en-US": "Food Groups"
+    }, {
+      "en-US": "Match the food items to their groups."
+    });
+  }
+
+  setMatching(key: string, event: Event) {
+    const newResult = {};
+    newResult[key] = (event.target as HTMLSelectElement).value;
+    this.matching = {
+      ...this.matching,
+      ...newResult
+    };
+  }
+
   /**
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    */
@@ -232,7 +283,7 @@ export class AppRoot {
           </form>
           <h4>Likert</h4>
           <p>Q5. What is the highest value on this scale?</p>
-          <form onSubmit={() => this.interactionLikert(event)}>
+          <form onSubmit={(event) => this.interactionLikert(event)}>
             <ul>
               <li><label><input type="radio" name="likert" value="likert0" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Very Unsatisfied</label></li>
               <li><label><input type="radio" name="likert" value="likert1" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Unsatisfied</label></li>
@@ -241,6 +292,31 @@ export class AppRoot {
               <li><label><input type="radio" name="likert" value="likert4" onInput={(event) => this.setLikert((event.target as HTMLInputElement).value)} />Very Satisfied</label></li>
             </ul>
             <input type="submit" value="Submit" disabled={!this.initialized || !this.likert} />
+          </form>
+          <h4>Matching</h4>
+          <p>Q6. Match the food items to their groups</p>
+          <form onSubmit={(event) => this.interactionMatching(event)}>
+            <div>
+              <label>
+                Apple
+                <select onInput={(event) => this.setMatching("apple", event)}>
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="fruit">Fruit</option>
+                  <option value="vegetable">Vegetable</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Carrot
+              <select onInput={(event) => this.setMatching("carrot", event)}>
+                <option value="" disabled selected>Select an option</option>
+                <option value="fruit">Fruit</option>
+                <option value="vegetable">Vegetable</option>
+              </select>
+            </label>
+            <div>
+              <input type="submit" value="submit" disabled={!this.initialized || this.matching.apple === "" || this.matching.carrot === ""} />
+            </div>
           </form>
         </main>
       </div>
