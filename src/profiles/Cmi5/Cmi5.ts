@@ -281,14 +281,25 @@ export class Cmi5 {
     });
   }
 
-  // public interactionMatching(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "matching",
-  //     ...(name ? {name} : {}),
-  //     ...(description ? {description} : {})
-  //   });
-  // }
+  public interactionMatching(testId: string, questionId: string, answers: {[sourceId: string]: string}, correctAnswers?: {[sourceId: string]: string}, source?: InteractionComponent[], target?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
+    return this.interaction(testId, questionId, Object.keys(answers).map((key) => {
+      return `${key}[.]${answers[key]}`;
+    }).join("[,]"), {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "matching",
+      ...(correctAnswers ? {
+        correctResponsesPattern: [
+          Object.keys(correctAnswers).map((key) => {
+            return `${key}[.]${correctAnswers[key]}`;
+          }).join("[,]")
+        ]
+      } : {}),
+      ...(source ? {source} : {}),
+      ...(target ? {target} : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
+    });
+  }
 
   // public interactionPerformance(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
