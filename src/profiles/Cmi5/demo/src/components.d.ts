@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AppRoot {
     }
+    interface GameTrexRunner {
+    }
 }
 declare global {
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
@@ -16,15 +18,27 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLGameTrexRunnerElement extends Components.GameTrexRunner, HTMLStencilElement {
+    }
+    var HTMLGameTrexRunnerElement: {
+        prototype: HTMLGameTrexRunnerElement;
+        new (): HTMLGameTrexRunnerElement;
+    };
     interface HTMLElementTagNameMap {
         "app-root": HTMLAppRootElement;
+        "game-trex-runner": HTMLGameTrexRunnerElement;
     }
 }
 declare namespace LocalJSX {
     interface AppRoot {
     }
+    interface GameTrexRunner {
+        "onGameScore"?: (event: CustomEvent<any>) => void;
+        "onGameStart"?: (event: CustomEvent<any>) => void;
+    }
     interface IntrinsicElements {
         "app-root": AppRoot;
+        "game-trex-runner": GameTrexRunner;
     }
 }
 export { LocalJSX as JSX };
@@ -32,6 +46,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "game-trex-runner": LocalJSX.GameTrexRunner & JSXBase.HTMLAttributes<HTMLGameTrexRunnerElement>;
         }
     }
 }

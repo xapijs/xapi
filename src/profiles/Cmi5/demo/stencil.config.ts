@@ -11,8 +11,15 @@ export const config: Config = {
       copy: [
         {
           src: "cmi5.xml",
-
           warn: true
+        },
+        {
+          src: "components/game-trex-runner/images",
+          dest: "images"
+        },
+        {
+          src: "components/game-trex-runner/sounds",
+          dest: "sounds"
         }
       ]
     }

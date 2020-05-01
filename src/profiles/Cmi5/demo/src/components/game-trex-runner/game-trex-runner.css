@@ -1,0 +1,8 @@
+.interstitial-wrapper {
+  width: 600px;
+  height: 150px;
+}
+
+#offline-resources {
+  display: none;
+}

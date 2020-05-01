@@ -35,6 +35,24 @@ interface Period {
   start: Date;
   end: Date;
 }
+interface PerformanceCriteriaBase {
+  id: string;
+}
+
+interface PerformanceCriteriaRange extends PerformanceCriteriaBase {
+  min?: number;
+  max?: number;
+}
+
+interface PerformanceCriteriaExact extends PerformanceCriteriaBase {
+  exact?: number;
+}
+
+type PerformanceCriteria = PerformanceCriteriaBase | PerformanceCriteriaRange | PerformanceCriteriaExact;
+
+interface Performance {
+  [id: string]: number;
+}
 
 // 9.3 Verbs - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#93-verbs
 class Cmi5DefinedVerbs {
@@ -306,14 +324,27 @@ export class Cmi5 {
     }, duration);
   }
 
-  // public interactionPerformance(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "performance",
-  //     ...(name ? {name} : {}),
-  //     ...(description ? {description} : {})
-  //   }, duration);
-  // }
+  public interactionPerformance(testId: string, questionId: string, answers: Performance, correctAnswers?: PerformanceCriteria[], steps?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+    return this.interaction(testId, questionId, Object.keys(answers).map(key => {
+      return `${key}[.]${answers[key]}`;
+    }).join("[,]"), {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "performance",
+      ...(correctAnswers ? {
+        correctResponsesPattern: [
+          Object.keys(correctAnswers).map((key) => {
+            const exact: string = correctAnswers[key].exact ? correctAnswers[key].exact.toString() : "";
+            const min: string = correctAnswers[key].min ? correctAnswers[key].min.toString() : "";
+            const max: number = correctAnswers[key].max ? correctAnswers[key].max.toString() : "";
+            return `${key}[.]${exact ? exact : (min + ":" + max)}`;
+          }).join("[,]")
+        ]
+      } : {}),
+      ...(steps ? {steps} : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
+    }, duration);
+  }
 
   // public interactionSequencing(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {

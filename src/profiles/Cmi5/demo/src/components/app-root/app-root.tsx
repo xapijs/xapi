@@ -1,4 +1,4 @@
-import { Component, h, State } from "@stencil/core";
+import { Component, h, State, Listen } from "@stencil/core";
 import { Cmi5 } from "xapi-js";
 
 @Component({
@@ -20,6 +20,7 @@ export class AppRoot {
     apple: "",
     carrot: ""
   };
+  gameStart: Date;
   cmi5: Cmi5 = new Cmi5();
 
   initialize() {
@@ -228,6 +229,37 @@ export class AppRoot {
     };
   }
 
+  @Listen("gameScore") interactionPerformance(event: CustomEvent) {
+    const score: number = event.detail;
+    if (!this.initialized) return;
+    this.cmi5.interactionPerformance("test1", "trex-runner", {
+      distance: score
+    }, [
+      {
+        id: "distance",
+        min: 100
+      }
+    ], [
+      {
+        id: "distance",
+        description: {
+          "en-US": "Running Distance"
+        }
+      }
+    ], {
+      "en-US": "T-Rex Runner"
+    }, {
+      "en-US": "The Chromium T-Rex Runner game"
+    }, {
+      start: this.gameStart,
+      end: new Date()
+    })
+  }
+
+  @Listen("gameStart") startHandler() {
+    this.gameStart = new Date();
+  }
+
   /**
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    */
@@ -318,6 +350,9 @@ export class AppRoot {
               <input type="submit" value="submit" disabled={!this.initialized || this.matching.apple === "" || this.matching.carrot === ""} />
             </div>
           </form>
+          <h5>Performance</h5>
+          <p>Q7. Get a score of minimum 200</p>
+          <game-trex-runner></game-trex-runner>
         </main>
       </div>
     );
