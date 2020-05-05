@@ -8,7 +8,7 @@
       <langstring lang="en-US">An example course using the XAPI JS library.</langstring>
     </description>
   </course>
-  <au id="https://github.com/CookieCookson/xAPI-JS/src/profiles/cmi5/demo" moveOn="Completed">
+  <au id="https://github.com/CookieCookson/xAPI-JS/src/profiles/cmi5/demo" moveOn="CompletedAndPassed" masteryScore="1.0">
     <title>
       <langstring lang="en-US">XAPI JS cmi5 Demo</langstring>
     </title>

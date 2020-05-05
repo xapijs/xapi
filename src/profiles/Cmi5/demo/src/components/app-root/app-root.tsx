@@ -34,7 +34,9 @@ export class AppRoot {
   }
 
   pass() {
-    this.cmi5.pass();
+    this.cmi5.pass({
+      scaled: 1
+    });
   }
 
   fail() {
