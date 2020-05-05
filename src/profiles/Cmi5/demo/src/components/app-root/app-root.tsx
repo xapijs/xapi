@@ -37,6 +37,25 @@ export class AppRoot {
   gameStart: Date;
   cmi5: Cmi5 = new Cmi5();
 
+  exit() {
+    location.href = this.cmi5.getLaunchData().returnURL;
+  }
+
+  getLaunchParameters() {
+    const launchParameters = this.cmi5.getLaunchParameters();
+    console.log(launchParameters);
+  }
+
+  getLaunchData() {
+    const launchData = this.cmi5.getLaunchData();
+    console.log(launchData);
+  }
+
+  getLearnerPreferences() {
+    const learnerPreferences = this.cmi5.getLearnerPreferences();
+    console.log(learnerPreferences);
+  }
+
   initialize() {
     this.cmi5.initialize().then(() => {
       this.initialized = true;
@@ -59,21 +78,6 @@ export class AppRoot {
 
   terminate() {
     this.cmi5.terminate();
-  }
-
-  getLaunchParameters() {
-    const launchParameters = this.cmi5.getLaunchParameters();
-    console.log(launchParameters);
-  }
-
-  getLaunchData() {
-    const launchData = this.cmi5.getLaunchData();
-    console.log(launchData);
-  }
-
-  getLearnerPreferences() {
-    const learnerPreferences = this.cmi5.getLearnerPreferences();
-    console.log(learnerPreferences);
   }
 
   progress(percent: number) {
@@ -280,11 +284,11 @@ export class AppRoot {
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    */
 
-   passObjective() {
-     this.cmi5.pass({
-       scaled: 1
-     }, testObjective)
-   }
+  passObjective() {
+    this.cmi5.pass({
+      scaled: 1
+    }, testObjective)
+  }
 
   interactionTrueFalseObjective(answer: boolean) {
     this.cmi5.interactionTrueFalse("test1", "is-true-true", answer, true, {
@@ -302,6 +306,7 @@ export class AppRoot {
         </header>
 
         <main>
+          <button onClick={() => this.exit()} disabled={!this.initialized}>Exit</button>
           <h2>Getters</h2>
           <button onClick={() => this.getLaunchParameters()}>Get Launch Parameters</button>
           <button onClick={() => this.getLaunchData()} disabled={!this.initialized}>Get Launch Data</button>
