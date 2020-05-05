@@ -2,6 +2,8 @@ import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, Stateme
 import { Statement, Actor, Agent } from "./interfaces/Statement";
 import { Verbs } from "./constants";
 import { getSearchQueryParamsAsObject } from "../lib/getSearchQueryParamsAsObject";
+import { parseMultiPart, createMultiPart, MultiPart } from "../lib/multiPart";
+import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
 
 enum Endpoint {
   ACTIVITY_STATE = "activities/state",
@@ -11,22 +13,23 @@ enum Endpoint {
 }
 
 export class XAPI {
-  private endpoint: string;
-  private headers: Headers;
+  private axiosInstance: AxiosInstance;
 
   public constructor(endpoint: string, auth: string) {
-    this.endpoint = endpoint;
-    const headers: Headers = new Headers();
-    headers.append("X-Experience-API-Version", "1.0.0");
-    headers.append("Content-Type", "application/json");
-    if (auth) {
-      headers.append("Authorization", auth);
-    }
-    this.headers = headers;
+    const headers: {[key: string]: string} = {
+      "X-Experience-API-Version": "1.0.0",
+      "Content-Type": "application/json",
+      ...(auth ? { Authorization : auth } : {})
+    };
+    this.axiosInstance = axios.create({
+      baseURL: endpoint,
+      headers: headers,
+      responseType: "text"
+    });
   }
 
   // Statements API
-  public getStatement(query: GetStatementQuery): Promise<Statement> {
+  public getStatement(query: GetStatementQuery): Promise<Statement | (Statement | Blob)[]> {
     return this.request(Endpoint.STATEMENTS, query);
   }
 
@@ -43,11 +46,20 @@ export class XAPI {
     return this.request(Endpoint.STATEMENTS, params);
   }
 
-  public sendStatement(statement: Statement): Promise<string[]> {
-    return this.request(Endpoint.STATEMENTS, {}, {
-      method: "POST",
-      body: JSON.stringify(statement)
-    });
+  public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
+    if (attachments?.length) {
+      const multiPart: MultiPart = createMultiPart(statement, attachments);
+      return this.request(Endpoint.STATEMENTS, {}, {
+        method: "POST",
+        headers: multiPart.header,
+        data: multiPart.blob
+      });
+    } else {
+        return this.request(Endpoint.STATEMENTS, {}, {
+        method: "POST",
+        data: statement
+      });
+    }
   }
 
   public voidStatement(actor: Actor, statementId: string): Promise<string[]> {
@@ -61,7 +73,7 @@ export class XAPI {
     };
     return this.request(Endpoint.STATEMENTS, {}, {
       method: "POST",
-      body: JSON.stringify(voidStatement)
+      data: voidStatement
     });
   }
 
@@ -76,7 +88,7 @@ export class XAPI {
       } : {})
     }, {
       method: "POST",
-      body: JSON.stringify(state)
+      data: state
     });
   }
 
@@ -90,7 +102,7 @@ export class XAPI {
       } : {})
     }, {
       method: "PUT",
-      body: JSON.stringify(state)
+      data: state
     });
   }
 
@@ -135,7 +147,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "POST",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -145,7 +157,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "PUT",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -178,7 +190,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "POST",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -188,7 +200,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "PUT",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -214,22 +226,22 @@ export class XAPI {
     });
   }
 
-  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
+  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: AxiosRequestConfig | undefined): any {
     const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
-    const request: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
-    return fetch(request, {
-      headers: this.headers,
+    const request: RequestInfo = `${path}${queryString ? "?" + queryString : ""}`;
+    const config: AxiosRequestConfig = {
+      url: request,
       ...init
-    }).then(response => {
-      if (response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          return response.json();
+    };
+    return this.axiosInstance.request(config).then((response) => {
+      if (response.status >= 200 && response.status < 400) {
+        if (typeof response.data === "string" && response.data.indexOf("--") === 2) {
+          return parseMultiPart(response.data);
         } else {
-          return response.text();
+          return response.data;
         }
       } else {
-        return response.text().then(error => Promise.reject(error));
+        return Promise.reject(response.data);
       }
     });
   }

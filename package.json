@@ -47,6 +47,7 @@
     "babel-jest": "^25.2.4",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cross-fetch": "^3.0.4",
+    "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "jest": "^25.2.4",
@@ -56,6 +57,7 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "deepmerge": "^4.2.2"
   }
 }
