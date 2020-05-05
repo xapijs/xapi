@@ -155,11 +155,11 @@ export class Cmi5 {
     });
   }
 
-  // TODO: Best Practice #4 - AU Mastery Score - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
-
   public pass(score?: ResultScore): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
     if (this.launchData.launchMode !== "Normal") return Promise.reject();
+    // Best Practice #4 - AU Mastery Score - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
+    if (this.launchData.masteryScore && score.scaled < this.launchData.masteryScore) return Promise.reject("Learner has not met Mastery Score");
     return this.sendCmi5DefinedStatement({
       // 9.3.4 Passed - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#934-passed
       verb: Cmi5DefinedVerbs.PASSED,
@@ -177,7 +177,12 @@ export class Cmi5 {
             // 9.6.2.2 moveOn Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9622-moveon-category-activity
             Cmi5ContextActivity.MOVE_ON
           ]
-        }
+        },
+        ...(this.launchData.masteryScore ? {
+          extensions: {
+            "https://w3id.org/xapi/cmi5/context/extensions/masteryscore": this.launchData.masteryScore
+          }
+        } : {})
       }
     });
   }
@@ -202,7 +207,12 @@ export class Cmi5 {
             // 9.6.2.2 moveOn Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9622-moveon-category-activity
             Cmi5ContextActivity.MOVE_ON
           ]
-        }
+        },
+        ...(this.launchData.masteryScore ? {
+          extensions: {
+            "https://w3id.org/xapi/cmi5/context/extensions/masteryscore": this.launchData.masteryScore
+          }
+        } : {})
       }
     });
   }
