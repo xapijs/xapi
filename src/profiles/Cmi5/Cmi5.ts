@@ -1,4 +1,4 @@
-import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, StatementObject, InteractionActivityDefinition, LanguageMap, InteractionComponent } from "../../XAPI";
+import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, StatementObject, InteractionActivityDefinition, LanguageMap, InteractionComponent, ObjectiveActivity } from "../../XAPI";
 import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
 import { default as deepmerge } from "deepmerge";
@@ -155,7 +155,7 @@ export class Cmi5 {
     });
   }
 
-  public pass(score?: ResultScore): Promise<string[]> {
+  public pass(score?: ResultScore, objective?: ObjectiveActivity): Promise<string[]> {
     // 10.0 xAPI State Data Model - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#100-xapi-state-data-model
     if (this.launchData.launchMode !== "Normal") return Promise.reject();
     // Best Practice #4 - AU Mastery Score - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
@@ -176,7 +176,13 @@ export class Cmi5 {
           category: [
             // 9.6.2.2 moveOn Category Activity - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#9622-moveon-category-activity
             Cmi5ContextActivity.MOVE_ON
-          ]
+          ],
+          // Best Practice #1 - Use of Objectives - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
+          ...(objective ? {
+            parent: [
+              objective
+            ]
+          } : {})
         },
         ...(this.launchData.masteryScore ? {
           extensions: {
@@ -244,7 +250,7 @@ export class Cmi5 {
     });
   }
 
-  public interactionTrueFalse(testId: string, questionId: string, answer: boolean, correctAnswer?: boolean, name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  public interactionTrueFalse(testId: string, questionId: string, answer: boolean, correctAnswer?: boolean, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.interaction(testId, questionId, answer.toString(), {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "true-false",
@@ -253,10 +259,10 @@ export class Cmi5 {
       }: {}),
       ...(name ? {name} : {}),
       ...(description ? {description} : {})
-    }, duration);
+    }, duration, objective);
   }
 
-  public interactionChoice(testId: string, questionId: string, answerIds: string[], correctAnswerIds?: string[], choices?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  public interactionChoice(testId: string, questionId: string, answerIds: string[], correctAnswerIds?: string[], choices?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.interaction(testId, questionId, answerIds.join("[,]"), {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "choice",
@@ -268,10 +274,10 @@ export class Cmi5 {
       ...(choices ? {choices} : {}),
       ...(name ? {name} : {}),
       ...(description ? {description} : {})
-    }, duration);
+    }, duration, objective);
   }
 
-  public interactionFillIn(testId: string, questionId: string, answers: string[], correctAnswers?: string[], name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  public interactionFillIn(testId: string, questionId: string, answers: string[], correctAnswers?: string[], name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.interaction(testId, questionId, answers.join("[,]"), {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "fill-in",
@@ -282,10 +288,10 @@ export class Cmi5 {
       } : {}),
       ...(name ? {name} : {}),
       ...(description ? {description} : {})
-    }, duration);
+    }, duration, objective);
   }
 
-  public interactionLongFillIn(testId: string, questionId: string, answers: string[], correctAnswers?: string[], name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  public interactionLongFillIn(testId: string, questionId: string, answers: string[], correctAnswers?: string[], name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.interaction(testId, questionId, answers.join("[,]"), {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "long-fill-in",
@@ -296,10 +302,10 @@ export class Cmi5 {
       } : {}),
       ...(name ? {name} : {}),
       ...(description ? {description} : {})
-    }, duration);
+    }, duration, objective);
   }
 
-  public interactionLikert(testId: string, questionId: string, answerId: string, correctAnswerId?: string, scale?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  public interactionLikert(testId: string, questionId: string, answerId: string, correctAnswerId?: string, scale?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.interaction(testId, questionId, answerId, {
       type: "http://adlnet.gov/expapi/activities/cmi.interaction",
       interactionType: "likert",
@@ -311,10 +317,10 @@ export class Cmi5 {
       ...(scale ? {scale} : {}),
       ...(name ? {name} : {}),
       ...(description ? {description} : {})
-    }, duration);
+    }, duration, objective);
   }
 
-  public interactionMatching(testId: string, questionId: string, answers: {[sourceId: string]: string}, correctAnswers?: {[sourceId: string]: string}, source?: InteractionComponent[], target?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  public interactionMatching(testId: string, questionId: string, answers: {[sourceId: string]: string}, correctAnswers?: {[sourceId: string]: string}, source?: InteractionComponent[], target?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.interaction(testId, questionId, Object.keys(answers).map((key) => {
       return `${key}[.]${answers[key]}`;
     }).join("[,]"), {
@@ -331,10 +337,10 @@ export class Cmi5 {
       ...(target ? {target} : {}),
       ...(name ? {name} : {}),
       ...(description ? {description} : {})
-    }, duration);
+    }, duration, objective);
   }
 
-  public interactionPerformance(testId: string, questionId: string, answers: Performance, correctAnswers?: PerformanceCriteria[], steps?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  public interactionPerformance(testId: string, questionId: string, answers: Performance, correctAnswers?: PerformanceCriteria[], steps?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.interaction(testId, questionId, Object.keys(answers).map(key => {
       return `${key}[.]${answers[key]}`;
     }).join("[,]"), {
@@ -353,37 +359,37 @@ export class Cmi5 {
       ...(steps ? {steps} : {}),
       ...(name ? {name} : {}),
       ...(description ? {description} : {})
-    }, duration);
+    }, duration, objective);
   }
 
-  // public interactionSequencing(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  // public interactionSequencing(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "sequencing",
   //     ...(name ? {name} : {}),
   //     ...(description ? {description} : {})
-  //   }, duration);
+  //   }, duration, objective);
   // }
 
-  // public interactionNumeric(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  // public interactionNumeric(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "numeric",
   //     ...(name ? {name} : {}),
   //     ...(description ? {description} : {})
-  //   }, duration);
+  //   }, duration, objective);
   // }
 
-  // public interactionOther(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period): Promise<string[]> {
+  // public interactionOther(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
   //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
   //     interactionType: "other",
   //     ...(name ? {name} : {}),
   //     ...(description ? {description} : {})
-  //   }, duration);
+  //   }, duration, objective);
   // }
 
-  public interaction(testId: string, questionId: string, response: string, interactionDefinition: InteractionActivityDefinition, duration?: Period/*, objectiveId?: string*/): Promise<string[]> {
+  public interaction(testId: string, questionId: string, response: string, interactionDefinition: InteractionActivityDefinition, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.sendCmi5AllowedStatement({
       verb: Verbs.ANSWERED,
       result: {
@@ -398,22 +404,14 @@ export class Cmi5 {
         id: `${this.launchParameters.activityId}/test/${testId}/question/${questionId}`,
         definition: interactionDefinition
       },
-      // context: {
-      //   contextActivities: {
-      //     parent: [
-            // TODO: Best Practice #1 - Use of Objectives - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
-            // {
-            // objectType: "Activity",
-            // id: `${this.launchParameters.activityId}/objectives/${objectiveId}`,
-            // definition: {
-            //   type: "http://adlnet.gov/expapi/activities/objective",
-            //   name: {
-            //     "en-US": "Shuttle Names"
-            //   }
-            // }
-      //     ]
-      //   }
-      // }
+      // Best Practice #1 - Use of Objectives - https://aicc.github.io/CMI-5_Spec_Current/best_practices/
+      ...(objective ? {context: {
+        contextActivities: {
+          parent: [
+            objective
+          ]
+        }
+      }} : {})
     });
   }
 
