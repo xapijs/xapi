@@ -1,5 +1,19 @@
 import { Component, h, State, Listen } from "@stencil/core";
-import { Cmi5 } from "xapi-js";
+import { Cmi5, ObjectiveActivity } from "xapi-js";
+
+const testObjective: ObjectiveActivity = {
+  objectType: "Activity",
+  id: "https://github.com/CookieCookson/xAPI-JS/objectives/test",
+  definition: {
+    type: "http://adlnet.gov/expapi/activities/objective",
+    name: {
+      "en-US": "Test Objective"
+    },
+    description: {
+      "en-US": "A basic objective used for testing."
+    }
+  }
+}
 
 @Component({
   tag: "app-root",
@@ -266,6 +280,20 @@ export class AppRoot {
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    */
 
+   passObjective() {
+     this.cmi5.pass({
+       scaled: 1
+     }, testObjective)
+   }
+
+  interactionTrueFalseObjective(answer: boolean) {
+    this.cmi5.interactionTrueFalse("test1", "is-true-true", answer, true, {
+      "en-US": "Is True True"
+    }, {
+      "en-US": "In a boolean context, is true truthy?"
+    }, undefined, testObjective)
+  }
+
   render() {
     return (
       <div>
@@ -355,6 +383,14 @@ export class AppRoot {
           <h5>Performance</h5>
           <p>Q7. Get a score of minimum 100 on T-Rex Runner</p>
           <game-trex-runner></game-trex-runner>
+          <h3>Objectives</h3>
+          <h4>"cmi5 defined" Statements</h4>
+          <h5>Pass</h5>
+          <button onClick={() => this.passObjective()} disabled={!this.initialized}>Pass</button>
+          <h4>"cmi5 allowed" Statements</h4>
+          <h5>Interaction</h5>
+          <p>In a boolean context, is <code>true</code> truthy?</p>
+          <button onClick={() => this.interactionTrueFalseObjective(true)} disabled={!this.initialized}>True (Correct)</button>
         </main>
       </div>
     );

@@ -8,6 +8,16 @@
       <langstring lang="en-US">An example course using the XAPI JS library.</langstring>
     </description>
   </course>
+  <objectives>
+    <objective id="https://github.com/CookieCookson/xAPI-JS/objectives/test">
+      <title>
+        <langstring lang="en-US">Test Objective</langstring>
+      </title>
+      <description>
+        <langstring lang="en-US">A basic objective used for testing.</langstring>
+      </description>
+    </objective>
+  </objectives>
   <au id="https://github.com/CookieCookson/xAPI-JS/src/profiles/cmi5/demo" moveOn="CompletedAndPassed" masteryScore="1.0">
     <title>
       <langstring lang="en-US">XAPI JS cmi5 Demo</langstring>
