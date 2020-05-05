@@ -1,5 +1,6 @@
 export * from "./Activity";
 export * from "./Actor";
+export * from "./Attachment";
 export * from "./Context";
 export * from "./ContextActivity";
 export * from "./Extensions";
