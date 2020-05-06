@@ -14,12 +14,20 @@ export const config: Config = {
           warn: true
         },
         {
-          src: "components/game-trex-runner/images",
-          dest: "images"
+          src: "components/game-trex-runner/images/100-percent",
+          dest: "images/100-percent"
+        },
+        {
+          src: "components/game-trex-runner/images/200-percent",
+          dest: "images/200-percent"
         },
         {
           src: "components/game-trex-runner/sounds",
           dest: "sounds"
+        },
+        {
+          src: "../node_modules/leaflet/dist/images",
+          dest: "images"
         }
       ]
     }

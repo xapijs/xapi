@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "leaflet": "^1.6.0",
     "xapi-js": "file:../../../.."
   }
 }

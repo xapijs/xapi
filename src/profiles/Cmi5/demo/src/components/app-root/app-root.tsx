@@ -42,6 +42,7 @@ export class AppRoot {
     "Three"
   ];
   numeric: number = 0;
+  @State() location: string;
   cmi5: Cmi5 = new Cmi5();
 
   exit() {
@@ -353,9 +354,17 @@ export class AppRoot {
     this.numeric = value;
   }
 
-  /**
-   * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
-   */
+  interactionOther() {
+    this.cmi5.interactionOther("test1", "plymouth-location", this.location, "(53.756898, -4.501819)", {
+      "en-US": "Plymouth Location"
+    }, {
+      "en-US": "On this map, please mark Plymouth, Devon"
+    })
+  }
+
+  @Listen("location") setLocation(event: CustomEvent) {
+    this.location = event.detail;
+  }
 
   passObjective() {
     this.cmi5.pass({
@@ -480,6 +489,11 @@ export class AppRoot {
             <input type="number" min="0" value="0" step="1" onInput={(event) => this.setNumeric(parseFloat((event.target as HTMLInputElement).value))} />
             <input type="submit" value="Submit" disabled={!this.initialized} />
           </form>
+          <h5>Other</h5>
+          <p>Q10. On this map, please mark Plymouth, Devon</p>
+          <map-assessment></map-assessment>
+          {this.location}
+          <button onClick={() => this.interactionOther()} disabled={!this.initialized || !this.location}>Submit</button>
           <h3>Objectives</h3>
           <h4>"cmi5 defined" Statements</h4>
           <h5>Pass</h5>
