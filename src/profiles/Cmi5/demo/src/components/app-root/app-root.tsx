@@ -35,6 +35,12 @@ export class AppRoot {
     carrot: ""
   };
   gameStart: Date;
+  @State() sequencing: string[] = [
+    "Four",
+    "Two",
+    "One",
+    "Three"
+  ];
   cmi5: Cmi5 = new Cmi5();
 
   exit() {
@@ -280,6 +286,58 @@ export class AppRoot {
     this.gameStart = new Date();
   }
 
+  interactionSequencing(event: Event) {
+    event.preventDefault();
+    this.cmi5.interactionSequencing("test1", "number-order", 
+      this.sequencing.map((item) => item.toLowerCase()),
+      ["one", "two", "three", "four"], [
+      {
+        id: "one",
+        description: {
+          "en-US": "One"
+        }
+      },
+      {
+        id: "two",
+        description: {
+          "en-US": "Two"
+        }
+      },
+      {
+        id: "three",
+        description: {
+          "en-US": "Three"
+        }
+      },
+      {
+        id: "four",
+        description: {
+          "en-US": "Four"
+        }
+      }
+    ], {
+      "en-US": "Number Order"
+    }, {
+      "en-US": "Put the numbers in order"
+    })
+  }
+
+  reorderSequence(value: string) {
+    const index = this.sequencing.indexOf(value);
+    if (index > -1) {
+      let arr = [
+        ...this.sequencing
+      ];
+      arr.splice(index, 1);
+      this.sequencing = arr;
+    } else {
+      this.sequencing = [
+        ...this.sequencing,
+        value
+      ];
+    }
+  }
+
   /**
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    */
@@ -300,11 +358,10 @@ export class AppRoot {
 
   render() {
     return (
-      <div>
+      [
         <header>
           <h1>XAPI JS Cmi5 Demo</h1>
-        </header>
-
+        </header>,
         <main>
           <button onClick={() => this.exit()} disabled={!this.initialized}>Exit</button>
           <h2>Getters</h2>
@@ -382,12 +439,26 @@ export class AppRoot {
               </select>
             </label>
             <div>
-              <input type="submit" value="submit" disabled={!this.initialized || this.matching.apple === "" || this.matching.carrot === ""} />
+              <input type="submit" value="Submit" disabled={!this.initialized || this.matching.apple === "" || this.matching.carrot === ""} />
             </div>
           </form>
           <h5>Performance</h5>
           <p>Q7. Get a score of minimum 100 on T-Rex Runner</p>
           <game-trex-runner></game-trex-runner>
+          <h5>Sequencing</h5>
+          <p>Q8. Put the numbers in order</p>
+          <form onSubmit={(event) => this.interactionSequencing(event)}>
+            <button type="button" onClick={() => this.reorderSequence("One")} class={{"pressed": this.sequencing.indexOf("One") > -1}}>One</button>
+            <button type="button" onClick={() => this.reorderSequence("Two")} class={{"pressed": this.sequencing.indexOf("Two") > -1}}>Two</button>
+            <button type="button" onClick={() => this.reorderSequence("Three")} class={{"pressed": this.sequencing.indexOf("Three") > -1}}>Three</button>
+            <button type="button" onClick={() => this.reorderSequence("Four")} class={{"pressed": this.sequencing.indexOf("Four") > -1}}>Four</button>
+            <div>
+              {this.sequencing.map((item) => 
+                <div>{item}</div>
+              )}
+            </div>
+            <button type="submit" value="Submit" disabled={!this.initialized || this.sequencing.length < 4}>Submit</button>
+          </form>
           <h3>Objectives</h3>
           <h4>"cmi5 defined" Statements</h4>
           <h5>Pass</h5>
@@ -397,7 +468,7 @@ export class AppRoot {
           <p>In a boolean context, is <code>true</code> truthy?</p>
           <button onClick={() => this.interactionTrueFalseObjective(true)} disabled={!this.initialized}>True (Correct)</button>
         </main>
-      </div>
+      ]
     );
   }
 }
