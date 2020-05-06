@@ -3,7 +3,6 @@ import { Statement, Actor, Agent } from "./interfaces/Statement";
 import { Verbs } from "./constants";
 import { getSearchQueryParamsAsObject } from "../lib/getSearchQueryParamsAsObject";
 import { parseMultiPart, createMultiPart, MultiPart } from "../lib/multiPart";
-import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
 
 enum Endpoint {
   ACTIVITY_STATE = "activities/state",
@@ -13,18 +12,15 @@ enum Endpoint {
 }
 
 export class XAPI {
-  private axiosInstance: AxiosInstance;
+  private endpoint: string;
+  private headers: Headers;
 
   public constructor(endpoint: string, auth: string) {
-    const headers: {[key: string]: string} = {
+    this.endpoint = endpoint;
+    this.headers = new Headers({
       "X-Experience-API-Version": "1.0.0",
       "Content-Type": "application/json",
       ...(auth ? { Authorization : auth } : {})
-    };
-    this.axiosInstance = axios.create({
-      baseURL: endpoint,
-      headers: headers,
-      responseType: "text"
     });
   }
 
@@ -49,15 +45,15 @@ export class XAPI {
   public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.request(Endpoint.STATEMENTS, {}, {
+      return this.requestXMLHTTPRequest(Endpoint.STATEMENTS, {}, {
         method: "POST",
         headers: multiPart.header,
-        data: multiPart.blob
+        body: multiPart.blob
       });
     } else {
         return this.request(Endpoint.STATEMENTS, {}, {
         method: "POST",
-        data: statement
+        body: JSON.stringify(statement)
       });
     }
   }
@@ -73,7 +69,7 @@ export class XAPI {
     };
     return this.request(Endpoint.STATEMENTS, {}, {
       method: "POST",
-      data: voidStatement
+      body: JSON.stringify(voidStatement)
     });
   }
 
@@ -88,7 +84,7 @@ export class XAPI {
       } : {})
     }, {
       method: "POST",
-      data: state
+      body: JSON.stringify(state)
     });
   }
 
@@ -102,7 +98,7 @@ export class XAPI {
       } : {})
     }, {
       method: "PUT",
-      data: state
+      body: JSON.stringify(state)
     });
   }
 
@@ -147,7 +143,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "POST",
-      data: profile
+      body: JSON.stringify(profile)
     });
   }
 
@@ -157,7 +153,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "PUT",
-      data: profile
+      body: JSON.stringify(profile)
     });
   }
 
@@ -190,7 +186,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "POST",
-      data: profile
+      body: JSON.stringify(profile)
     });
   }
 
@@ -200,7 +196,7 @@ export class XAPI {
       profileId: profileId
     }, {
       method: "PUT",
-      data: profile
+      body: JSON.stringify(profile)
     });
   }
 
@@ -226,23 +222,58 @@ export class XAPI {
     });
   }
 
-  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: AxiosRequestConfig | undefined): any {
+  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
     const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
-    const request: RequestInfo = `${path}${queryString ? "?" + queryString : ""}`;
-    const config: AxiosRequestConfig = {
-      url: request,
+    const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
+    return fetch(url, {
+      headers: this.headers,
       ...init
-    };
-    return this.axiosInstance.request(config).then((response) => {
-      if (response.status >= 200 && response.status < 400) {
-        if (typeof response.data === "string" && response.data.indexOf("--") === 2) {
-          return parseMultiPart(response.data);
+    }).then(response => {
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return response.json();
         } else {
-          return response.data;
+          return response.text().then((data) => {
+            return data.indexOf("--") === 2 ? parseMultiPart(data) : data;
+          });
         }
       } else {
-        return Promise.reject(response.data);
+        return response.text().then(error => Promise.reject(error));
       }
+    });
+  }
+
+  private requestXMLHTTPRequest(path: Endpoint, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): any {
+    return new Promise((resolve, reject) => {
+      const xmlRequest = new XMLHttpRequest();
+      const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
+      const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
+      xmlRequest.open(initExtras.method || "GET", url, true);
+      const headers = {
+        ...this.headers,
+        ...initExtras.headers
+      };
+      const headerKeys = Object.keys(headers);
+      for (let i: number = 0; i < headerKeys.length; i++) {
+        const key: string = headerKeys[i];
+        xmlRequest.setRequestHeader(key, headers[key]);
+      }
+      xmlRequest.onloadend = (): void => {
+        if (xmlRequest.status >= 200 && xmlRequest.status < 400) {
+          try {
+            resolve(JSON.parse(xmlRequest.responseText));
+          } catch {
+            resolve(xmlRequest.response);
+          }
+        } else {
+          reject(xmlRequest.response);
+        }
+      };
+      xmlRequest.onerror = (): void => {
+        reject(xmlRequest.response);
+      };
+      xmlRequest.send(initExtras.body);
     });
   }
 }
