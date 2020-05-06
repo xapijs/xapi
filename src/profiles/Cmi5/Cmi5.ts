@@ -362,14 +362,20 @@ export class Cmi5 {
     }, duration, objective);
   }
 
-  // public interactionSequencing(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "sequencing",
-  //     ...(name ? {name} : {}),
-  //     ...(description ? {description} : {})
-  //   }, duration, objective);
-  // }
+  public interactionSequencing(testId: string, questionId: string, answerIds: string[], correctAnswerIds: string[], choices?: InteractionComponent[], name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
+    return this.interaction(testId, questionId, answerIds.join("[,]"), {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "sequencing",
+      ...(correctAnswerIds ? {
+        correctResponsesPattern: [
+          correctAnswerIds.join("[,]")
+        ]
+      } : {}),
+      ...(choices ? {choices} : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
+    }, duration, objective);
+  }
 
   // public interactionNumeric(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {
