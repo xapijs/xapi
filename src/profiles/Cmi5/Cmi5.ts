@@ -402,14 +402,19 @@ export class Cmi5 {
     }, duration, objective);
   }
 
-  // public interactionOther(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "other",
-  //     ...(name ? {name} : {}),
-  //     ...(description ? {description} : {})
-  //   }, duration, objective);
-  // }
+  public interactionOther(testId: string, questionId: string, answer: string, correctAnswer: string, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
+    return this.interaction(testId, questionId, answer, {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "other",
+      ...(correctAnswer? {
+        correctResponsesPattern: [
+          correctAnswer
+        ]
+      } : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
+    }, duration, objective);
+  }
 
   public interaction(testId: string, questionId: string, response: string, interactionDefinition: InteractionActivityDefinition, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
     return this.sendCmi5AllowedStatement({

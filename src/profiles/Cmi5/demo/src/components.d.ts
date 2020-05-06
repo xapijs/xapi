@@ -10,6 +10,8 @@ export namespace Components {
     }
     interface GameTrexRunner {
     }
+    interface MapAssessment {
+    }
 }
 declare global {
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
@@ -24,9 +26,16 @@ declare global {
         prototype: HTMLGameTrexRunnerElement;
         new (): HTMLGameTrexRunnerElement;
     };
+    interface HTMLMapAssessmentElement extends Components.MapAssessment, HTMLStencilElement {
+    }
+    var HTMLMapAssessmentElement: {
+        prototype: HTMLMapAssessmentElement;
+        new (): HTMLMapAssessmentElement;
+    };
     interface HTMLElementTagNameMap {
         "app-root": HTMLAppRootElement;
         "game-trex-runner": HTMLGameTrexRunnerElement;
+        "map-assessment": HTMLMapAssessmentElement;
     }
 }
 declare namespace LocalJSX {
@@ -36,9 +45,13 @@ declare namespace LocalJSX {
         "onGameScore"?: (event: CustomEvent<any>) => void;
         "onGameStart"?: (event: CustomEvent<any>) => void;
     }
+    interface MapAssessment {
+        "onLocation"?: (event: CustomEvent<any>) => void;
+    }
     interface IntrinsicElements {
         "app-root": AppRoot;
         "game-trex-runner": GameTrexRunner;
+        "map-assessment": MapAssessment;
     }
 }
 export { LocalJSX as JSX };
@@ -47,6 +60,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "game-trex-runner": LocalJSX.GameTrexRunner & JSXBase.HTMLAttributes<HTMLGameTrexRunnerElement>;
+            "map-assessment": LocalJSX.MapAssessment & JSXBase.HTMLAttributes<HTMLMapAssessmentElement>;
         }
     }
 }
