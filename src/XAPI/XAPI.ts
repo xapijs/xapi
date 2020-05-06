@@ -13,15 +13,15 @@ enum Endpoint {
 
 export class XAPI {
   private endpoint: string;
-  private headers: Headers;
+  private headers: {[key: string]: string};
 
   public constructor(endpoint: string, auth: string) {
     this.endpoint = endpoint;
-    this.headers = new Headers({
+    this.headers = {
       "X-Experience-API-Version": "1.0.0",
       "Content-Type": "application/json",
       ...(auth ? { Authorization : auth } : {})
-    });
+    };
   }
 
   // Statements API
