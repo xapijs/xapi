@@ -39,13 +39,10 @@ interface PerformanceCriteriaBase {
   id: string;
 }
 
-interface PerformanceCriteriaRange extends PerformanceCriteriaBase {
-  min?: number;
-  max?: number;
-}
+interface PerformanceCriteriaRange extends PerformanceCriteriaBase, NumericRange {}
 
 interface PerformanceCriteriaExact extends PerformanceCriteriaBase {
-  exact?: number;
+  exact?: number | string;
 }
 
 type PerformanceCriteria = PerformanceCriteriaBase | PerformanceCriteriaRange | PerformanceCriteriaExact;
@@ -53,6 +50,17 @@ type PerformanceCriteria = PerformanceCriteriaBase | PerformanceCriteriaRange | 
 interface Performance {
   [id: string]: number;
 }
+
+interface NumericRange {
+  min?: number;
+  max?: number;
+}
+
+interface NumericExact {
+  exact?: number;
+}
+
+type NumericCriteria = NumericRange | NumericExact;
 
 // 9.3 Verbs - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#93-verbs
 class Cmi5DefinedVerbs {
@@ -377,14 +385,22 @@ export class Cmi5 {
     }, duration, objective);
   }
 
-  // public interactionNumeric(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
-  //   return this.interaction(testId, questionId, answer.toString(), {
-  //     type: "http://adlnet.gov/expapi/activities/cmi.interaction",
-  //     interactionType: "numeric",
-  //     ...(name ? {name} : {}),
-  //     ...(description ? {description} : {})
-  //   }, duration, objective);
-  // }
+  public interactionNumeric(testId: string, questionId: string, answer: number, correctAnswer: NumericCriteria, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
+    return this.interaction(testId, questionId, answer.toString(), {
+      type: "http://adlnet.gov/expapi/activities/cmi.interaction",
+      interactionType: "numeric",
+      ...(correctAnswer ? {
+        correctResponsesPattern: [
+          `${(correctAnswer as NumericExact).exact ?
+            (correctAnswer as NumericExact).exact :
+            ((correctAnswer as NumericRange).min + ":" + (correctAnswer as NumericRange).max)
+          }`
+        ]
+      } : {}),
+      ...(name ? {name} : {}),
+      ...(description ? {description} : {})
+    }, duration, objective);
+  }
 
   // public interactionOther(testId: string, questionId: string, answer, name?: LanguageMap, description?: LanguageMap, duration?: Period, objective?: ObjectiveActivity): Promise<string[]> {
   //   return this.interaction(testId, questionId, answer.toString(), {

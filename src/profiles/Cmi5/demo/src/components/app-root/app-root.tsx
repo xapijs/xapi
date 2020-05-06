@@ -41,6 +41,7 @@ export class AppRoot {
     "One",
     "Three"
   ];
+  numeric: number = 0;
   cmi5: Cmi5 = new Cmi5();
 
   exit() {
@@ -338,6 +339,20 @@ export class AppRoot {
     }
   }
 
+  interactionNumeric(event: Event) {
+    event.preventDefault();
+    this.cmi5.interactionNumeric("test1", "human-legs", this.numeric,
+    { exact: 2 }, {
+      "en-US": "Human Legs"
+    }, {
+      "en-US": "How many legs does a human have?"
+    })
+  }
+
+  setNumeric(value: number) {
+    this.numeric = value;
+  }
+
   /**
    * TODO: Add cmi5 allowed cmi.interaction statements to demo https://xapi.com/blog/capturing-interactions-from-cmi5-launched-assessments/
    */
@@ -458,6 +473,12 @@ export class AppRoot {
               )}
             </div>
             <button type="submit" value="Submit" disabled={!this.initialized || this.sequencing.length < 4}>Submit</button>
+          </form>
+          <h5>Numeric</h5>
+          <p>Q9. How many legs does a human have?</p>
+          <form onSubmit={(event) => this.interactionNumeric(event)}>
+            <input type="number" min="0" value="0" step="1" onInput={(event) => this.setNumeric(parseFloat((event.target as HTMLInputElement).value))} />
+            <input type="submit" value="Submit" disabled={!this.initialized} />
           </form>
           <h3>Objectives</h3>
           <h4>"cmi5 defined" Statements</h4>
