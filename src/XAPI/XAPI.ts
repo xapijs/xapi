@@ -2,7 +2,7 @@ import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, Stateme
 import { Statement, Actor, Agent } from "./interfaces/Statement";
 import { Verbs } from "./constants";
 import { getSearchQueryParamsAsObject } from "../lib/getSearchQueryParamsAsObject";
-import { parseMultiPart, createMultiPart, MultiPart } from "../lib/multiPart";
+import { parseMultiPart, createMultiPart, MultiPart, Part } from "../lib/multiPart";
 
 enum Endpoint {
   ACTIVITY_STATE = "activities/state",
@@ -25,11 +25,11 @@ export class XAPI {
   }
 
   // Statements API
-  public getStatement(query: GetStatementQuery): Promise<Statement | (Statement | Blob)[]> {
+  public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
     return this.request(Endpoint.STATEMENTS, query);
   }
 
-  public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement> {
+  public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement | Part[]> {
     return this.request(Endpoint.STATEMENTS, query);
   }
 
@@ -222,7 +222,7 @@ export class XAPI {
     });
   }
 
-  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
+  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): Promise<any> {
     const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
     const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
     return fetch(url, {
@@ -244,15 +244,15 @@ export class XAPI {
     });
   }
 
-  private requestXMLHTTPRequest(path: Endpoint, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): any {
+  private requestXMLHTTPRequest(path: Endpoint, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): Promise<any> {
     return new Promise((resolve, reject) => {
       const xmlRequest = new XMLHttpRequest();
       const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
       const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
-      xmlRequest.open(initExtras.method || "GET", url, true);
+      xmlRequest.open(initExtras?.method || "GET", url, true);
       const headers = {
         ...this.headers,
-        ...initExtras.headers
+        ...initExtras?.headers
       };
       const headerKeys = Object.keys(headers);
       for (let i: number = 0; i < headerKeys.length; i++) {
@@ -264,7 +264,7 @@ export class XAPI {
           try {
             resolve(JSON.parse(xmlRequest.responseText));
           } catch {
-            resolve(xmlRequest.response);
+            resolve(xmlRequest.responseText.indexOf("--") === 2 ? parseMultiPart(xmlRequest.responseText) : xmlRequest.responseText);
           }
         } else {
           reject(xmlRequest.response);
@@ -273,7 +273,7 @@ export class XAPI {
       xmlRequest.onerror = (): void => {
         reject(xmlRequest.response);
       };
-      xmlRequest.send(initExtras.body);
+      xmlRequest.send(initExtras?.body);
     });
   }
 }
