@@ -1,84 +1,9 @@
-import { XAPI, Context, ContextActivity, Verb, Statement, Agent, ResultScore, Verbs, StatementObject, InteractionActivityDefinition, LanguageMap, InteractionComponent, ObjectiveActivity } from "../../XAPI";
+import { XAPI, Context, Statement, Agent, ResultScore, Verbs, StatementObject, InteractionActivityDefinition, LanguageMap, InteractionComponent, ObjectiveActivity } from "../../XAPI";
+import { LaunchParameters, LaunchData, LearnerPreferences, Period, AuthTokenResponse, PerformanceCriteria, NumericCriteria, NumericRange, NumericExact } from "./interfaces";
+import { Cmi5DefinedVerbs, Cmi5ContextActivity } from "./constants";
 import { getSearchQueryParamsAsObject } from "../../lib/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "../../lib/calculateISO8601Duration";
 import { default as deepmerge } from "deepmerge";
-
-interface LaunchParameters {
-  endpoint: string;
-  fetch: string;
-  actor: Agent;
-  registration: string;
-  activityId: string;
-}
-
-interface LaunchData {
-  contextTemplate: Context;
-  launchMode: "Normal" | "Browse" | "Review";
-  launchMethod?: "OwnWindow" | "AnyWindow";
-  launchParameters?: string;
-  masteryScore?: number;
-  moveOn: "Passed" | "Completed" | "CompletedAndPassed" | "CompletedOrPassed" | "NotApplicable";
-  returnURL?: string;
-  entitlementKey?: { courseStructure?: string; alternate?: string };
-}
-
-interface LearnerPreferences {
-  languagePreference?: string;
-  audioPreference?: "on" | "off";
-}
-
-interface AuthTokenResponse {
-  "auth-token": string;
-}
-
-interface Period {
-  start: Date;
-  end: Date;
-}
-interface PerformanceCriteriaBase {
-  id: string;
-}
-
-interface PerformanceCriteriaRange extends PerformanceCriteriaBase, NumericRange {}
-
-interface PerformanceCriteriaExact extends PerformanceCriteriaBase {
-  exact?: number | string;
-}
-
-type PerformanceCriteria = PerformanceCriteriaBase | PerformanceCriteriaRange | PerformanceCriteriaExact;
-
-interface Performance {
-  [id: string]: number;
-}
-
-interface NumericRange {
-  min?: number;
-  max?: number;
-}
-
-interface NumericExact {
-  exact?: number;
-}
-
-type NumericCriteria = NumericRange | NumericExact;
-
-// 9.3 Verbs - https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md#93-verbs
-class Cmi5DefinedVerbs {
-  public static readonly INITIALIZED: Verb = Verbs.INITIALIZED;
-  public static readonly COMPLETED: Verb = Verbs.COMPLETED;
-  public static readonly PASSED: Verb = Verbs.PASSED;
-  public static readonly FAILED: Verb = Verbs.FAILED;
-  public static readonly TERMINATED: Verb = Verbs.TERMINATED;
-}
-
-class Cmi5ContextActivity {
-  public static readonly MOVE_ON: ContextActivity = {
-    id: "https://w3id.org/xapi/cmi5/context/categories/moveon"
-  };
-  public static readonly CMI5: ContextActivity = {
-    id: "https://w3id.org/xapi/cmi5/context/categories/cmi5"
-  };
-}
 
 /**
  * Experience API cmi5 Profile (Quartz - 1st Edition)
