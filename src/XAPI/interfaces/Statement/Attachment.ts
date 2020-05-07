@@ -9,5 +9,4 @@ export interface Attachment {
   sha2: string;
   description?: LanguageMap;
   fileUrl?: string;
-  content?: ArrayBuffer;
 }

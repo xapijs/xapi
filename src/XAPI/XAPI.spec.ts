@@ -1,5 +1,6 @@
 import { XAPI, Agent, Statement, Activity, Attachment, AttachmentUsage } from ".";
 import * as CryptoJS from "crypto-js";
+import { TextEncoder } from "util";
 
 const endpoint: string = process.env.LRS_ENDPOINT || "";
 const username: string = process.env.LRS_USERNAME || "";
@@ -73,25 +74,22 @@ describe("statement api", () => {
 
     test("can create a statement with an embedded attachment", () => {
         const statement: Statement = Object.assign({}, testStatement);
-        const imageURL: string = "https://raw.githubusercontent.com/RusticiSoftware/TinCanJS/8733f14ddcaeea77a0579505300bc8f38921a6b1/test/files/image.jpg";
-        return fetch(imageURL).then((image) => {
-            return image.arrayBuffer();
-        }).then((imageAsArrayBuffer) => {
-            const attachment: Attachment = {
-                usageType: AttachmentUsage.SUPPORTING_MEDIA,
-                display: {
-                    "en-US": "Image Attachment"
-                },
-                description: {
-                    "en-US": "One does not simply send an attachment with JavaScript"
-                },
-                contentType: "image/jpeg",
-                length: imageAsArrayBuffer.byteLength,
-                sha2: CryptoJS.SHA256(arrayBufferToWordArray(imageAsArrayBuffer)).toString()
-            };
-            statement.attachments = [attachment];
-            return xapi.sendStatement(statement, [imageAsArrayBuffer]);
-        }).then((result) => {
+        const attachmentContent: string = "hello world";
+        const arrayBuffer: ArrayBuffer = new TextEncoder().encode(attachmentContent);
+        const attachment: Attachment = {
+            usageType: AttachmentUsage.SUPPORTING_MEDIA,
+            display: {
+                "en-US": "Text Attachment"
+            },
+            description: {
+                "en-US": `The text attachment contains "${attachmentContent}"`
+            },
+            contentType: "text/plain",
+            length: arrayBuffer.byteLength,
+            sha2: CryptoJS.SHA256(arrayBufferToWordArray(arrayBuffer)).toString()
+        };
+        statement.attachments = [attachment];
+        return xapi.sendStatement(statement, [arrayBuffer]).then((result) => {
             return expect(result).toHaveLength(1);
         });
     });
@@ -108,46 +106,29 @@ describe("statement api", () => {
 
     test("can get a statement with an embedded attachment", () => {
         const statement: Statement = Object.assign({}, testStatement);
-        const imageURL: string = "https://raw.githubusercontent.com/RusticiSoftware/TinCanJS/8733f14ddcaeea77a0579505300bc8f38921a6b1/test/files/image.jpg";
-        return fetch(imageURL).then((image) => {
-           return image.arrayBuffer();
-        }).then((imageAsArrayBuffer) => {
-            const attachment: Attachment = {
-                usageType: AttachmentUsage.SUPPORTING_MEDIA,
-                display: {
-                    "en-US": "Image Attachment"
-                },
-                description: {
-                    "en-US": "One does not simply send an attachment with JavaScript"
-                },
-                contentType: "image/jpeg",
-                length: imageAsArrayBuffer.byteLength,
-                sha2: CryptoJS.SHA256(arrayBufferToWordArray(imageAsArrayBuffer)).toString()
-            };
-            statement.attachments = [attachment];
-            return xapi.sendStatement(statement, [imageAsArrayBuffer]);
-        }).then((result) => {
+        const attachmentContent: string = "hello world";
+        const arrayBuffer: ArrayBuffer = new TextEncoder().encode(attachmentContent);
+        const attachment: Attachment = {
+            usageType: AttachmentUsage.SUPPORTING_MEDIA,
+            display: {
+                "en-US": "Text Attachment"
+            },
+            description: {
+                "en-US": `The text attachment contains "${attachmentContent}"`
+            },
+            contentType: "text/plain",
+            length: arrayBuffer.byteLength,
+            sha2: CryptoJS.SHA256(arrayBufferToWordArray(arrayBuffer)).toString()
+        };
+        statement.attachments = [attachment];
+        return xapi.sendStatement(statement, [arrayBuffer]).then((result) => {
             return xapi.getStatement({
                 statementId: result[0],
                 attachments: true
             });
         }).then((parts) => {
-            const statement: Statement = parts[0];
-            const attachmentData: string = parts[1];
-            const blob = new Blob([attachmentData], {type: statement.attachments[0].contentType});
-            const fr = new FileReader();
-            // TODO: Change multiPart so the image successfully embeds and restores
-            return new Promise((resolve, reject) => {
-                fr.onloadend = (e) => {
-                    resolve(e.target.result);
-                };
-                fr.onerror = (e) => reject(e);
-                fr.readAsDataURL(blob);
-            });
-        }).then((base64Image: string) => {
-            console.log(base64Image);
-            // return expect(attachmentData.byteLength).toEqual(statement.attachments[0].length);
-            // return expect(CryptoJS.SHA256(arrayBufferToWordArray(attachmentData)).toString()).toEqual(statement.attachments[0].sha2);
+            const attachmentData: unknown = parts[1];
+            return expect(attachmentData).toEqual(attachmentContent);
         });
     });
 

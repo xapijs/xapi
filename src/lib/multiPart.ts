@@ -5,7 +5,7 @@ export interface MultiPart {
   blob: Blob;
 }
 
-type Part = Statement | string;
+export type Part = Statement | unknown;
 
 const crlf: string = "\r\n";
 
@@ -24,9 +24,11 @@ export function parseMultiPart(data: string): Part[] {
       const header = items[j].split(":");
       headers[header[0]] = header[1];
     }
-    const data: string = items[items.length - 1];
-    const part: Part = headers["Content-Type"].indexOf("application/json") > -1 ? JSON.parse(data) : data;
-    parsedParts.push(part);
+    let data: unknown = items[items.length - 1];
+    if (headers["Content-Type"].indexOf("application/json") > -1) {
+      data = JSON.parse(data as string);
+    }
+    parsedParts.push(data);
   }
   return parsedParts;
 }
