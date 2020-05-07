@@ -2,6 +2,7 @@ import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, Stateme
 import { Statement, Actor, Agent } from "./interfaces/Statement";
 import { Verbs } from "./constants";
 import { getSearchQueryParamsAsObject } from "../lib/getSearchQueryParamsAsObject";
+import { parseMultiPart, createMultiPart, MultiPart, Part } from "../lib/multiPart";
 
 enum Endpoint {
   ACTIVITY_STATE = "activities/state",
@@ -12,25 +13,23 @@ enum Endpoint {
 
 export class XAPI {
   private endpoint: string;
-  private headers: Headers;
+  private headers: {[key: string]: string};
 
   public constructor(endpoint: string, auth: string) {
     this.endpoint = endpoint;
-    const headers: Headers = new Headers();
-    headers.append("X-Experience-API-Version", "1.0.0");
-    headers.append("Content-Type", "application/json");
-    if (auth) {
-      headers.append("Authorization", auth);
-    }
-    this.headers = headers;
+    this.headers = {
+      "X-Experience-API-Version": "1.0.0",
+      "Content-Type": "application/json",
+      ...(auth ? { Authorization : auth } : {})
+    };
   }
 
   // Statements API
-  public getStatement(query: GetStatementQuery): Promise<Statement> {
+  public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
     return this.request(Endpoint.STATEMENTS, query);
   }
 
-  public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement> {
+  public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement | Part[]> {
     return this.request(Endpoint.STATEMENTS, query);
   }
 
@@ -43,11 +42,20 @@ export class XAPI {
     return this.request(Endpoint.STATEMENTS, params);
   }
 
-  public sendStatement(statement: Statement): Promise<string[]> {
-    return this.request(Endpoint.STATEMENTS, {}, {
-      method: "POST",
-      body: JSON.stringify(statement)
-    });
+  public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
+    if (attachments?.length) {
+      const multiPart: MultiPart = createMultiPart(statement, attachments);
+      return this.requestXMLHTTPRequest(Endpoint.STATEMENTS, {}, {
+        method: "POST",
+        headers: multiPart.header,
+        body: multiPart.blob
+      });
+    } else {
+        return this.request(Endpoint.STATEMENTS, {}, {
+        method: "POST",
+        body: JSON.stringify(statement)
+      });
+    }
   }
 
   public voidStatement(actor: Actor, statementId: string): Promise<string[]> {
@@ -214,10 +222,10 @@ export class XAPI {
     });
   }
 
-  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): any {
+  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): Promise<any> {
     const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
-    const request: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
-    return fetch(request, {
+    const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
+    return fetch(url, {
       headers: this.headers,
       ...init
     }).then(response => {
@@ -226,11 +234,46 @@ export class XAPI {
         if (contentType && contentType.indexOf("application/json") !== -1) {
           return response.json();
         } else {
-          return response.text();
+          return response.text().then((data) => {
+            return data.indexOf("--") === 2 ? parseMultiPart(data) : data;
+          });
         }
       } else {
         return response.text().then(error => Promise.reject(error));
       }
+    });
+  }
+
+  private requestXMLHTTPRequest(path: Endpoint, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const xmlRequest = new XMLHttpRequest();
+      const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
+      const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
+      xmlRequest.open(initExtras?.method || "GET", url, true);
+      const headers = {
+        ...this.headers,
+        ...initExtras?.headers
+      };
+      const headerKeys = Object.keys(headers);
+      for (let i: number = 0; i < headerKeys.length; i++) {
+        const key: string = headerKeys[i];
+        xmlRequest.setRequestHeader(key, headers[key]);
+      }
+      xmlRequest.onloadend = (): void => {
+        if (xmlRequest.status >= 200 && xmlRequest.status < 400) {
+          try {
+            resolve(JSON.parse(xmlRequest.responseText));
+          } catch {
+            resolve(xmlRequest.responseText.indexOf("--") === 2 ? parseMultiPart(xmlRequest.responseText) : xmlRequest.responseText);
+          }
+        } else {
+          reject(xmlRequest.response);
+        }
+      };
+      xmlRequest.onerror = (): void => {
+        reject(xmlRequest.response);
+      };
+      xmlRequest.send(initExtras?.body);
     });
   }
 }
