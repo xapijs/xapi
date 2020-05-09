@@ -1,8 +1,8 @@
-![Node.js CI](https://github.com/CookieCookson/xAPI-JS/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/xAPI-js/xAPI-js/workflows/Node.js%20CI/badge.svg)
 
-# xAPI JS
+# xAPI.js
 ## Overview
-An XAPI JS library for communicating with an LRS.
+A JavaScript library for communicating with an LRS over xAPI.
 
 ## Supported xAPI Versions
 1.0.0
