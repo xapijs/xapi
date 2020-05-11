@@ -1,9 +1,9 @@
 {
-  "name": "xapi-js",
-  "version": "0.1.0",
+  "name": "@xapi/xapi",
+  "version": "0.2.0",
   "description": "A JavaScript library for communicating with an LRS over xAPI.",
-  "main": "dist/xapi-js.js",
-  "module": "dist/xapi-js.esm.js",
+  "main": "dist/xapi.js",
+  "module": "dist/xapi.esm.js",
   "typings": "dist/types/index.d.ts",
   "files": [
     "dist/**/*"
@@ -19,19 +19,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xAPI-js/XAPI-js.git"
+    "url": "https://github.com/xapijs/xapi.git"
   },
   "keywords": [
     "xapi",
-    "cmi5",
     "typescript"
   ],
   "author": "Christian Cook",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xAPI-js/XAPI-js/issues"
+    "url": "https://github.com/xapijs/xapi/issues"
   },
-  "homepage": "https://github.com/xAPI-js/XAPI-js",
+  "homepage": "https://github.com/xapijs/xapi",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
