@@ -9,7 +9,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "clean": "rimraf ./dist",
     "build:js": "rollup --config",
     "build:types": "tsc --emitDeclarationOnly",
