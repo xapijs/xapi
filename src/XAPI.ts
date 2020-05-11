@@ -1,8 +1,7 @@
-import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces";
-import { Statement, Actor, Agent } from "./interfaces/Statement";
+import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Statement, Actor, Agent } from "./interfaces";
 import { Verbs } from "./constants";
-import { getSearchQueryParamsAsObject } from "../lib/getSearchQueryParamsAsObject";
-import { parseMultiPart, createMultiPart, MultiPart, Part } from "../lib/multiPart";
+import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
+import { getSearchQueryParamsAsObject } from "./helpers";
 
 enum Endpoint {
   ACTIVITY_STATE = "activities/state",

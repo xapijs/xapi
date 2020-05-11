@@ -24,7 +24,7 @@ export default {
     {
       file: pkg.main,
       format: "umd",
-      name: "xapijs"
+      name: "xapi"
     },
     {
       file: pkg.module,

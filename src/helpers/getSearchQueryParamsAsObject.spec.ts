@@ -1,5 +1,5 @@
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
-import { Actor } from "../";
+import { Actor } from "../interfaces/Statement/Actor";
 
 test("converts querystring into object", () => {
   return expect(getSearchQueryParamsAsObject("?test=test")).toMatchObject({

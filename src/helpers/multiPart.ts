@@ -1,4 +1,4 @@
-import { Statement, Attachment } from "../XAPI";
+import { Statement, Attachment } from "../interfaces/Statement";
 
 export interface MultiPart {
   header: {"Content-Type": string};
