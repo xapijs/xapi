@@ -1,6 +1,6 @@
 {
   "name": "xapi-js",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "An XAPI JS library for communicating with an LRS.",
   "main": "dist/xapi-js.js",
   "module": "dist/xapi-js.esm.js",
