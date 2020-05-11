@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CookieCookson/XAPI-JS.git"
+    "url": "https://github.com/xAPI-js/XAPI-js.git"
   },
   "keywords": [
     "xapi",
@@ -29,9 +29,9 @@
   "author": "Christian Cook",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CookieCookson/XAPI-JS/issues"
+    "url": "https://github.com/xAPI-js/XAPI-js/issues"
   },
-  "homepage": "https://github.com/CookieCookson/XAPI-JS",
+  "homepage": "https://github.com/xAPI-js/XAPI-js",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
