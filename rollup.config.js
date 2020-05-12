@@ -9,7 +9,7 @@ const extensions = [
 ];
 
 export default {
-  input: "./src/index.ts",
+  input: "./src/XAPI.ts",
   plugins: [
     resolve({
       extensions: extensions
@@ -24,7 +24,7 @@ export default {
     {
       file: pkg.main,
       format: "umd",
-      name: "xapi"
+      name: "XAPI"
     },
     {
       file: pkg.module,

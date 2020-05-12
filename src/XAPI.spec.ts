@@ -1,4 +1,4 @@
-import { XAPI, Agent, Statement, Activity, Attachment, AttachmentUsage } from ".";
+import XAPI, { Agent, Statement, Activity, Attachment } from "./XAPI";
 import * as CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
 
@@ -51,7 +51,7 @@ describe("statement api", () => {
             return image.arrayBuffer();
         }).then((imageAsArrayBuffer) => {
             const attachment: Attachment = {
-                usageType: AttachmentUsage.SUPPORTING_MEDIA,
+                usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
                 display: {
                     "en-US": "Image Attachment"
                 },
@@ -75,7 +75,7 @@ describe("statement api", () => {
         const attachmentContent: string = "hello world";
         const arrayBuffer: ArrayBuffer = new TextEncoder().encode(attachmentContent);
         const attachment: Attachment = {
-            usageType: AttachmentUsage.SUPPORTING_MEDIA,
+            usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
             display: {
                 "en-US": "Text Attachment"
             },
@@ -107,7 +107,7 @@ describe("statement api", () => {
         const attachmentContent: string = "hello world";
         const arrayBuffer: ArrayBuffer = new TextEncoder().encode(attachmentContent);
         const attachment: Attachment = {
-            usageType: AttachmentUsage.SUPPORTING_MEDIA,
+            usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
             display: {
                 "en-US": "Text Attachment"
             },

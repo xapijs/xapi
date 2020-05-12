@@ -1,6 +1,7 @@
 export function getSearchQueryParamsAsObject(str: string): {[key: string]: any} {
   const obj: {[key: string]: any} = {};
-  const queryString = str.split("?")[1] || "";
+  const queryString = str.split("?")[1] || null;
+  if (!queryString) return obj;
   const items = queryString.split("&");
   items.forEach((n: string) => {
     const item: string[] = n.split("=");
