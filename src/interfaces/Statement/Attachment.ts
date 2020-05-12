@@ -1,5 +1,4 @@
-import { LanguageMap } from ".";
-import { AttachmentUsage } from "../../constants/AttachmentUsage";
+import { LanguageMap, AttachmentUsage } from ".";
 
 export interface Attachment {
   usageType: AttachmentUsage;

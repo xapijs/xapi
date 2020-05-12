@@ -1,20 +1,24 @@
-import { GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, Statement, Actor, Agent } from "./interfaces";
-import { Verbs } from "./constants";
+import { Statement, Actor, Agent } from "./interfaces/Statement";
+import { Endpoint, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/XAPI";
+import { AttachmentUsages, Endpoints, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
-import { getSearchQueryParamsAsObject } from "./helpers";
+import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
+import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 
-enum Endpoint {
-  ACTIVITY_STATE = "activities/state",
-  ACTIVITY_PROFILE = "activities/profile",
-  AGENT_PROFILE = "agents/profile",
-  STATEMENTS = "statements"
-}
+export * from "./interfaces/XAPI";
+export * from "./interfaces/Statement";
 
-export class XAPI {
+export default class XAPI {
+  public static AttachmentUsages = AttachmentUsages;
+  public static Verbs = Verbs;
+
+  public static calculateISO8601Duration = calculateISO8601Duration;
+  public static getSearchQueryParamsAsObject = getSearchQueryParamsAsObject;
+
   private endpoint: string;
   private headers: {[key: string]: string};
 
-  public constructor(endpoint: string, auth: string) {
+  public constructor(endpoint?: string, auth?: string) {
     this.endpoint = endpoint;
     this.headers = {
       "X-Experience-API-Version": "1.0.0",
@@ -25,32 +29,32 @@ export class XAPI {
 
   // Statements API
   public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Endpoint.STATEMENTS, query);
+    return this.request(Endpoints.STATEMENTS, query);
   }
 
   public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Endpoint.STATEMENTS, query);
+    return this.request(Endpoints.STATEMENTS, query);
   }
 
   public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
-    return this.request(Endpoint.STATEMENTS, query);
+    return this.request(Endpoints.STATEMENTS, query);
   }
 
   public getMoreStatements(more: string): Promise<StatementsResponse> {
     const params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
-    return this.request(Endpoint.STATEMENTS, params);
+    return this.request(Endpoints.STATEMENTS, params);
   }
 
   public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.requestXMLHTTPRequest(Endpoint.STATEMENTS, {}, {
+      return this.requestXMLHTTPRequest(Endpoints.STATEMENTS, {}, {
         method: "POST",
         headers: multiPart.header,
         body: multiPart.blob
       });
     } else {
-        return this.request(Endpoint.STATEMENTS, {}, {
+        return this.request(Endpoints.STATEMENTS, {}, {
         method: "POST",
         body: JSON.stringify(statement)
       });
@@ -66,7 +70,7 @@ export class XAPI {
         id: statementId
       }
     };
-    return this.request(Endpoint.STATEMENTS, {}, {
+    return this.request(Endpoints.STATEMENTS, {}, {
       method: "POST",
       body: JSON.stringify(voidStatement)
     });
@@ -74,7 +78,7 @@ export class XAPI {
 
   // Activity State API
   public createActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Endpoint.ACTIVITY_STATE, {
+    return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -88,7 +92,7 @@ export class XAPI {
   }
 
   public setActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Endpoint.ACTIVITY_STATE, {
+    return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -102,7 +106,7 @@ export class XAPI {
   }
 
   public getActivityStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
-    return this.request(Endpoint.ACTIVITY_STATE, {
+    return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       ...(registration ? {
@@ -112,7 +116,7 @@ export class XAPI {
   }
 
   public getActivityState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
-    return this.request(Endpoint.ACTIVITY_STATE, {
+    return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -123,7 +127,7 @@ export class XAPI {
   }
 
   public deleteActivityState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
-    return this.request(Endpoint.ACTIVITY_STATE, {
+    return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -137,7 +141,7 @@ export class XAPI {
 
   // Activity Profile API
   public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoint.ACTIVITY_PROFILE, {
+    return this.request(Endpoints.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -147,7 +151,7 @@ export class XAPI {
   }
 
   public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoint.ACTIVITY_PROFILE, {
+    return this.request(Endpoints.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -157,20 +161,20 @@ export class XAPI {
   }
 
   public getActivityProfiles(activityId: string): Promise<string[]> {
-    return this.request(Endpoint.ACTIVITY_PROFILE, {
+    return this.request(Endpoints.ACTIVITY_PROFILE, {
       activityId: activityId
     });
   }
 
   public getActivityProfile(activityId: string, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Endpoint.ACTIVITY_PROFILE, {
+    return this.request(Endpoints.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     });
   }
 
   public deleteActivityProfile(activityId: string, profileId: string): Promise<void> {
-    return this.request(Endpoint.ACTIVITY_PROFILE, {
+    return this.request(Endpoints.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -180,7 +184,7 @@ export class XAPI {
 
   // Agent Profile API
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoint.AGENT_PROFILE, {
+    return this.request(Endpoints.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     }, {
@@ -190,7 +194,7 @@ export class XAPI {
   }
 
   public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoint.AGENT_PROFILE, {
+    return this.request(Endpoints.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     }, {
@@ -200,20 +204,20 @@ export class XAPI {
   }
 
   public getAgentProfiles(agent: Agent): Promise<string[]> {
-    return this.request(Endpoint.AGENT_PROFILE, {
+    return this.request(Endpoints.AGENT_PROFILE, {
       agent: JSON.stringify(agent)
     });
   }
 
   public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Endpoint.AGENT_PROFILE, {
+    return this.request(Endpoints.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     });
   }
 
   public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
-    return this.request(Endpoint.AGENT_PROFILE, {
+    return this.request(Endpoints.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     }, {
