@@ -87,7 +87,7 @@ const xapi = new XAPI(endpoint, auth);
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
 |endpoint|string|true|The URL of your LRS endpoint.|
-|auth|string|false|The `Authorization` header value to be appended to all requests.|
+|auth|string|false|The `Authorization` header value to be appended to all requests. Defaults to `Basic 0g==`, which is equivalent of `Basic ` followed by a base64 encoded version of the string `:`.|
 
 #### Returns
 
