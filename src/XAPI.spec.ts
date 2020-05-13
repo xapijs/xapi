@@ -42,7 +42,8 @@ function arrayBufferToWordArray(ab: ArrayBuffer): CryptoJS.WordArray {
 describe("about resource", () => {
     test("can get about", () => {
         return expect(xapi.getAbout()).resolves.toEqual(expect.objectContaining({
-            versions: expect.any(Array)
+            extensions: expect.any(Object),
+            version: expect.any(Array)
         }));
     });
 });
