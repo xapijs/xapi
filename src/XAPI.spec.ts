@@ -39,7 +39,7 @@ function arrayBufferToWordArray(ab: ArrayBuffer): CryptoJS.WordArray {
     return CryptoJS.lib.WordArray.create(a, i8a.length);
 }
 
-describe("statement api", () => {
+describe("statement resource", () => {
     test("can create a statement", () => {
         return expect(xapi.sendStatement(testStatement)).resolves.toHaveLength(1);
     });
@@ -177,34 +177,34 @@ describe("statement api", () => {
     });
 });
 
-describe("activity state api", () => {
+describe("state resource", () => {
     const testStateId: string = `${testActivity.id}/states/test`;
     const testState: {[key: string]: any} = {
         test: "test"
     };
 
-    test("can create activity state", () => {
-        return expect(xapi.createActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+    test("can create state", () => {
+        return expect(xapi.createState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
     });
 
-    test("can set activity state", () => {
-        return expect(xapi.setActivityState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+    test("can set state", () => {
+        return expect(xapi.setState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
     });
 
-    test("can get all activity states", () => {
-        return expect(xapi.getActivityStates(testAgent, testActivity.id)).resolves.toHaveLength(1);
+    test("can get all states", () => {
+        return expect(xapi.getStates(testAgent, testActivity.id)).resolves.toHaveLength(1);
     });
 
-    test("can get an activity state", () => {
-        return expect(xapi.getActivityState(testAgent, testActivity.id, testStateId)).resolves.toMatchObject(testState);
+    test("can get a state", () => {
+        return expect(xapi.getState(testAgent, testActivity.id, testStateId)).resolves.toMatchObject(testState);
     });
 
-    test("can delete an activity state", () => {
-        return expect(xapi.deleteActivityState(testAgent, testActivity.id, testStateId)).resolves.toBeDefined();
+    test("can delete a state", () => {
+        return expect(xapi.deleteState(testAgent, testActivity.id, testStateId)).resolves.toBeDefined();
     });
 });
 
-describe("activity profile api", () => {
+describe("activity profile resource", () => {
     const testProfileId: string = `${testActivity.id}/profiles/test`;
     const testProfile: {[key: string]: any} = {
         test: "test"
@@ -231,7 +231,7 @@ describe("activity profile api", () => {
     });
 });
 
-describe("agent profile api", () => {
+describe("agent profile resource", () => {
     const testProfileId: string = `${testActivity.id}/profiles/test`;
     const testProfile: {[key: string]: any} = {
         test: "test"

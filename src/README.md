@@ -44,26 +44,30 @@ xapi.sendStatement(myStatement);
 
 - [XAPI](#XAPI)
   - [new XAPI()](#new-XAPI)
-- [Statement API](#Statement-API)
+
+- [Statement Resource](#Statement-Resource)
   - [sendStatement](#sendStatement)
   - [getStatement](#getStatement)
   - [getStatements](#getStatements)
   - [getMoreStatements](#getMoreStatements)
   - [voidStatement](#voidStatement)
   - [getVoidedStatement](#getVoidedStatement)
-- [Activity State API](#Activity-State-API)
+
+- [State Resource](#State-Resource)
   - [createActivityState](#createActivityState)
   - [setActivityState](#setActivityState)
   - [getActivityStates](#getActivityStates)
   - [getActivityState](#getActivityState)
   - [deleteActivityState](#deleteActivityState)
-- [Activity Profile API](#Activity-Profile-API)
+
+- [Activity Profile Resource](#Activity-Profile-Resource)
   - [createActivityProfile](#createActivityProfile)
   - [setActivityProfile](#setActivityProfile)
   - [getActivityProfiles](#getActivityProfiles)
   - [getActivityProfile](#getActivityProfile)
   - [deleteActivityProfile](#deleteActivityProfile)
-- [Agent Profile API](#Agent-Profile-API)
+
+- [Agent Profile Resource](#Agent-Profile-Resource)
   - [createAgentProfile](#createAgentProfile)
   - [setAgentProfile](#setAgentProfile)
   - [getAgentProfiles](#getAgentProfiles)
@@ -74,7 +78,7 @@ xapi.sendStatement(myStatement);
 
 ### new XAPI()
 
-To use any of the APIs, you will need to create a new instance of [XAPI](./XAPI.ts) with your LRS credentials.
+To use any of the Resources, you will need to create a new instance of [XAPI](./XAPI.ts) with credentials.
 
 ```ts
 const endpoint = "https://my-lms.com/endpoint/";
@@ -86,14 +90,14 @@ const xapi = new XAPI(endpoint, auth);
 
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
-|endpoint|string|true|The URL of your LRS endpoint.|
+|endpoint|string|true|The URL of the endpoint.|
 |auth|string|false|The `Authorization` header value to be appended to all requests. Defaults to `Basic 0g==`, which is equivalent of `Basic ` followed by a base64 encoded version of the string `:`.|
 
 #### Returns
 
 This returns an [XAPI](./XAPI.ts) object which you can use to communicate with the LRS.
 
-## Statement API
+## Statement Resource
 
 ### sendStatement
 
@@ -221,7 +225,7 @@ xapi.getVoidedStatement({statementId: "abcdefgh-1234"}).then((voidStatement: Sta
 
 This method returns a `Promise` containing the [Statement](./interfaces/Statement/Statement.ts) of the supplied `voidedStatementId`.
 
-## Activity State API
+## State Resource
 
 ### createActivityState
 
@@ -373,7 +377,7 @@ xapi.deleteActivityState(agent, activityId, stateId);
 
 This method returns a `Promise` resolving with no data if successful.
 
-## Activity Profile API
+## Activity Profile Resource
 
 ### createActivityProfile
 
@@ -495,7 +499,7 @@ xapi.deleteActivityProfile(activityId, profileId);
 
 This method returns a `Promise` resolving with no data if successful.
 
-## Agent Profile API
+## Agent Profile Resource
 
 ### createAgentProfile
 
