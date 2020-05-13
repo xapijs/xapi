@@ -63,6 +63,12 @@ xapi.sendStatement(myStatement);
   - [getActivityProfiles](#getActivityProfiles)
   - [getActivityProfile](#getActivityProfile)
   - [deleteActivityProfile](#deleteActivityProfile)
+- [Agent Profile API](#Agent-Profile-API)
+  - [createAgentProfile](#createAgentProfile)
+  - [setAgentProfile](#setAgentProfile)
+  - [getAgentProfiles](#getAgentProfiles)
+  - [getAgentProfile](#getAgentProfile)
+  - [deleteAgentProfile](#deleteAgentProfile)
 
 ## XAPI
 
@@ -240,7 +246,7 @@ xapi.createActivityState(agent, activityId, stateId, state);
 
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
-|agent|[Agent](./interfaces/Statement/Agent/Agent.ts)|true|The agent performing the activity.|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the activity state to be created or merged into.|
 |state|any|true|The state data to be stored.|
@@ -272,7 +278,7 @@ xapi.setActivityState(agent, activityId, stateId, state);
 
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
-|agent|[Agent](./interfaces/Statement/Agent/Agent.ts)|true|The agent performing the activity.|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the activity state to be created or overwritten.|
 |state|any|true|The state data to be stored.|
@@ -302,7 +308,7 @@ xapi.getActivityStates(agent, activityId).then((states: string[]) => {
 
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
-|agent|[Agent](./interfaces/Statement/Agent/Agent.ts)|true|The agent performing the activity.|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 
 #### Returns
@@ -331,7 +337,7 @@ xapi.getActivityState(agent, activityId, stateId).then((state) => {
 
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
-|agent|[Agent](./interfaces/Statement/Agent/Agent.ts)|true|The agent performing the activity.|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be retrieved.|
 
@@ -359,7 +365,7 @@ xapi.deleteActivityState(agent, activityId, stateId);
 
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
-|agent|[Agent](./interfaces/Statement/Agent/Agent.ts)|true|The agent performing the activity.|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be deleted.|
 
@@ -483,6 +489,148 @@ xapi.deleteActivityProfile(activityId, profileId);
 |Parameter|Type|Requred|Description|
 |-|-|-|-|
 |activityId|string|true|The URI of the activity.|
+|profileId|string|true|The URI of the profile to be deleted.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+## Agent Profile API
+
+### createAgentProfile
+
+Creates or merges into an agent profile document by the agent and agent profile identifier.
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+const profileId: string = "https://example.com/profiles/myProfileId"
+const profile = {
+  myKey: "myValue"
+}
+
+xapi.createAgentProfile(agent, profileId, profile);
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
+|profileId|string|true|The URI of the agent profile to be created or merged into.|
+|profile|any|true|The profile data to be stored.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+### setAgentProfile
+
+Creates or overwrites an agent profile document by the agent and agent profile identifier.
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+const profileId: string = "https://example.com/profiles/myProfileId"
+const state = {
+  myKey: "myValue"
+}
+
+xapi.setAgentProfile(agent, profileId, profile);
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
+|profileId|string|true|The URI of the agent profile to be created or overwritten.|
+|profile|any|true|The profile data to be stored.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+### getAgentProfiles
+
+Gets an array of agent profile identifiers by the agent.
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+
+xapi.getAgentProfiles(agent).then((profiles: string[]) => {
+  console.log(profiles); // ["https://example.com/profiles/myProfileId"]
+});
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
+
+#### Returns
+
+This method returns a `Promise` resolving with an array of agent profile identifiers if successful.
+
+### getAgentProfile
+
+Gets an agent profile document by the agent and the agent profile identifier.
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+const profileId: string = "https://example.com/profiles/myProfileId"
+
+xapi.getAgentProfile(agent, profileId).then((profile) => {
+  // do stuff with profile
+});
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
+|profileId|string|true|The URI of the profile to be retrieved.|
+
+#### Returns
+
+This method returns a `Promise` resolving with the stored document if successful.
+
+### deleteAgentProfile
+
+Deletes an agent profile document by the agent and the agent profile identifier.
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+const profileId: string = "https://example.com/profiles/myProfileId"
+
+xapi.deleteAgentProfile(agent, profileId);
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |profileId|string|true|The URI of the profile to be deleted.|
 
 #### Returns
