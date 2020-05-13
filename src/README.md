@@ -26,7 +26,6 @@ xapi.sendStatement(myStatement);
 <script src="https://unpkg.com/@xapi/xapi"></script>
 
 <script type="text/javascript">
-
   // Create LRS connection
   const endpoint = "https://my-lms.com/endpoint";
   const auth = `Basic ${btoa('username:password')}`;
