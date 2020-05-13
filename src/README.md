@@ -90,7 +90,7 @@ const xapi = new XAPI(endpoint, auth);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |endpoint|string|true|The URL of the endpoint.|
 |auth|string|false|The `Authorization` header value to be appended to all requests. Defaults to `Basic 0g==`, which is equivalent of `Basic ` followed by a base64 encoded version of the string `:`.|
@@ -104,6 +104,8 @@ This returns an [XAPI](./XAPI.ts) object which you can use to communicate with t
 ### getAbout
 
 Gets information about the LRS.
+
+#### Example
 
 ```ts
 xapi.getAbout().then((about: About) => {
@@ -121,16 +123,66 @@ This method returns a `Promise` with the success containing an [About](./interfa
 
 Sends a statement to the LRS.
 
+#### Examples
+
+##### Example 1: Send Basic Statement
+
 ```ts
-const myStatement: Statement = { ... };
+import XAPI, { Statement } from "@xapi/xapi";
+
+// new XAPI() etc
+
+const myStatement: Statement = {
+  actor: {
+    objectType: "Agent",
+    name: "Test Agent",
+    mbox: "mailto:hello@example.com"
+  },
+  verb: {
+    id: "http://example.com/verbs/tested",
+    display: {
+        "en-GB": "tested"
+    }
+  },
+  object: {
+    objectType: "Activity",
+    id: "https://github.com/xapijs/xapi"
+  }
+};
+
 xapi.sendStatement(myStatement);
 ```
 
+##### Example 2: Send Embedded Attachment Statement
+
+```ts
+const attachmentContent: string = "hello world";
+const arrayBuffer: ArrayBuffer = new TextEncoder().encode(attachmentContent);
+const statement: Statement = {
+  // actor, verb, object etc,
+  attachments: [{
+    usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
+    display: {
+        "en-US": "Text Attachment"
+    },
+    description: {
+        "en-US": `The text attachment contains "${attachmentContent}"`
+    },
+    contentType: "text/plain",
+    length: arrayBuffer.byteLength,
+    sha2: CryptoJS.SHA256(arrayBufferToWordArray(arrayBuffer)).toString()
+  }]
+}
+xapi.sendStatement(myStatement, [arrayBuffer]);
+```
+This example requires [CryptoJS](https://cryptojs.gitbook.io/docs/) to generate a sha2 of the attachment data.
+
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Reqiured|Description|
 |-|-|-|-|
 |statement|[Statement](./interfaces/Statement/Statement.ts)|true|The statement you wish to send to the LRS.|
+|attachments|ArrayBuffer[]|false|An array of attachment data converted to `ArrayBuffer`.|
 
 #### Returns
 
@@ -140,6 +192,10 @@ This method returns a `Promise` with the success containing a string array of st
 
 To receive a single statement, you must use the `getStatement` method and pass the statement ID in the query. Optionally, you can provide additional parameters to the query to change the data format returned from the LRS.
 
+#### Examples
+
+##### Example 1: Get Basic Statement
+
 ```ts
 xapi.getStatement({
   statementId: "abcdefgh-1234"
@@ -148,9 +204,22 @@ xapi.getStatement({
 });
 ```
 
+##### Example 2: Get Embedded Attachment Statement
+
+```ts
+xapi.getStatement({
+  statementId: "abcdefgh-1234",
+  attachments: true
+}).then((parts: any[]) => {
+  const statement: Statement = parts[0];
+  const attachment: any = parts[1];
+})
+```
+When getting a statement with attachments, the response is returned as an array of parts. The first part always contains the statement, and the following parts are the attachments supplied with the statement.
+
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |query|[GetStatementQuery](./interfaces/XAPI/GetStatementQuery.ts)|true|An object containing the statement query. Must contain the `statementId`.|
 
@@ -162,6 +231,8 @@ This method returns a `Promise` containing the [Statement](./interfaces/Statemen
 
 To receive an array of statements based upon a query, you must use the `getStatements` method. See the [GetStatementsQuery](./interfaces/XAPI/GetStatementsQuery.ts) interface for a full list of ways to create your query.
 
+#### Example
+
 ```ts
 const query: GetStatementsQuery = { ... };
 xapi.getStatements(query).then((response: StatementsResponse) => {
@@ -171,7 +242,7 @@ xapi.getStatements(query).then((response: StatementsResponse) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |query|[GetStatementsQuery](./interfaces/XAPI/GetStatementsQuery.ts)|true|An object containing the statements query.|
 
@@ -182,6 +253,8 @@ This method returns a `Promise` containing a [StatementsResponse](./interfaces/X
 ### getMoreStatements
 
 To be used in conjunction with `getStatements`. If the `more` property is populated on your initial request, more data is available. Send the value of the `more` property to this method to get the next page of statements.
+
+#### Example
 
 ```ts
 const query: GetStatementsQuery = { ... };
@@ -195,7 +268,7 @@ xapi.getStatements(query).then((response: StatementsResponse) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |more|string|true|The `more` property passed from the `getStatements`/`getMoreStatements` query response.|
 
@@ -207,6 +280,8 @@ This method returns a `Promise` containing a [StatementsResponse](./interfaces/X
 
 Voids a statement in the LRS by the supplied Actor.
 
+#### Example
+
 ```ts
 const actor: Actor = { ... };
 xapi.voidStatement(actor, "abcdefgh-1234"});
@@ -214,7 +289,7 @@ xapi.voidStatement(actor, "abcdefgh-1234"});
 
 ##### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |actor|[Actor](./interfaces/Statement/Actor/Actor.ts)|true|The Actor who is voiding the statement e.g. an administrator.|
 |statementId|string|true|The statement to be voided.|
@@ -227,6 +302,8 @@ This method returns a `Promise` containing an array of statement ID strings of t
 
 To receive a single voided statement, you must use the `getVoidedStatement` method and pass the original statement ID in the query (not the original statement's void statement id). Optionally, you can provide additional parameters to the query to change the data format returned from the LRS.
 
+#### Example
+
 ```ts
 xapi.getVoidedStatement({statementId: "abcdefgh-1234"}).then((voidStatement: Statement) => {
   // do stuff with `voidStatement`
@@ -235,7 +312,7 @@ xapi.getVoidedStatement({statementId: "abcdefgh-1234"}).then((voidStatement: Sta
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |query|[GetVoidedStatementQuery](./interfaces/XAPI/GetStatementQuery.ts)|true|An object containing the statement query. Must contain the `voidedStatementId`.|
 
@@ -248,6 +325,8 @@ This method returns a `Promise` containing the [Statement](./interfaces/Statemen
 ### createActivityState
 
 Creates or merges into an activity state document by the agent, activity identifier and activity state identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -266,7 +345,7 @@ xapi.createActivityState(agent, activityId, stateId, state);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
@@ -280,6 +359,8 @@ This method returns a `Promise` resolving with no data if successful.
 ### setActivityState
 
 Creates or overwrites an activity state document by the agent, activity identifier and activity state identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -298,7 +379,7 @@ xapi.setActivityState(agent, activityId, stateId, state);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
@@ -312,6 +393,8 @@ This method returns a `Promise` resolving with no data if successful.
 ### getActivityStates
 
 Gets an array of activity state identifiers by the agent and activity identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -328,7 +411,7 @@ xapi.getActivityStates(agent, activityId).then((states: string[]) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
@@ -340,6 +423,8 @@ This method returns a `Promise` resolving with an array of activity state identi
 ### getActivityState
 
 Gets an activity state document by the agent, activity identifier and the activity state identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -357,7 +442,7 @@ xapi.getActivityState(agent, activityId, stateId).then((state) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
@@ -370,6 +455,8 @@ This method returns a `Promise` resolving with the stored document if successful
 ### deleteActivityState
 
 Deletes an activity state document by the agent, activity identifier and the activity state identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -385,7 +472,7 @@ xapi.deleteActivityState(agent, activityId, stateId);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
@@ -401,6 +488,8 @@ This method returns a `Promise` resolving with no data if successful.
 
 Creates or merges into an activity profile document by the activity identifier and activity profile identifier.
 
+#### Example
+
 ```ts
 const activityId: string = "https://example.com/activities/test-activity";
 const profileId: string = activityId + "/profiles/myProfileId"
@@ -413,7 +502,7 @@ xapi.createActivityProfile(activityId, profileId, profile);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |activityId|string|true|The URI of the activity.|
 |profileId|string|true|The URI of the activity profile to be created or merged into.|
@@ -427,6 +516,8 @@ This method returns a `Promise` resolving with no data if successful.
 
 Creates or overwrites an activity profile document by the activity identifier and activity profile identifier.
 
+#### Example
+
 ```ts
 const activityId: string = "https://example.com/activities/test-activity";
 const profileId: string = activityId + "/profiles/myProfileId"
@@ -439,7 +530,7 @@ xapi.setActivityProfile(activityId, profileId, profile);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |activityId|string|true|The URI of the activity.|
 |profileId|string|true|The URI of the activity profile to be created or overwritten.|
@@ -453,6 +544,8 @@ This method returns a `Promise` resolving with no data if successful.
 
 Gets an array of activity profile identifiers by the activity identifier.
 
+#### Example
+
 ```ts
 const activityId: string = "https://example.com/activities/test-activity";
 
@@ -463,7 +556,7 @@ xapi.getActivityProfiles(activityId).then((profiles: string[]) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |activityId|string|true|The URI of the activity.|
 
@@ -474,6 +567,8 @@ This method returns a `Promise` resolving with an array of activity profile iden
 ### getActivityProfile
 
 Gets an activity profile document by the activity identifier and the activity profile identifier.
+
+#### Example
 
 ```ts
 const activityId: string = "https://example.com/activities/test-activity";
@@ -486,7 +581,7 @@ xapi.getActivityProfile(activityId, profileId).then((profile) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |activityId|string|true|The URI of the activity.|
 |profileId|string|true|The URI of the profile to be retrieved.|
@@ -499,6 +594,8 @@ This method returns a `Promise` resolving with the stored document if successful
 
 Deletes an activity profile document by the activity identifier and the activity state identifier.
 
+#### Example
+
 ```ts
 const activityId: string = "https://example.com/activities/test-activity";
 const profileId: string = activityId + "/profiles/myProfileId"
@@ -508,7 +605,7 @@ xapi.deleteActivityProfile(activityId, profileId);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |activityId|string|true|The URI of the activity.|
 |profileId|string|true|The URI of the profile to be deleted.|
@@ -522,6 +619,8 @@ This method returns a `Promise` resolving with no data if successful.
 ### createAgentProfile
 
 Creates or merges into an agent profile document by the agent and agent profile identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -539,7 +638,7 @@ xapi.createAgentProfile(agent, profileId, profile);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |profileId|string|true|The URI of the agent profile to be created or merged into.|
@@ -552,6 +651,8 @@ This method returns a `Promise` resolving with no data if successful.
 ### setAgentProfile
 
 Creates or overwrites an agent profile document by the agent and agent profile identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -569,7 +670,7 @@ xapi.setAgentProfile(agent, profileId, profile);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |profileId|string|true|The URI of the agent profile to be created or overwritten.|
@@ -582,6 +683,8 @@ This method returns a `Promise` resolving with no data if successful.
 ### getAgentProfiles
 
 Gets an array of agent profile identifiers by the agent.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -597,7 +700,7 @@ xapi.getAgentProfiles(agent).then((profiles: string[]) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 
@@ -608,6 +711,8 @@ This method returns a `Promise` resolving with an array of agent profile identif
 ### getAgentProfile
 
 Gets an agent profile document by the agent and the agent profile identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -624,7 +729,7 @@ xapi.getAgentProfile(agent, profileId).then((profile) => {
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |profileId|string|true|The URI of the profile to be retrieved.|
@@ -636,6 +741,8 @@ This method returns a `Promise` resolving with the stored document if successful
 ### deleteAgentProfile
 
 Deletes an agent profile document by the agent and the agent profile identifier.
+
+#### Example
 
 ```ts
 const agent: Agent = {
@@ -650,7 +757,7 @@ xapi.deleteAgentProfile(agent, profileId);
 
 #### Parameters
 
-|Parameter|Type|Requred|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |profileId|string|true|The URI of the profile to be deleted.|
