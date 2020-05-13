@@ -18,12 +18,13 @@ export default class XAPI {
   private endpoint: string;
   private headers: {[key: string]: string};
 
-  public constructor(endpoint?: string, auth?: string) {
+  public constructor(endpoint: string, auth?: string) {
     this.endpoint = endpoint;
     this.headers = {
       "X-Experience-API-Version": "1.0.0",
       "Content-Type": "application/json",
-      ...(auth ? { Authorization : auth } : {})
+      // No Authorization Process and Requirements -  https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
+      Authorization : auth ? auth : `Basic ${btoa(":")}`
     };
   }
 
