@@ -1,7 +1,7 @@
 ![Node.js CI](https://github.com/xapijs/xapi/workflows/Node.js%20CI/badge.svg)
 
 # xAPI.js
-Send and receive xAPI statements using JavaScript.
+Communicate over xAPI using JavaScript.
 
 [Documentation](/src/README.md)
 

@@ -28,7 +28,7 @@ export default class XAPI {
     };
   }
 
-  // Statements API
+  // Statement Resource
   public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
     return this.request(Endpoints.STATEMENTS, query);
   }
@@ -77,8 +77,8 @@ export default class XAPI {
     });
   }
 
-  // Activity State API
-  public createActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
+  // State Resource
+  public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
     return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
@@ -92,7 +92,7 @@ export default class XAPI {
     });
   }
 
-  public setActivityState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
+  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
     return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
@@ -106,7 +106,7 @@ export default class XAPI {
     });
   }
 
-  public getActivityStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
+  public getStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
     return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
@@ -116,7 +116,7 @@ export default class XAPI {
     });
   }
 
-  public getActivityState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
+  public getState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
     return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
@@ -127,7 +127,7 @@ export default class XAPI {
     });
   }
 
-  public deleteActivityState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
+  public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
     return this.request(Endpoints.ACTIVITY_STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
@@ -140,7 +140,7 @@ export default class XAPI {
     });
   }
 
-  // Activity Profile API
+  // Activity Profile Resource
   public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Endpoints.ACTIVITY_PROFILE, {
       activityId: activityId,
@@ -183,7 +183,7 @@ export default class XAPI {
     });
   }
 
-  // Agent Profile API
+  // Agent Profile Resource
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Endpoints.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
