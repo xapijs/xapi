@@ -6,7 +6,7 @@ Communicate over xAPI using JavaScript.
 [Documentation](/src/README.md)
 
 ## Supported xAPI Versions
-1.0.0
+1.0.0 - 1.0.3
 
 ## xAPI Profile implementations
 - [cmi5](https://github.com/xapijs/cmi5)

@@ -1,6 +1,7 @@
+import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/XAPI";
 import { Statement, Actor, Agent } from "./interfaces/Statement";
-import { Endpoint, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/XAPI";
-import { AttachmentUsages, Endpoints, Verbs } from "./constants";
+import { About } from "./interfaces/About/About";
+import { AttachmentUsages, Resources, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
@@ -21,41 +22,46 @@ export default class XAPI {
   public constructor(endpoint: string, auth?: string) {
     this.endpoint = endpoint;
     this.headers = {
-      "X-Experience-API-Version": "1.0.0",
+      "X-Experience-API-Version": "1.0.3",
       "Content-Type": "application/json",
       // No Authorization Process and Requirements -  https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
       Authorization : auth ? auth : `Basic ${btoa(":")}`
     };
   }
 
+  // About Resource
+  public getAbout(): Promise<About> {
+    return this.request(Resources.ABOUT);
+  }
+
   // Statement Resource
   public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Endpoints.STATEMENTS, query);
+    return this.request(Resources.STATEMENT, query);
   }
 
   public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Endpoints.STATEMENTS, query);
+    return this.request(Resources.STATEMENT, query);
   }
 
   public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
-    return this.request(Endpoints.STATEMENTS, query);
+    return this.request(Resources.STATEMENT, query);
   }
 
   public getMoreStatements(more: string): Promise<StatementsResponse> {
     const params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
-    return this.request(Endpoints.STATEMENTS, params);
+    return this.request(Resources.STATEMENT, params);
   }
 
   public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.requestXMLHTTPRequest(Endpoints.STATEMENTS, {}, {
+      return this.requestXMLHTTPRequest(Resources.STATEMENT, {}, {
         method: "POST",
         headers: multiPart.header,
         body: multiPart.blob
       });
     } else {
-        return this.request(Endpoints.STATEMENTS, {}, {
+        return this.request(Resources.STATEMENT, {}, {
         method: "POST",
         body: JSON.stringify(statement)
       });
@@ -71,7 +77,7 @@ export default class XAPI {
         id: statementId
       }
     };
-    return this.request(Endpoints.STATEMENTS, {}, {
+    return this.request(Resources.STATEMENT, {}, {
       method: "POST",
       body: JSON.stringify(voidStatement)
     });
@@ -79,7 +85,7 @@ export default class XAPI {
 
   // State Resource
   public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Endpoints.ACTIVITY_STATE, {
+    return this.request(Resources.STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -93,7 +99,7 @@ export default class XAPI {
   }
 
   public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Endpoints.ACTIVITY_STATE, {
+    return this.request(Resources.STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -107,7 +113,7 @@ export default class XAPI {
   }
 
   public getStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
-    return this.request(Endpoints.ACTIVITY_STATE, {
+    return this.request(Resources.STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       ...(registration ? {
@@ -117,7 +123,7 @@ export default class XAPI {
   }
 
   public getState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
-    return this.request(Endpoints.ACTIVITY_STATE, {
+    return this.request(Resources.STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -128,7 +134,7 @@ export default class XAPI {
   }
 
   public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
-    return this.request(Endpoints.ACTIVITY_STATE, {
+    return this.request(Resources.STATE, {
       agent: JSON.stringify(agent),
       activityId: activityId,
       stateId: stateId,
@@ -142,7 +148,7 @@ export default class XAPI {
 
   // Activity Profile Resource
   public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoints.ACTIVITY_PROFILE, {
+    return this.request(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -152,7 +158,7 @@ export default class XAPI {
   }
 
   public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoints.ACTIVITY_PROFILE, {
+    return this.request(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -162,20 +168,20 @@ export default class XAPI {
   }
 
   public getActivityProfiles(activityId: string): Promise<string[]> {
-    return this.request(Endpoints.ACTIVITY_PROFILE, {
+    return this.request(Resources.ACTIVITY_PROFILE, {
       activityId: activityId
     });
   }
 
   public getActivityProfile(activityId: string, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Endpoints.ACTIVITY_PROFILE, {
+    return this.request(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     });
   }
 
   public deleteActivityProfile(activityId: string, profileId: string): Promise<void> {
-    return this.request(Endpoints.ACTIVITY_PROFILE, {
+    return this.request(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -185,7 +191,7 @@ export default class XAPI {
 
   // Agent Profile Resource
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoints.AGENT_PROFILE, {
+    return this.request(Resources.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     }, {
@@ -195,7 +201,7 @@ export default class XAPI {
   }
 
   public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Endpoints.AGENT_PROFILE, {
+    return this.request(Resources.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     }, {
@@ -205,20 +211,20 @@ export default class XAPI {
   }
 
   public getAgentProfiles(agent: Agent): Promise<string[]> {
-    return this.request(Endpoints.AGENT_PROFILE, {
+    return this.request(Resources.AGENT_PROFILE, {
       agent: JSON.stringify(agent)
     });
   }
 
   public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Endpoints.AGENT_PROFILE, {
+    return this.request(Resources.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     });
   }
 
   public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
-    return this.request(Endpoints.AGENT_PROFILE, {
+    return this.request(Resources.AGENT_PROFILE, {
       agent: JSON.stringify(agent),
       profileId: profileId
     }, {
@@ -226,9 +232,9 @@ export default class XAPI {
     });
   }
 
-  private request(path: Endpoint, params: {[key: string]: any} = {}, init?: RequestInit | undefined): Promise<any> {
+  private request(resource: Resource, params: {[key: string]: any} = {}, init?: RequestInit | undefined): Promise<any> {
     const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
-    const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
+    const url: RequestInfo = `${this.endpoint}${resource}${queryString ? "?" + queryString : ""}`;
     return fetch(url, {
       headers: this.headers,
       ...init
@@ -248,11 +254,11 @@ export default class XAPI {
     });
   }
 
-  private requestXMLHTTPRequest(path: Endpoint, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): Promise<any> {
+  private requestXMLHTTPRequest(resource: Resource, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): Promise<any> {
     return new Promise((resolve, reject) => {
       const xmlRequest = new XMLHttpRequest();
       const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
-      const url: RequestInfo = `${this.endpoint}${path}${queryString ? "?" + queryString : ""}`;
+      const url: RequestInfo = `${this.endpoint}${resource}${queryString ? "?" + queryString : ""}`;
       xmlRequest.open(initExtras?.method || "GET", url, true);
       const headers = {
         ...this.headers,
