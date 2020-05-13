@@ -44,6 +44,9 @@ xapi.sendStatement(myStatement);
 - [XAPI](#XAPI)
   - [new XAPI()](#new-XAPI)
 
+- [About Resource](#About-Resource)
+  - [getAbout](#getAbout)
+
 - [Statement Resource](#Statement-Resource)
   - [sendStatement](#sendStatement)
   - [getStatement](#getStatement)
@@ -95,6 +98,22 @@ const xapi = new XAPI(endpoint, auth);
 #### Returns
 
 This returns an [XAPI](./XAPI.ts) object which you can use to communicate with the LRS.
+
+## About Resource
+
+### getAbout
+
+Gets information about the LRS.
+
+```ts
+xapi.getAbout().then((about: About) => {
+  console.log(about); // {versions: ["1.0.3"], extensions: []}
+});
+```
+
+#### Returns
+
+This method returns a `Promise` with the success containing an [About](./interfaces/About/About.ts) object.
 
 ## Statement Resource
 

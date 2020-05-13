@@ -39,6 +39,14 @@ function arrayBufferToWordArray(ab: ArrayBuffer): CryptoJS.WordArray {
     return CryptoJS.lib.WordArray.create(a, i8a.length);
 }
 
+describe("about resource", () => {
+    test("can get about", () => {
+        return expect(xapi.getAbout()).resolves.toEqual(expect.objectContaining({
+            versions: expect.any(Array)
+        }));
+    });
+});
+
 describe("statement resource", () => {
     test("can create a statement", () => {
         return expect(xapi.sendStatement(testStatement)).resolves.toHaveLength(1);

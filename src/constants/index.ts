@@ -1,3 +1,3 @@
 export * from "./AttachmentUsages";
-export * from "./Endpoints";
+export * from "./Resources";
 export * from "./Verbs";
