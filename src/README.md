@@ -57,6 +57,12 @@ xapi.sendStatement(myStatement);
   - [getActivityStates](#getActivityStates)
   - [getActivityState](#getActivityState)
   - [deleteActivityState](#deleteActivityState)
+- [Activity Profile API](#Activity-Profile-API)
+  - [createActivityProfile](#createActivityProfile)
+  - [setActivityProfile](#setActivityProfile)
+  - [getActivityProfiles](#getActivityProfiles)
+  - [getActivityProfile](#getActivityProfile)
+  - [deleteActivityProfile](#deleteActivityProfile)
 
 ## XAPI
 
@@ -356,6 +362,128 @@ xapi.deleteActivityState(agent, activityId, stateId);
 |agent|[Agent](./interfaces/Statement/Agent/Agent.ts)|true|The agent performing the activity.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be deleted.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+## Activity Profile API
+
+### createActivityProfile
+
+Creates or merges into an activity profile document by the activity identifier and activity profile identifier.
+
+```ts
+const activityId: string = "https://example.com/activities/test-activity";
+const profileId: string = activityId + "/profiles/myProfileId"
+const profile = {
+  myKey: "myValue"
+}
+
+xapi.createActivityProfile(activityId, profileId, profile);
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|activityId|string|true|The URI of the activity.|
+|profileId|string|true|The URI of the activity profile to be created or merged into.|
+|profile|any|true|The profile data to be stored.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+### setActivityProfile
+
+Creates or overwrites an activity profile document by the activity identifier and activity profile identifier.
+
+```ts
+const activityId: string = "https://example.com/activities/test-activity";
+const profileId: string = activityId + "/profiles/myProfileId"
+const profile = {
+  myKey: "myValue"
+}
+
+xapi.setActivityProfile(activityId, profileId, profile);
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|activityId|string|true|The URI of the activity.|
+|profileId|string|true|The URI of the activity profile to be created or overwritten.|
+|profile|any|true|The profile data to be stored.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+### getActivityProfiles
+
+Gets an array of activity profile identifiers by the activity identifier.
+
+```ts
+const activityId: string = "https://example.com/activities/test-activity";
+
+xapi.getActivityProfiles(activityId).then((profiles: string[]) => {
+  console.log(profiles); // ["https://example.com/activities/test-activity/profiles/myProfileId"]
+});
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|activityId|string|true|The URI of the activity.|
+
+#### Returns
+
+This method returns a `Promise` resolving with an array of activity profile identifiers if successful.
+
+### getActivityProfile
+
+Gets an activity profile document by the activity identifier and the activity profile identifier.
+
+```ts
+const activityId: string = "https://example.com/activities/test-activity";
+const profileId: string = activityId + "/profiles/myProfileId"
+
+xapi.getActivityProfile(activityId, profileId).then((profile) => {
+  // do stuff with profile
+});
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|activityId|string|true|The URI of the activity.|
+|profileId|string|true|The URI of the profile to be retrieved.|
+
+#### Returns
+
+This method returns a `Promise` resolving with the stored document if successful.
+
+### deleteActivityProfile
+
+Deletes an activity profile document by the activity identifier and the activity state identifier.
+
+```ts
+const activityId: string = "https://example.com/activities/test-activity";
+const profileId: string = activityId + "/profiles/myProfileId"
+
+xapi.deleteActivityProfile(activityId, profileId);
+```
+
+#### Parameters
+
+|Parameter|Type|Requred|Description|
+|-|-|-|-|
+|activityId|string|true|The URI of the activity.|
+|profileId|string|true|The URI of the profile to be deleted.|
 
 #### Returns
 
