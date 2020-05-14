@@ -211,6 +211,10 @@ describe("state resource", () => {
     test("can delete a state", () => {
         return expect(xapi.deleteState(testAgent, testActivity.id, testStateId)).resolves.toBeDefined();
     });
+
+    test("can delete all states", () => {
+        return expect(xapi.deleteStates(testAgent, testActivity.id)).resolves.toBeDefined();
+    });
 });
 
 describe("activity profile resource", () => {
