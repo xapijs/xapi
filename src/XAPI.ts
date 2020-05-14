@@ -1,5 +1,5 @@
 import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/XAPI";
-import { Statement, Actor, Agent } from "./interfaces/Statement";
+import { Statement, Actor, Agent, Person } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
@@ -32,6 +32,13 @@ export default class XAPI {
   // About Resource
   public getAbout(): Promise<About> {
     return this.request(Resources.ABOUT);
+  }
+
+  // Agents Resource
+  public getAgent(agent: Agent): Promise<Person> {
+    return this.request(Resources.AGENTS, {
+      agent: JSON.stringify(agent)
+    });
   }
 
   // Statement Resource

@@ -244,6 +244,12 @@ describe("activity profile resource", () => {
     });
 });
 
+describe("agent resource", () => {
+    test("can get person by agent", () => {
+        return expect(xapi.getAgent(testAgent)).resolves.toBeDefined();
+    });
+});
+
 describe("agent profile resource", () => {
     const testProfileId: string = `${testActivity.id}/profiles/test`;
     const testProfile: {[key: string]: any} = {
