@@ -352,6 +352,7 @@ xapi.createState(agent, activityId, stateId, state);
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be created or merged into.|
 |state|any|true|The state data to be stored.|
+|registration|string|false|The registration associated with this state.|
 
 #### Returns
 
@@ -386,6 +387,7 @@ xapi.setState(agent, activityId, stateId, state);
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be created or overwritten.|
 |state|any|true|The state data to be stored.|
+|registration|string|false|The registration associated with this state.|
 
 #### Returns
 
@@ -416,6 +418,7 @@ xapi.getStates(agent, activityId).then((states: string[]) => {
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
+|registration|string|false|The registration associated with this state.|
 
 #### Returns
 
@@ -448,6 +451,7 @@ xapi.getState(agent, activityId, stateId).then((state) => {
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be retrieved.|
+|registration|string|false|The registration associated with this state.|
 
 #### Returns
 
@@ -478,6 +482,7 @@ xapi.deleteState(agent, activityId, stateId);
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be deleted.|
+|registration|string|false|The registration associated with this stage.|
 
 #### Returns
 
@@ -506,6 +511,7 @@ xapi.deleteStates(agent, activityId);
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
+|registration|string|false|The registration associated with this stage.|
 
 #### Returns
 
