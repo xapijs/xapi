@@ -56,11 +56,12 @@ xapi.sendStatement(myStatement);
   - [getVoidedStatement](#getVoidedStatement)
 
 - [State Resource](#State-Resource)
-  - [createActivityState](#createActivityState)
-  - [setActivityState](#setActivityState)
-  - [getActivityStates](#getActivityStates)
-  - [getActivityState](#getActivityState)
-  - [deleteActivityState](#deleteActivityState)
+  - [createState](#createState)
+  - [setState](#setState)
+  - [getStates](#getStates)
+  - [getState](#getState)
+  - [deleteState](#deleteState)
+  - [deleteStates](#deleteStates)
 
 - [Activity Profile Resource](#Activity-Profile-Resource)
   - [createActivityProfile](#createActivityProfile)
@@ -322,43 +323,9 @@ This method returns a `Promise` containing the [Statement](./interfaces/Statemen
 
 ## State Resource
 
-### createActivityState
+### createState
 
-Creates or merges into an activity state document by the agent, activity identifier and activity state identifier.
-
-#### Example
-
-```ts
-const agent: Agent = {
-  objectType: "Agent",
-  name: "Test Agent",
-  mbox: "mailto:test@agent.com"
-};
-const activityId: string = "https://example.com/activities/test-activity";
-const stateId: string = activityId + "/states/myStateId"
-const state = {
-  myKey: "myValue"
-}
-
-xapi.createActivityState(agent, activityId, stateId, state);
-```
-
-#### Parameters
-
-|Parameter|Type|Required|Description|
-|-|-|-|-|
-|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
-|activityId|string|true|The URI of the activity.|
-|stateId|string|true|The URI of the activity state to be created or merged into.|
-|state|any|true|The state data to be stored.|
-
-#### Returns
-
-This method returns a `Promise` resolving with no data if successful.
-
-### setActivityState
-
-Creates or overwrites an activity state document by the agent, activity identifier and activity state identifier.
+Creates or merges into a state document by the agent, activity identifier and state identifier.
 
 #### Example
 
@@ -374,7 +341,7 @@ const state = {
   myKey: "myValue"
 }
 
-xapi.setActivityState(agent, activityId, stateId, state);
+xapi.createState(agent, activityId, stateId, state);
 ```
 
 #### Parameters
@@ -383,16 +350,50 @@ xapi.setActivityState(agent, activityId, stateId, state);
 |-|-|-|-|
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
-|stateId|string|true|The URI of the activity state to be created or overwritten.|
+|stateId|string|true|The URI of the state to be created or merged into.|
 |state|any|true|The state data to be stored.|
 
 #### Returns
 
 This method returns a `Promise` resolving with no data if successful.
 
-### getActivityStates
+### setState
 
-Gets an array of activity state identifiers by the agent and activity identifier.
+Creates or overwrites a state document by the agent, activity identifier and state identifier.
+
+#### Example
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+const activityId: string = "https://example.com/activities/test-activity";
+const stateId: string = activityId + "/states/myStateId"
+const state = {
+  myKey: "myValue"
+}
+
+xapi.setState(agent, activityId, stateId, state);
+```
+
+#### Parameters
+
+|Parameter|Type|Required|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
+|activityId|string|true|The URI of the activity.|
+|stateId|string|true|The URI of the state to be created or overwritten.|
+|state|any|true|The state data to be stored.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+### getStates
+
+Gets an array of state identifiers by the agent and activity identifier.
 
 #### Example
 
@@ -404,7 +405,7 @@ const agent: Agent = {
 };
 const activityId: string = "https://example.com/activities/test-activity";
 
-xapi.getActivityStates(agent, activityId).then((states: string[]) => {
+xapi.getStates(agent, activityId).then((states: string[]) => {
   console.log(states); // ["https://example.com/activities/test-activity/states/myStateId"]
 });
 ```
@@ -418,11 +419,11 @@ xapi.getActivityStates(agent, activityId).then((states: string[]) => {
 
 #### Returns
 
-This method returns a `Promise` resolving with an array of activity state identifiers if successful.
+This method returns a `Promise` resolving with an array of state identifiers if successful.
 
-### getActivityState
+### getState
 
-Gets an activity state document by the agent, activity identifier and the activity state identifier.
+Gets a state document by the agent, activity identifier and the state identifier.
 
 #### Example
 
@@ -435,7 +436,7 @@ const agent: Agent = {
 const activityId: string = "https://example.com/activities/test-activity";
 const stateId: string = activityId + "/states/myStateId"
 
-xapi.getActivityState(agent, activityId, stateId).then((state) => {
+xapi.getState(agent, activityId, stateId).then((state) => {
   // do stuff with state
 });
 ```
@@ -452,9 +453,9 @@ xapi.getActivityState(agent, activityId, stateId).then((state) => {
 
 This method returns a `Promise` resolving with the stored document if successful.
 
-### deleteActivityState
+### deleteState
 
-Deletes an activity state document by the agent, activity identifier and the activity state identifier.
+Deletes a state document by the agent, activity identifier and the state identifier.
 
 #### Example
 
@@ -467,7 +468,7 @@ const agent: Agent = {
 const activityId: string = "https://example.com/activities/test-activity";
 const stateId: string = activityId + "/states/myStateId"
 
-xapi.deleteActivityState(agent, activityId, stateId);
+xapi.deleteState(agent, activityId, stateId);
 ```
 
 #### Parameters
@@ -477,6 +478,34 @@ xapi.deleteActivityState(agent, activityId, stateId);
 |agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
 |activityId|string|true|The URI of the activity.|
 |stateId|string|true|The URI of the state to be deleted.|
+
+#### Returns
+
+This method returns a `Promise` resolving with no data if successful.
+
+### deleteStates
+
+Deletes all state documents by the agent and activity identifier.
+
+#### Example
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+const activityId: string = "https://example.com/activities/test-activity";
+
+xapi.deleteStates(agent, activityId);
+```
+
+#### Parameters
+
+|Parameter|Type|Required|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
+|activityId|string|true|The URI of the activity.|
 
 #### Returns
 
@@ -592,7 +621,7 @@ This method returns a `Promise` resolving with the stored document if successful
 
 ### deleteActivityProfile
 
-Deletes an activity profile document by the activity identifier and the activity state identifier.
+Deletes an activity profile document by the activity identifier and the activity profile identifier.
 
 #### Example
 

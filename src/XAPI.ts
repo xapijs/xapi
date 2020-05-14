@@ -146,6 +146,18 @@ export default class XAPI {
     });
   }
 
+  public deleteStates(agent: Agent, activityId: string, registration?: string): Promise<void> {
+    return this.request(Resources.STATE, {
+      agent: JSON.stringify(agent),
+      activityId: activityId,
+      ...(registration ? {
+        registration
+      } : {})
+    }, {
+      method: "DELETE"
+    });
+  }
+
   // Activity Profile Resource
   public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Resources.ACTIVITY_PROFILE, {
