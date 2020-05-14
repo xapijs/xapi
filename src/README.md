@@ -70,6 +70,9 @@ xapi.sendStatement(myStatement);
   - [getActivityProfile](#getActivityProfile)
   - [deleteActivityProfile](#deleteActivityProfile)
 
+- [Agents Resource](#Agents-Resource)
+  - [getAgent](#getAgent)
+
 - [Agent Profile Resource](#Agent-Profile-Resource)
   - [createAgentProfile](#createAgentProfile)
   - [setAgentProfile](#setAgentProfile)
@@ -648,6 +651,36 @@ xapi.deleteActivityProfile(activityId, profileId);
 #### Returns
 
 This method returns a `Promise` resolving with no data if successful.
+
+## Agents Resource
+
+### getAgent
+
+Gets all agents used by a single person.
+
+#### Example
+
+```ts
+const agent: Agent = {
+  objectType: "Agent",
+  name: "Test Agent",
+  mbox: "mailto:test@agent.com"
+};
+
+xapi.getAgent(agent).then((person: Person) => {
+  // do stuff with person
+});
+```
+
+#### Parameters
+
+|Parameter|Type|Required|Description|
+|-|-|-|-|
+|agent|[Agent](./interfaces/Statement/Actor/Agent.ts)|true|The agent experiencing the AU.|
+
+#### Returns
+
+This method returns a `Promise` resolving with the [Person](./interfaces/Statement/Actor/Person.ts) if successful.
 
 ## Agent Profile Resource
 
