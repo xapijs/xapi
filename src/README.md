@@ -183,7 +183,7 @@ This example requires [CryptoJS](https://cryptojs.gitbook.io/docs/) to generate 
 
 #### Parameters
 
-|Parameter|Type|Reqiured|Description|
+|Parameter|Type|Required|Description|
 |-|-|-|-|
 |statement|[Statement](./interfaces/Statement/Statement.ts)|true|The statement you wish to send to the LRS.|
 |attachments|ArrayBuffer[]|false|An array of attachment data converted to `ArrayBuffer`.|
