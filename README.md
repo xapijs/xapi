@@ -2,14 +2,11 @@
 
 <img width="100" src="https://avatars3.githubusercontent.com/u/65084607?s=200&v=4" alt="xAPI.js logo">
 
-# xAPI.js
+# xAPI.js - xAPI Wrapper Library
 Communicate over xAPI using JavaScript.
 
-[Documentation](/src/README.md)
+[Documentation](https://cookiecookson.gitbook.io/xapijs/xapi-wrapper-library/getting-started)
 
-## Supported xAPI Versions
-1.0.0 - 1.0.3
-
-## xAPI Profile implementations
+## xAPI Profile Libraries
 - [cmi5](https://github.com/xapijs/cmi5)
 - [SCORM](https://github.com/xapijs/scorm)
