@@ -1,6 +1,6 @@
 ![Node.js CI](https://github.com/xapijs/xapi/workflows/Node.js%20CI/badge.svg)
 
-![xAPI.js Logo](https://user-images.githubusercontent.com/3473396/82065159-a8075d00-96c5-11ea-98a3-b4b58bcd4a06.png)
+<img width="100" src="https://avatars3.githubusercontent.com/u/65084607?s=200&v=4" alt="xAPI.js logo">
 
 # xAPI.js
 Communicate over xAPI using JavaScript.
