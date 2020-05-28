@@ -1,7 +1,7 @@
 {
   "name": "@xapi/xapi",
   "version": "0.2.0",
-  "description": "A JavaScript library for communicating with an LRS over xAPI.",
+  "description": "Communicate over xAPI using JavaScript.",
   "main": "dist/XAPI.js",
   "module": "dist/XAPI.esm.js",
   "typings": "dist/types/XAPI.d.ts",
