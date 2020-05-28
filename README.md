@@ -1,22 +1,12 @@
-![Node.js CI](https://github.com/xAPI-js/xAPI-js/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/xapijs/xapi/workflows/Node.js%20CI/badge.svg)
 
-# xAPI.js
-## Overview
-A JavaScript library for communicating with an LRS over xAPI.
+<img width="100" src="https://avatars3.githubusercontent.com/u/65084607?s=200&v=4" alt="xAPI.js logo">
 
-## Supported xAPI Versions
-1.0.0
+# xAPI.js - xAPI Wrapper Library
+Communicate over xAPI using JavaScript.
 
-## Installation
-```bash
-npm install xapi-js
-```
+[Documentation](https://cookiecookson.gitbook.io/xapijs/xapi-wrapper-library/getting-started)
 
-## Usage
-This library has been developed with both opinionated and unopinionated approaches to xAPI.
-
-To construct statements manually with full control, use the [xAPI](/src/XAPI/README.md) wrapper.
-
-To send off premade statements based off a profile, use the corresponding profile. Profiles currently supported:
-- [cmi5](src/profiles/Cmi5/Cmi5.ts)
-- [xAPI SCORM Profile (WIP)](/src/profiles/SCORMProfile/README.md)
+## xAPI Profile Libraries
+- [cmi5](https://github.com/xapijs/cmi5)
+- [SCORM](https://github.com/xapijs/scorm)
