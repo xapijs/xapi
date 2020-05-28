@@ -5,6 +5,7 @@ import { AttachmentUsages, Resources, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
+import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
 
 export * from "./interfaces/XAPI";
 export * from "./interfaces/Statement";
@@ -15,6 +16,7 @@ export default class XAPI {
 
   public static calculateISO8601Duration = calculateISO8601Duration;
   public static getSearchQueryParamsAsObject = getSearchQueryParamsAsObject;
+  public static getXAPILaunchData = getXAPILaunchData;
 
   private endpoint: string;
   private headers: {[key: string]: string};
