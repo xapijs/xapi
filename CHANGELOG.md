@@ -1,3 +1,6 @@
+# 0.2.1 (5 Aug 2020)
+- Fixed issue when using `getStatements()` and querying with `actor` parameter (https://github.com/xapijs/xapi/issues/34)
+
 # 0.2.0 (28 May 2020)
 - Split out SCORM profile, cmi5 profile, cmi5 demo into separate repos
 - Module now exports as a single class
