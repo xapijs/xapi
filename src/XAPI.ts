@@ -10,6 +10,8 @@ export * from "./interfaces/XAPI";
 export * from "./interfaces/Statement";
 
 export default class XAPI {
+  public static default = XAPI;
+
   public static AttachmentUsages = AttachmentUsages;
   public static Verbs = Verbs;
 
