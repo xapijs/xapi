@@ -167,6 +167,14 @@ describe("statement resource", () => {
         });
     });
 
+    test("can query for statements using the actor property", () => {
+        return xapi.getStatements({
+            agent: testAgent
+        }).then((result) => {
+            return expect(result.statements).toBeTruthy();
+        });
+    });
+
     test("can query a single statement using the limit property", () => {
         return xapi.getStatements({
             limit: 1
