@@ -1,4 +1,4 @@
-import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/XAPI";
+import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, RequestParams } from "./interfaces/XAPI";
 import { Statement, Actor, Agent, Person } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs } from "./constants";
@@ -251,7 +251,7 @@ export default class XAPI {
     });
   }
 
-  private request(resource: Resource, params: {[key: string]: any, agent?: Agent} = {}, init?: RequestInit | undefined): Promise<any> {
+  private request(resource: Resource, params: RequestParams = {}, init?: RequestInit | undefined): Promise<any> {
     const url = this.generateURL(resource, params);
     return fetch(url, {
       headers: this.headers,
@@ -272,7 +272,7 @@ export default class XAPI {
     });
   }
 
-  private requestXMLHTTPRequest(resource: Resource, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): Promise<any> {
+  private requestXMLHTTPRequest(resource: Resource, params: RequestParams = {}, initExtras?: RequestInit | undefined): Promise<any> {
     return new Promise((resolve, reject) => {
       const xmlRequest = new XMLHttpRequest();
       const url = this.generateURL(resource, params);
