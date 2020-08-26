@@ -254,7 +254,7 @@ export default class XAPI {
     });
   }
 
-  private request(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined) : Promise<any> {
+  private request(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
     const url = this.generateURL(resource, params);
     return axios({
       method: initExtras?.method || "GET",

@@ -2,8 +2,9 @@
   "name": "@xapi/xapi",
   "version": "0.2.1",
   "description": "Communicate over xAPI using JavaScript.",
-  "main": "dist/XAPI.js",
+  "main": "dist/XAPI.cjs.js",
   "module": "dist/XAPI.esm.js",
+  "browser": "dist/XAPI.umd.js",
   "typings": "dist/types/XAPI.d.ts",
   "files": [
     "dist/**/*"
@@ -51,7 +52,6 @@
     "jest": "^25.2.4",
     "rimraf": "^3.0.2",
     "rollup": "^2.23.0",
-    "rollup-plugin-node-builtins": "^2.1.2",
     "ts-jest": "^25.3.0",
     "typescript": "^3.7.5"
   },
