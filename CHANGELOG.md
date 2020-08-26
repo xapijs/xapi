@@ -1,3 +1,6 @@
+# 0.3.0 (26 Aug 2020)
+- Fixed Rollup configuration to export for UMD (Browser), CJS (Node) and ESM (Browser)
+
 # 0.2.1 (5 Aug 2020)
 - Fixed issue when using `getStatements()` and querying with `actor` parameter (https://github.com/xapijs/xapi/issues/34)
 
