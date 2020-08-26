@@ -5,6 +5,7 @@ import { AttachmentUsages, Resources, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
+import axios, { AxiosRequestConfig } from "axios";
 
 export * from "./interfaces/XAPI";
 export * from "./interfaces/Statement";
@@ -64,15 +65,15 @@ export default class XAPI {
   public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.requestXMLHTTPRequest(Resources.STATEMENT, {}, {
+      return this.request(Resources.STATEMENT, {}, {
         method: "POST",
         headers: multiPart.header,
-        body: multiPart.blob
+        data: multiPart.blob
       });
     } else {
         return this.request(Resources.STATEMENT, {}, {
         method: "POST",
-        body: JSON.stringify(statement)
+        data: statement
       });
     }
   }
@@ -88,7 +89,7 @@ export default class XAPI {
     };
     return this.request(Resources.STATEMENT, {}, {
       method: "POST",
-      body: JSON.stringify(voidStatement)
+      data: voidStatement
     });
   }
 
@@ -103,7 +104,7 @@ export default class XAPI {
       } : {})
     }, {
       method: "POST",
-      body: JSON.stringify(state)
+      data: state
     });
   }
 
@@ -117,7 +118,7 @@ export default class XAPI {
       } : {})
     }, {
       method: "PUT",
-      body: JSON.stringify(state)
+      data: state
     });
   }
 
@@ -174,7 +175,7 @@ export default class XAPI {
       profileId: profileId
     }, {
       method: "POST",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -184,7 +185,7 @@ export default class XAPI {
       profileId: profileId
     }, {
       method: "PUT",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -217,7 +218,7 @@ export default class XAPI {
       profileId: profileId
     }, {
       method: "POST",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -227,7 +228,7 @@ export default class XAPI {
       profileId: profileId
     }, {
       method: "PUT",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -253,56 +254,23 @@ export default class XAPI {
     });
   }
 
-  private request(resource: Resource, params: RequestParams = {}, init?: RequestInit | undefined): Promise<any> {
+  private request(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
     const url = this.generateURL(resource, params);
-    return fetch(url, {
-      headers: this.headers,
-      ...init
-    }).then(response => {
-      if (response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          return response.json();
-        } else {
-          return response.text().then((data) => {
-            return data.indexOf("--") === 2 ? parseMultiPart(data) : data;
-          });
-        }
-      } else {
-        return response.text().then(error => Promise.reject(error));
-      }
-    });
-  }
-
-  private requestXMLHTTPRequest(resource: Resource, params: RequestParams = {}, initExtras?: RequestInit | undefined): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const xmlRequest = new XMLHttpRequest();
-      const url = this.generateURL(resource, params);
-      xmlRequest.open(initExtras?.method || "GET", url, true);
-      const headers = {
+    return axios({
+      method: initExtras?.method || "GET",
+      url: url,
+      headers: {
         ...this.headers,
         ...initExtras?.headers
-      };
-      const headerKeys = Object.keys(headers);
-      for (let i: number = 0; i < headerKeys.length; i++) {
-        const key: string = headerKeys[i];
-        xmlRequest.setRequestHeader(key, headers[key]);
+      },
+      data: initExtras?.data,
+      
+    }).then((response) => {
+      if (response.headers["content-type"].indexOf("application/json") !== -1) {
+        return response.data;
+      } else {
+        return response.data.indexOf("--") === 2 ? parseMultiPart(response.data) : response.data;
       }
-      xmlRequest.onloadend = (): void => {
-        if (xmlRequest.status >= 200 && xmlRequest.status < 400) {
-          try {
-            resolve(JSON.parse(xmlRequest.responseText));
-          } catch {
-            resolve(xmlRequest.responseText.indexOf("--") === 2 ? parseMultiPart(xmlRequest.responseText) : xmlRequest.responseText);
-          }
-        } else {
-          reject(xmlRequest.response);
-        }
-      };
-      xmlRequest.onerror = (): void => {
-        reject(xmlRequest.response);
-      };
-      xmlRequest.send(initExtras?.body);
     });
   }
 
