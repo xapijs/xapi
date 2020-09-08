@@ -1,5 +1,6 @@
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
 import { Actor } from "../interfaces/Statement";
+import axios from "axios";
 
 interface XAPILaunchParameters {
   xAPILaunchKey?: string;
@@ -19,9 +20,10 @@ export function getXAPILaunchData(): Promise<XAPILaunchData> {
   }
   const launchURL: URL = new URL(params.xAPILaunchService);
   launchURL.pathname += `launch/${params.xAPILaunchKey}`;
-  return fetch(launchURL.toString(), {
-    method: "POST"
+  return axios({
+    method: "POST",
+    url: launchURL.toString()
   }).then((response) => {
-    return response.json();
-  }) as Promise<XAPILaunchData>;
+    return response.data;
+  });
 }

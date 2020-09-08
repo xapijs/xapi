@@ -1,6 +1,20 @@
 import XAPI, { Agent, Statement, Activity, Attachment } from "./XAPI";
-import * as CryptoJS from "crypto-js";
+import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
+import axios from "axios";
+
+interface WordArray {
+    iv: string;
+    salt: string;
+    ciphertext: string;
+    key?: string;
+    toString(encoder?: Encoder): string;
+}
+
+interface Encoder {
+    parse(encodedMessage: string): any;
+    stringify(words: any): string;
+}
 
 const endpoint: string = process.env.LRS_ENDPOINT || "";
 const username: string = process.env.LRS_USERNAME || "";
@@ -30,7 +44,7 @@ const testStatement: Statement = {
     object: testActivity
 };
 
-function arrayBufferToWordArray(ab: ArrayBuffer): CryptoJS.WordArray {
+function arrayBufferToWordArray(ab: ArrayBuffer): WordArray {
     const i8a = new Uint8Array(ab);
     const a = [];
     for (let i = 0; i < i8a.length; i += 4) {
@@ -56,8 +70,10 @@ describe("statement resource", () => {
     test("can create a statement with a remote attachment", () => {
         const statement: Statement = Object.assign({}, testStatement);
         const imageURL: string = "https://raw.githubusercontent.com/RusticiSoftware/TinCanJS/8733f14ddcaeea77a0579505300bc8f38921a6b1/test/files/image.jpg";
-        return fetch(imageURL).then((image) => {
-            return image.arrayBuffer();
+        return axios.get(imageURL, {
+            responseType: "arraybuffer"
+        }).then((response) => {
+            return response.data as ArrayBuffer;
         }).then((imageAsArrayBuffer) => {
             const attachment: Attachment = {
                 usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
@@ -167,6 +183,14 @@ describe("statement resource", () => {
         });
     });
 
+    test("can query for statements using the actor property", () => {
+        return xapi.getStatements({
+            agent: testAgent
+        }).then((result) => {
+            return expect(result.statements).toBeTruthy();
+        });
+    });
+
     test("can query a single statement using the limit property", () => {
         return xapi.getStatements({
             limit: 1
@@ -214,6 +238,12 @@ describe("state resource", () => {
 
     test("can delete all states", () => {
         return expect(xapi.deleteStates(testAgent, testActivity.id)).resolves.toBeDefined();
+    });
+});
+
+describe("activities resource", () => {
+    test("can get activity", () => {
+        return expect(xapi.getActivity(testActivity.id)).resolves.toMatchObject(testActivity);
     });
 });
 

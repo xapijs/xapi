@@ -1,3 +1,26 @@
+# 0.4.0 (8 Sep 2020)
+- Added Activities Resource
+
+# 0.3.0 (26 Aug 2020)
+- Fixed Rollup configuration to export for UMD (Browser), CJS (Node) and ESM (Browser)
+
+# 0.2.1 (5 Aug 2020)
+- Fixed issue when using `getStatements()` and querying with `actor` parameter (https://github.com/xapijs/xapi/issues/34)
+
+# 0.2.0 (28 May 2020)
+- Split out SCORM profile, cmi5 profile, cmi5 demo into separate repos
+- Module now exports as a single class
+- Added State Resource documentation
+- Added Activity Profile Resource documentation
+- Added Agent Profile Resource documentation
+- Modified authentication handling as per spec
+- Added About Resource and documentation
+- Added documentation for attachments
+- Added support for deletion of multiple State documents
+- Added Agents Resource and documentation
+- Moved documentation to GitBook
+- Scoped packages to `@xapi` namespace
+
 # 0.1.0 (11 May 2020)
 - cmi5 profile: Implemented profile for cmi5 defined statements
 - cmi5 profile: Added additional helpers for cmi5 allowed statements

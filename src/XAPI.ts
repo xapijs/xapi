@@ -1,16 +1,19 @@
-import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse } from "./interfaces/XAPI";
-import { Statement, Actor, Agent, Person } from "./interfaces/Statement";
+import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, RequestParams } from "./interfaces/XAPI";
+import { Statement, Actor, Agent, Person, Activity } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
+import axios, { AxiosRequestConfig } from "axios";
 
 export * from "./interfaces/XAPI";
 export * from "./interfaces/Statement";
 
 export default class XAPI {
+  public static default = XAPI;
+
   public static AttachmentUsages = AttachmentUsages;
   public static Verbs = Verbs;
 
@@ -39,7 +42,7 @@ export default class XAPI {
   // Agents Resource
   public getAgent(agent: Agent): Promise<Person> {
     return this.request(Resources.AGENTS, {
-      agent: JSON.stringify(agent)
+      agent: agent
     });
   }
 
@@ -64,15 +67,15 @@ export default class XAPI {
   public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.requestXMLHTTPRequest(Resources.STATEMENT, {}, {
+      return this.request(Resources.STATEMENT, {}, {
         method: "POST",
         headers: multiPart.header,
-        body: multiPart.blob
+        data: multiPart.blob
       });
     } else {
         return this.request(Resources.STATEMENT, {}, {
         method: "POST",
-        body: JSON.stringify(statement)
+        data: statement
       });
     }
   }
@@ -88,14 +91,14 @@ export default class XAPI {
     };
     return this.request(Resources.STATEMENT, {}, {
       method: "POST",
-      body: JSON.stringify(voidStatement)
+      data: voidStatement
     });
   }
 
   // State Resource
   public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
     return this.request(Resources.STATE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       activityId: activityId,
       stateId: stateId,
       ...(registration ? {
@@ -103,13 +106,13 @@ export default class XAPI {
       } : {})
     }, {
       method: "POST",
-      body: JSON.stringify(state)
+      data: state
     });
   }
 
   public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
     return this.request(Resources.STATE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       activityId: activityId,
       stateId: stateId,
       ...(registration ? {
@@ -117,13 +120,13 @@ export default class XAPI {
       } : {})
     }, {
       method: "PUT",
-      body: JSON.stringify(state)
+      data: state
     });
   }
 
   public getStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
     return this.request(Resources.STATE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       activityId: activityId,
       ...(registration ? {
         registration
@@ -133,7 +136,7 @@ export default class XAPI {
 
   public getState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
     return this.request(Resources.STATE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       activityId: activityId,
       stateId: stateId,
       ...(registration ? {
@@ -144,7 +147,7 @@ export default class XAPI {
 
   public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
     return this.request(Resources.STATE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       activityId: activityId,
       stateId: stateId,
       ...(registration ? {
@@ -157,13 +160,20 @@ export default class XAPI {
 
   public deleteStates(agent: Agent, activityId: string, registration?: string): Promise<void> {
     return this.request(Resources.STATE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       activityId: activityId,
       ...(registration ? {
         registration
       } : {})
     }, {
       method: "DELETE"
+    });
+  }
+
+  // Activities Resource
+  public getActivity(activityId: string): Promise<Activity> {
+    return this.request(Resources.ACTIVITIES, {
+      activityId: activityId
     });
   }
 
@@ -174,7 +184,7 @@ export default class XAPI {
       profileId: profileId
     }, {
       method: "POST",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -184,7 +194,7 @@ export default class XAPI {
       profileId: profileId
     }, {
       method: "PUT",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
@@ -213,98 +223,73 @@ export default class XAPI {
   // Agent Profile Resource
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Resources.AGENT_PROFILE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       profileId: profileId
     }, {
       method: "POST",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
   public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
     return this.request(Resources.AGENT_PROFILE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       profileId: profileId
     }, {
       method: "PUT",
-      body: JSON.stringify(profile)
+      data: profile
     });
   }
 
   public getAgentProfiles(agent: Agent): Promise<string[]> {
     return this.request(Resources.AGENT_PROFILE, {
-      agent: JSON.stringify(agent)
+      agent: agent
     });
   }
 
   public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
     return this.request(Resources.AGENT_PROFILE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       profileId: profileId
     });
   }
 
   public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
     return this.request(Resources.AGENT_PROFILE, {
-      agent: JSON.stringify(agent),
+      agent: agent,
       profileId: profileId
     }, {
       method: "DELETE"
     });
   }
 
-  private request(resource: Resource, params: {[key: string]: any} = {}, init?: RequestInit | undefined): Promise<any> {
-    const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
-    const url: RequestInfo = `${this.endpoint}${resource}${queryString ? "?" + queryString : ""}`;
-    return fetch(url, {
-      headers: this.headers,
-      ...init
-    }).then(response => {
-      if (response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          return response.json();
-        } else {
-          return response.text().then((data) => {
-            return data.indexOf("--") === 2 ? parseMultiPart(data) : data;
-          });
-        }
+  private request(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
+    const url = this.generateURL(resource, params);
+    return axios({
+      method: initExtras?.method || "GET",
+      url: url,
+      headers: {
+        ...this.headers,
+        ...initExtras?.headers
+      },
+      data: initExtras?.data,
+      
+    }).then((response) => {
+      if (response.headers["content-type"].indexOf("application/json") !== -1) {
+        return response.data;
       } else {
-        return response.text().then(error => Promise.reject(error));
+        return response.data.indexOf("--") === 2 ? parseMultiPart(response.data) : response.data;
       }
     });
   }
 
-  private requestXMLHTTPRequest(resource: Resource, params: {[key: string]: any} = {}, initExtras?: RequestInit | undefined): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const xmlRequest = new XMLHttpRequest();
-      const queryString: string = Object.keys(params).map(key => key + "=" + encodeURIComponent(params[key])).join("&");
-      const url: RequestInfo = `${this.endpoint}${resource}${queryString ? "?" + queryString : ""}`;
-      xmlRequest.open(initExtras?.method || "GET", url, true);
-      const headers = {
-        ...this.headers,
-        ...initExtras?.headers
-      };
-      const headerKeys = Object.keys(headers);
-      for (let i: number = 0; i < headerKeys.length; i++) {
-        const key: string = headerKeys[i];
-        xmlRequest.setRequestHeader(key, headers[key]);
-      }
-      xmlRequest.onloadend = (): void => {
-        if (xmlRequest.status >= 200 && xmlRequest.status < 400) {
-          try {
-            resolve(JSON.parse(xmlRequest.responseText));
-          } catch {
-            resolve(xmlRequest.responseText.indexOf("--") === 2 ? parseMultiPart(xmlRequest.responseText) : xmlRequest.responseText);
-          }
-        } else {
-          reject(xmlRequest.response);
-        }
-      };
-      xmlRequest.onerror = (): void => {
-        reject(xmlRequest.response);
-      };
-      xmlRequest.send(initExtras?.body);
-    });
+  private generateURL(resource: Resource, params: {[key: string]: any}): string {
+    const queryString = Object.keys(params).map(key => {
+      let val = key === "agent" ? JSON.stringify(params[key]) : params[key];
+      val = encodeURIComponent(val);
+      return `${key}=${val}`;
+    }).join("&");
+    const url: RequestInfo = `${this.endpoint}${resource}${queryString ? "?" + queryString : ""}`;
+    return url;
   }
 }
