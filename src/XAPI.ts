@@ -1,5 +1,5 @@
 import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, RequestParams } from "./interfaces/XAPI";
-import { Statement, Actor, Agent, Person } from "./interfaces/Statement";
+import { Statement, Actor, Agent, Person, Activity } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
@@ -165,6 +165,13 @@ export default class XAPI {
       } : {})
     }, {
       method: "DELETE"
+    });
+  }
+
+  // Activities Resource
+  public getActivity(activityId: string): Promise<Activity> {
+    return this.request(Resources.ACTIVITIES, {
+      activityId: activityId
     });
   }
 
