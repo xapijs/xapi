@@ -1,7 +1,7 @@
 export enum Resources {
   ABOUT = "about",
   AGENTS = "agents",
-  ACTIVITY = "activities",
+  ACTIVITIES = "activities",
   ACTIVITY_PROFILE = "activities/profile",
   STATE = "activities/state",
   AGENT_PROFILE = "agents/profile",

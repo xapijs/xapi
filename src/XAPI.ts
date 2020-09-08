@@ -168,9 +168,9 @@ export default class XAPI {
     });
   }
 
-  // Activity Resource
+  // Activities Resource
   public getActivity(activityId: string): Promise<Activity> {
-    return this.request(Resources.ACTIVITY, {
+    return this.request(Resources.ACTIVITIES, {
       activityId: activityId
     });
   }
