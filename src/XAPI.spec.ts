@@ -241,6 +241,12 @@ describe("state resource", () => {
     });
 });
 
+describe("activities resource", () => {
+    test("can get activity", () => {
+        return expect(xapi.getActivity(testActivity.id)).resolves.toMatchObject(testActivity);
+    });
+});
+
 describe("activity profile resource", () => {
     const testProfileId: string = `${testActivity.id}/profiles/test`;
     const testProfile: {[key: string]: any} = {
