@@ -6,6 +6,7 @@ import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/mult
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
+import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData";
 import axios, { AxiosRequestConfig } from "axios";
 
 export * from "./interfaces/XAPI";
@@ -20,6 +21,7 @@ export default class XAPI {
   public static calculateISO8601Duration = calculateISO8601Duration;
   public static getSearchQueryParamsAsObject = getSearchQueryParamsAsObject;
   public static getXAPILaunchData = getXAPILaunchData;
+  public static getTinCanLaunchData = getTinCanLaunchData;
 
   private endpoint: string;
   private headers: {[key: string]: string};
