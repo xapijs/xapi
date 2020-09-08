@@ -241,7 +241,7 @@ describe("state resource", () => {
     });
 });
 
-describe("activity resource", () => {
+describe("activities resource", () => {
     test("can get activity", () => {
         return expect(xapi.getActivity(testActivity.id)).resolves.toMatchObject(testActivity);
     });
