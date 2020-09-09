@@ -5,7 +5,7 @@ import { AttachmentUsages, Resources, Verbs } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
 
 export * from "./interfaces/XAPI";
 export * from "./interfaces/Statement";
@@ -33,37 +33,37 @@ export default class XAPI {
   }
 
   // About Resource
-  public getAbout(): Promise<About> {
+  public getAbout(): AxiosPromise<About> {
     return this.requestResource(Resources.ABOUT);
   }
 
   // Agents Resource
-  public getAgent(agent: Agent): Promise<Person> {
+  public getAgent(agent: Agent): AxiosPromise<Person> {
     return this.requestResource(Resources.AGENTS, {
       agent: agent
     });
   }
 
   // Statement Resource
-  public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
+  public getStatement(query: GetStatementQuery): AxiosPromise<Statement> | Promise<Part[]> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement | Part[]> {
+  public getVoidedStatement(query: GetVoidedStatementQuery): AxiosPromise<Statement>  | Promise<Part[]> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
+  public getStatements(query?: GetStatementsQuery): AxiosPromise<StatementsResponse> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getMoreStatements(more: string): Promise<StatementsResponse> {
+  public getMoreStatements(more: string): AxiosPromise<StatementsResponse> {
     const endpoint = new URL(this.endpoint);
     const url = `${endpoint.protocol}//${endpoint.host}${more}`;
     return this.requestURL(url);
   }
 
-  public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
+  public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): AxiosPromise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
       return this.requestResource(Resources.STATEMENT, {}, {
@@ -79,7 +79,7 @@ export default class XAPI {
     }
   }
 
-  public voidStatement(actor: Actor, statementId: string): Promise<string[]> {
+  public voidStatement(actor: Actor, statementId: string): AxiosPromise<string[]> {
     const voidStatement: Statement = {
       actor,
       verb: Verbs.VOIDED,
@@ -95,7 +95,7 @@ export default class XAPI {
   }
 
   // State Resource
-  public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
+  public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): AxiosPromise<void> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -109,7 +109,7 @@ export default class XAPI {
     });
   }
 
-  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
+  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): AxiosPromise<void> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -123,7 +123,7 @@ export default class XAPI {
     });
   }
 
-  public getStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
+  public getStates(agent: Agent, activityId: string, registration?: string): AxiosPromise<string[]> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -133,7 +133,7 @@ export default class XAPI {
     });
   }
 
-  public getState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
+  public getState(agent: Agent, activityId: string, stateId: string, registration?: string): AxiosPromise<{[key: string]: any}> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -144,7 +144,7 @@ export default class XAPI {
     });
   }
 
-  public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
+  public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): AxiosPromise<void> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -157,7 +157,7 @@ export default class XAPI {
     });
   }
 
-  public deleteStates(agent: Agent, activityId: string, registration?: string): Promise<void> {
+  public deleteStates(agent: Agent, activityId: string, registration?: string): AxiosPromise<void> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -170,14 +170,14 @@ export default class XAPI {
   }
 
   // Activities Resource
-  public getActivity(activityId: string): Promise<Activity> {
+  public getActivity(activityId: string): AxiosPromise<Activity> {
     return this.requestResource(Resources.ACTIVITIES, {
       activityId: activityId
     });
   }
 
   // Activity Profile Resource
-  public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
+  public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
@@ -187,7 +187,7 @@ export default class XAPI {
     });
   }
 
-  public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
+  public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
@@ -197,20 +197,20 @@ export default class XAPI {
     });
   }
 
-  public getActivityProfiles(activityId: string): Promise<string[]> {
+  public getActivityProfiles(activityId: string): AxiosPromise<string[]> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId
     });
   }
 
-  public getActivityProfile(activityId: string, profileId: string): Promise<{[key: string]: any}> {
+  public getActivityProfile(activityId: string, profileId: string): AxiosPromise<{[key: string]: any}> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     });
   }
 
-  public deleteActivityProfile(activityId: string, profileId: string): Promise<void> {
+  public deleteActivityProfile(activityId: string, profileId: string): AxiosPromise<void> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
@@ -220,7 +220,7 @@ export default class XAPI {
   }
 
   // Agent Profile Resource
-  public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
+  public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
@@ -230,7 +230,7 @@ export default class XAPI {
     });
   }
 
-  public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
+  public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
@@ -240,20 +240,20 @@ export default class XAPI {
     });
   }
 
-  public getAgentProfiles(agent: Agent): Promise<string[]> {
+  public getAgentProfiles(agent: Agent): AxiosPromise<string[]> {
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent
     });
   }
 
-  public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
+  public getAgentProfile(agent: Agent, profileId: string): AxiosPromise<{[key: string]: any}> {
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     });
   }
 
-  public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
+  public deleteAgentProfile(agent: Agent, profileId: string): AxiosPromise<void> {
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
@@ -262,12 +262,12 @@ export default class XAPI {
     });
   }
 
-  private requestResource(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
+  private requestResource(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> | Promise<any> {
     const url = this.generateURL(resource, params);
     return this.requestURL(url, initExtras);
   }
 
-  private requestURL(url: string, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
+  private requestURL(url: string, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> | Promise<any> {
     return axios({
       method: initExtras?.method || "GET",
       url: url,
@@ -280,9 +280,9 @@ export default class XAPI {
     }).then((response) => {
       const contentType = response.headers["content-type"];
       if (!contentType || contentType.indexOf("application/json") !== -1) {
-        return response.data;
+        return response;
       } else {
-        return response.data.indexOf("--") === 2 ? parseMultiPart(response.data) : response.data;
+        return response.data.indexOf("--") === 2 ? parseMultiPart(response.data) : response;
       }
     });
   }
