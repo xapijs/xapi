@@ -56,7 +56,6 @@ function arrayBufferToWordArray(ab: ArrayBuffer): WordArray {
 describe("about resource", () => {
     test("can get about", () => {
         return expect(xapi.getAbout()).resolves.toEqual(expect.objectContaining({
-            extensions: expect.any(Object),
             version: expect.any(Array)
         }));
     });
