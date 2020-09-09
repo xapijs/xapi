@@ -34,44 +34,45 @@ export default class XAPI {
 
   // About Resource
   public getAbout(): Promise<About> {
-    return this.request(Resources.ABOUT);
+    return this.requestResource(Resources.ABOUT);
   }
 
   // Agents Resource
   public getAgent(agent: Agent): Promise<Person> {
-    return this.request(Resources.AGENTS, {
+    return this.requestResource(Resources.AGENTS, {
       agent: agent
     });
   }
 
   // Statement Resource
   public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Resources.STATEMENT, query);
+    return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Resources.STATEMENT, query);
+    return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
-    return this.request(Resources.STATEMENT, query);
+    return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getMoreStatements(more: string): Promise<StatementsResponse> {
-    const params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
-    return this.request(Resources.STATEMENT, params);
+    const endpoint = new URL(this.endpoint);
+    const url = `${endpoint.protocol}//${endpoint.host}${more}`;
+    return this.requestURL(url);
   }
 
   public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.request(Resources.STATEMENT, {}, {
+      return this.requestResource(Resources.STATEMENT, {}, {
         method: "POST",
         headers: multiPart.header,
         data: multiPart.blob
       });
     } else {
-        return this.request(Resources.STATEMENT, {}, {
+        return this.requestResource(Resources.STATEMENT, {}, {
         method: "POST",
         data: statement
       });
@@ -87,7 +88,7 @@ export default class XAPI {
         id: statementId
       }
     };
-    return this.request(Resources.STATEMENT, {}, {
+    return this.requestResource(Resources.STATEMENT, {}, {
       method: "POST",
       data: voidStatement
     });
@@ -95,7 +96,7 @@ export default class XAPI {
 
   // State Resource
   public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -109,7 +110,7 @@ export default class XAPI {
   }
 
   public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -123,7 +124,7 @@ export default class XAPI {
   }
 
   public getStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
-    return this.request(Resources.STATE, {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       ...(registration ? {
@@ -133,7 +134,7 @@ export default class XAPI {
   }
 
   public getState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
-    return this.request(Resources.STATE, {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -144,7 +145,7 @@ export default class XAPI {
   }
 
   public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -157,7 +158,7 @@ export default class XAPI {
   }
 
   public deleteStates(agent: Agent, activityId: string, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       ...(registration ? {
@@ -170,14 +171,14 @@ export default class XAPI {
 
   // Activities Resource
   public getActivity(activityId: string): Promise<Activity> {
-    return this.request(Resources.ACTIVITIES, {
+    return this.requestResource(Resources.ACTIVITIES, {
       activityId: activityId
     });
   }
 
   // Activity Profile Resource
   public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -187,7 +188,7 @@ export default class XAPI {
   }
 
   public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -197,20 +198,20 @@ export default class XAPI {
   }
 
   public getActivityProfiles(activityId: string): Promise<string[]> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId
     });
   }
 
   public getActivityProfile(activityId: string, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     });
   }
 
   public deleteActivityProfile(activityId: string, profileId: string): Promise<void> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
@@ -220,7 +221,7 @@ export default class XAPI {
 
   // Agent Profile Resource
   public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.AGENT_PROFILE, {
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
@@ -230,7 +231,7 @@ export default class XAPI {
   }
 
   public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.AGENT_PROFILE, {
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
@@ -240,20 +241,20 @@ export default class XAPI {
   }
 
   public getAgentProfiles(agent: Agent): Promise<string[]> {
-    return this.request(Resources.AGENT_PROFILE, {
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent
     });
   }
 
   public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Resources.AGENT_PROFILE, {
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     });
   }
 
   public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
-    return this.request(Resources.AGENT_PROFILE, {
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
@@ -261,8 +262,12 @@ export default class XAPI {
     });
   }
 
-  private request(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
+  private requestResource(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
     const url = this.generateURL(resource, params);
+    return this.requestURL(url, initExtras);
+  }
+
+  private requestURL(url: string, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
     return axios({
       method: initExtras?.method || "GET",
       url: url,
