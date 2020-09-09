@@ -288,9 +288,12 @@ describe("activity profile resource", () => {
     });
 
     test("can set activity profile", () => {
-        return xapi.setActivityProfile(testActivity.id, testProfileId, testProfile)
+        return xapi.getActivityProfile(testActivity.id, testProfileId)
         .then((result) => {
-            return expect(result.data).toBeDefined();
+            return xapi.setActivityProfile(testActivity.id, testProfileId, testProfile, result.headers.etag, "If-Match")
+            .then((result) => {
+                return expect(result.data).toBeDefined();
+            });
         });
     });
 
@@ -339,8 +342,10 @@ describe("agent profile resource", () => {
     });
 
     test("can set agent profile", () => {
-        return xapi.setAgentProfile(testAgent, testProfileId, testProfile)
+        return xapi.getAgentProfile(testAgent, testProfileId)
         .then((result) => {
+            return xapi.setAgentProfile(testAgent, testProfileId, testProfile, result.headers.etag, "If-Match");
+        }).then((result) => {
             return expect(result.data).toBeDefined();
         });
     });

@@ -95,7 +95,9 @@ export default class XAPI {
   }
 
   // State Resource
-  public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): AxiosPromise<void> {
+  public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -105,11 +107,14 @@ export default class XAPI {
       } : {})
     }, {
       method: "POST",
-      data: state
+      data: state,
+      headers: headers
     });
   }
 
-  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): AxiosPromise<void> {
+  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -119,7 +124,8 @@ export default class XAPI {
       } : {})
     }, {
       method: "PUT",
-      data: state
+      data: state,
+      headers: headers
     });
   }
 
@@ -144,7 +150,9 @@ export default class XAPI {
     });
   }
 
-  public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): AxiosPromise<void> {
+  public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -153,11 +161,14 @@ export default class XAPI {
         registration
       } : {})
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
-  public deleteStates(agent: Agent, activityId: string, registration?: string): AxiosPromise<void> {
+  public deleteStates(agent: Agent, activityId: string, registration?: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -165,7 +176,8 @@ export default class XAPI {
         registration
       } : {})
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
@@ -177,23 +189,29 @@ export default class XAPI {
   }
 
   // Activity Profile Resource
-  public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
+  public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
       method: "POST",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
-  public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
+  public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}, etag: string, matchHeader: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    headers[matchHeader] = etag;
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
       method: "PUT",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
@@ -210,33 +228,42 @@ export default class XAPI {
     });
   }
 
-  public deleteActivityProfile(activityId: string, profileId: string): AxiosPromise<void> {
+  public deleteActivityProfile(activityId: string, profileId: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
   // Agent Profile Resource
-  public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
+  public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
       method: "POST",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
-  public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): AxiosPromise<void> {
+  public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}, etag: string, matchHeader: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    headers[matchHeader] = etag;
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
       method: "PUT",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
@@ -253,12 +280,15 @@ export default class XAPI {
     });
   }
 
-  public deleteAgentProfile(agent: Agent, profileId: string): AxiosPromise<void> {
+  public deleteAgentProfile(agent: Agent, profileId: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
