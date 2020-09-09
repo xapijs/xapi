@@ -278,7 +278,8 @@ export default class XAPI {
       data: initExtras?.data,
       
     }).then((response) => {
-      if (response.headers["content-type"].indexOf("application/json") !== -1) {
+      const contentType = response.headers["content-type"];
+      if (!contentType || contentType.indexOf("application/json") !== -1) {
         return response.data;
       } else {
         return response.data.indexOf("--") === 2 ? parseMultiPart(response.data) : response.data;
