@@ -1,7 +1,7 @@
 import XAPI, { Agent, Statement, Activity, Attachment } from "./XAPI";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
-import axios, { AxiosPromise } from "axios";
+import axios from "axios";
 
 interface WordArray {
     iv: string;
@@ -127,7 +127,7 @@ describe("statement resource", () => {
         .then((result) => {
             return xapi.getStatement({
                 statementId: result.data[0]
-            }) as AxiosPromise<Statement>;
+            });
         }).then((result) => {
             return expect(result.data).toHaveProperty("id");
         });
@@ -154,8 +154,9 @@ describe("statement resource", () => {
             return xapi.getStatement({
                 statementId: result.data[0],
                 attachments: true
-            }) as AxiosPromise<Statement>;
-        }).then((parts) => {
+            });
+        }).then((response) => {
+            const parts = response.data;
             const attachmentData: unknown = parts[1];
             return expect(attachmentData).toEqual(attachmentContent);
         });
@@ -177,7 +178,7 @@ describe("statement resource", () => {
         }).then(() => {
             return xapi.getVoidedStatement({
                 voidedStatementId: statementId
-            }) as AxiosPromise<Statement>;
+            });
         }).then((result) => {
             return expect(result.data).toHaveProperty("id");
         });

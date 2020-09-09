@@ -45,11 +45,11 @@ export default class XAPI {
   }
 
   // Statement Resource
-  public getStatement(query: GetStatementQuery): AxiosPromise<Statement> | Promise<Part[]> {
+  public getStatement(query: GetStatementQuery): AxiosPromise<Statement | Part[]> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getVoidedStatement(query: GetVoidedStatementQuery): AxiosPromise<Statement>  | Promise<Part[]> {
+  public getVoidedStatement(query: GetVoidedStatementQuery): AxiosPromise<Statement | Part[]> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
@@ -292,12 +292,12 @@ export default class XAPI {
     });
   }
 
-  private requestResource(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> | Promise<any> {
+  private requestResource(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> {
     const url = this.generateURL(resource, params);
     return this.requestURL(url, initExtras);
   }
 
-  private requestURL(url: string, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> | Promise<any> {
+  private requestURL(url: string, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> {
     return axios({
       method: initExtras?.method || "GET",
       url: url,
@@ -305,14 +305,18 @@ export default class XAPI {
         ...this.headers,
         ...initExtras?.headers
       },
-      data: initExtras?.data,
-      
+      data: initExtras?.data
     }).then((response) => {
       const contentType = response.headers["content-type"];
-      if (!contentType || contentType.indexOf("application/json") !== -1) {
+      if (
+        !contentType || 
+        contentType.indexOf("application/json") !== -1 ||
+        response.data.indexOf("--") !== 2
+      ) {
         return response;
       } else {
-        return response.data.indexOf("--") === 2 ? parseMultiPart(response.data) : response;
+        response.data = parseMultiPart(response.data);
+        return response;
       }
     });
   }
