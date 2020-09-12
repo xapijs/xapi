@@ -55,16 +55,21 @@ function arrayBufferToWordArray(ab: ArrayBuffer): WordArray {
 
 describe("about resource", () => {
     test("can get about", () => {
-        return expect(xapi.getAbout()).resolves.toEqual(expect.objectContaining({
-            extensions: expect.any(Object),
-            version: expect.any(Array)
-        }));
+        return xapi.getAbout()
+        .then((result) => {
+            return expect(result.data).toEqual(expect.objectContaining({
+                version: expect.any(Array)
+            }));
+        });
     });
 });
 
 describe("statement resource", () => {
     test("can create a statement", () => {
-        return expect(xapi.sendStatement(testStatement)).resolves.toHaveLength(1);
+        return xapi.sendStatement(testStatement)
+        .then((result) => {
+            return expect(result.data).toHaveLength(1);
+        });
     });
 
     test("can create a statement with a remote attachment", () => {
@@ -91,7 +96,7 @@ describe("statement resource", () => {
             statement.attachments = [attachment];
             return xapi.sendStatement(statement);
         }).then((result) => {
-            return expect(result).toHaveLength(1);
+            return expect(result.data).toHaveLength(1);
         });
     });
 
@@ -113,17 +118,18 @@ describe("statement resource", () => {
         };
         statement.attachments = [attachment];
         return xapi.sendStatement(statement, [arrayBuffer]).then((result) => {
-            return expect(result).toHaveLength(1);
+            return expect(result.data).toHaveLength(1);
         });
     });
 
     test("can get a single statement", () => {
-        return xapi.sendStatement(testStatement).then((result) => {
+        return xapi.sendStatement(testStatement)
+        .then((result) => {
             return xapi.getStatement({
-                statementId: result[0]
+                statementId: result.data[0]
             });
-        }).then((statement) => {
-            return expect(statement).toHaveProperty("id");
+        }).then((result) => {
+            return expect(result.data).toHaveProperty("id");
         });
     });
 
@@ -146,10 +152,11 @@ describe("statement resource", () => {
         statement.attachments = [attachment];
         return xapi.sendStatement(statement, [arrayBuffer]).then((result) => {
             return xapi.getStatement({
-                statementId: result[0],
+                statementId: result.data[0],
                 attachments: true
             });
-        }).then((parts) => {
+        }).then((response) => {
+            const parts = response.data;
             const attachmentData: unknown = parts[1];
             return expect(attachmentData).toEqual(attachmentContent);
         });
@@ -157,29 +164,29 @@ describe("statement resource", () => {
 
     test("can void a single statement", () => {
         return xapi.sendStatement(testStatement).then((result) => {
-            return xapi.voidStatement(testAgent, result[0]);
-        }).then((voidResult) => {
-            return expect(voidResult).toHaveLength(1);
+            return xapi.voidStatement(testAgent, result.data[0]);
+        }).then((result) => {
+            return expect(result.data).toHaveLength(1);
         });
     });
 
     test("can get a voided statement", () => {
         let statementId: string;
         return xapi.sendStatement(testStatement).then((result) => {
-            statementId = result[0];
+            statementId = result.data[0];
             return xapi.voidStatement(testAgent, statementId);
         }).then(() => {
             return xapi.getVoidedStatement({
                 voidedStatementId: statementId
             });
-        }).then((voidedStatement) => {
-            return expect(voidedStatement).toHaveProperty("id");
+        }).then((result) => {
+            return expect(result.data).toHaveProperty("id");
         });
     });
 
     test("can get an array of statements", () => {
         return xapi.getStatements().then((result) => {
-            return expect(result.statements).toBeTruthy();
+            return expect(result.data.statements).toBeTruthy();
         });
     });
 
@@ -187,7 +194,7 @@ describe("statement resource", () => {
         return xapi.getStatements({
             agent: testAgent
         }).then((result) => {
-            return expect(result.statements).toBeTruthy();
+            return expect(result.data.statements).toBeTruthy();
         });
     });
 
@@ -195,7 +202,7 @@ describe("statement resource", () => {
         return xapi.getStatements({
             limit: 1
         }).then((result) => {
-            return expect(result.statements).toHaveLength(1);
+            return expect(result.data.statements).toHaveLength(1);
         });
     });
 
@@ -203,9 +210,9 @@ describe("statement resource", () => {
         return xapi.getStatements({
             limit: 1
         }).then((result) => {
-            return xapi.getMoreStatements(result.more);
+            return xapi.getMoreStatements(result.data.more);
         }).then((result) => {
-            return expect(result.statements).toBeTruthy();
+            return expect(result.data.statements).toBeTruthy();
         });
     });
 });
@@ -217,33 +224,54 @@ describe("state resource", () => {
     };
 
     test("can create state", () => {
-        return expect(xapi.createState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+        return xapi.createState(testAgent, testActivity.id, testStateId, testState)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 
     test("can set state", () => {
-        return expect(xapi.setState(testAgent, testActivity.id, testStateId, testState)).resolves.toBeDefined();
+        return xapi.setState(testAgent, testActivity.id, testStateId, testState)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 
     test("can get all states", () => {
-        return expect(xapi.getStates(testAgent, testActivity.id)).resolves.toHaveLength(1);
+        return xapi.getStates(testAgent, testActivity.id)
+        .then((result) => {
+            return expect(result.data).toHaveLength(1);
+        });
     });
 
     test("can get a state", () => {
-        return expect(xapi.getState(testAgent, testActivity.id, testStateId)).resolves.toMatchObject(testState);
+        return xapi.getState(testAgent, testActivity.id, testStateId)
+        .then((result) => {
+            return expect(result.data).toMatchObject(testState);
+        });
     });
 
     test("can delete a state", () => {
-        return expect(xapi.deleteState(testAgent, testActivity.id, testStateId)).resolves.toBeDefined();
+        return xapi.deleteState(testAgent, testActivity.id, testStateId)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 
     test("can delete all states", () => {
-        return expect(xapi.deleteStates(testAgent, testActivity.id)).resolves.toBeDefined();
+        return xapi.deleteStates(testAgent, testActivity.id)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 });
 
 describe("activities resource", () => {
     test("can get activity", () => {
-        return expect(xapi.getActivity(testActivity.id)).resolves.toMatchObject(testActivity);
+        return xapi.getActivity(testActivity.id)
+        .then((result) => {
+            return expect(result.data).toMatchObject(testActivity);
+        });
     });
 });
 
@@ -254,29 +282,50 @@ describe("activity profile resource", () => {
     };
 
     test("can create activity profile", () => {
-        return expect(xapi.createActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
+        return xapi.createActivityProfile(testActivity.id, testProfileId, testProfile)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 
     test("can set activity profile", () => {
-        return expect(xapi.setActivityProfile(testActivity.id, testProfileId, testProfile)).resolves.toBeDefined();
+        return xapi.getActivityProfile(testActivity.id, testProfileId)
+        .then((result) => {
+            return xapi.setActivityProfile(testActivity.id, testProfileId, testProfile, result.headers.etag, "If-Match")
+            .then((result) => {
+                return expect(result.data).toBeDefined();
+            });
+        });
     });
 
     test("can get all activity profiles", () => {
-        return expect(xapi.getActivityProfiles(testActivity.id)).resolves.toHaveLength(1);
+        return xapi.getActivityProfiles(testActivity.id)
+        .then((result) => {
+            return expect(result.data).toHaveLength(1);
+        });
     });
 
     test("can get an activity profile", () => {
-        return expect(xapi.getActivityProfile(testActivity.id, testProfileId)).resolves.toMatchObject(testProfile);
+        return xapi.getActivityProfile(testActivity.id, testProfileId)
+        .then((result) => {
+            return expect(result.data).toMatchObject(testProfile);
+        });
     });
 
     test("can delete an activity profile", () => {
-        return expect(xapi.deleteActivityProfile(testActivity.id, testProfileId)).resolves.toBeDefined();
+        return xapi.deleteActivityProfile(testActivity.id, testProfileId)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 });
 
 describe("agent resource", () => {
     test("can get person by agent", () => {
-        return expect(xapi.getAgent(testAgent)).resolves.toBeDefined();
+        return xapi.getAgent(testAgent)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 });
 
@@ -287,22 +336,39 @@ describe("agent profile resource", () => {
     };
 
     test("can create agent profile", () => {
-        return expect(xapi.createAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
+        return xapi.createAgentProfile(testAgent, testProfileId, testProfile)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 
     test("can set agent profile", () => {
-        return expect(xapi.setAgentProfile(testAgent, testProfileId, testProfile)).resolves.toBeDefined();
+        return xapi.getAgentProfile(testAgent, testProfileId)
+        .then((result) => {
+            return xapi.setAgentProfile(testAgent, testProfileId, testProfile, result.headers.etag, "If-Match");
+        }).then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 
     test("can get all agent profiles", () => {
-        return expect(xapi.getAgentProfiles(testAgent)).resolves.toHaveLength(1);
+        return xapi.getAgentProfiles(testAgent)
+        .then((result) => {
+            return expect(result.data).toHaveLength(1);
+        });
     });
 
     test("can get an agent profile", () => {
-        return expect(xapi.getAgentProfile(testAgent, testProfileId)).resolves.toMatchObject(testProfile);
+        return xapi.getAgentProfile(testAgent, testProfileId)
+        .then((result) => {
+            return expect(result.data).toMatchObject(testProfile);
+        });
     });
 
     test("can delete an agent profile", () => {
-        return expect(xapi.deleteAgentProfile(testAgent, testProfileId)).resolves.toBeDefined();
+        return xapi.deleteAgentProfile(testAgent, testProfileId)
+        .then((result) => {
+            return expect(result.data).toBeDefined();
+        });
     });
 });
