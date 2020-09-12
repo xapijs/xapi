@@ -1,3 +1,9 @@
+# 0.5.0 (12 Sep 2020)
+- Fixed `getMoreStatements()` to use correct URL
+- Fixed error if no `Content-Type` header is returned from LRS
+- Changes responses to return entire `AxiosResponse` instead of `data` property (For ETag support)
+- Added support for sending ETags with requests where required/optional
+
 # 0.4.0 (8 Sep 2020)
 - Added Activities Resource
 
