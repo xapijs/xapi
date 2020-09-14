@@ -1,6 +1,6 @@
 {
   "name": "@xapi/xapi",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Communicate over xAPI using JavaScript.",
   "main": "dist/XAPI.cjs.js",
   "module": "dist/XAPI.esm.js",
@@ -52,11 +52,11 @@
     "jest": "^25.2.4",
     "rimraf": "^3.0.2",
     "rollup": "^2.23.0",
+    "rollup-plugin-terser": "^7.0.2",
     "ts-jest": "^25.3.0",
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "deepmerge": "^4.2.2"
+    "axios": "^0.19.2"
   }
 }

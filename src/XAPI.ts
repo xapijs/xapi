@@ -7,7 +7,7 @@ import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsOb
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
 import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
 
 export * from "./interfaces/XAPI";
 export * from "./interfaces/Statement";
@@ -37,52 +37,53 @@ export default class XAPI {
   }
 
   // About Resource
-  public getAbout(): Promise<About> {
-    return this.request(Resources.ABOUT);
+  public getAbout(): AxiosPromise<About> {
+    return this.requestResource(Resources.ABOUT);
   }
 
   // Agents Resource
-  public getAgent(agent: Agent): Promise<Person> {
-    return this.request(Resources.AGENTS, {
+  public getAgent(agent: Agent): AxiosPromise<Person> {
+    return this.requestResource(Resources.AGENTS, {
       agent: agent
     });
   }
 
   // Statement Resource
-  public getStatement(query: GetStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Resources.STATEMENT, query);
+  public getStatement(query: GetStatementQuery): AxiosPromise<Statement | Part[]> {
+    return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getVoidedStatement(query: GetVoidedStatementQuery): Promise<Statement | Part[]> {
-    return this.request(Resources.STATEMENT, query);
+  public getVoidedStatement(query: GetVoidedStatementQuery): AxiosPromise<Statement | Part[]> {
+    return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getStatements(query?: GetStatementsQuery): Promise<StatementsResponse> {
-    return this.request(Resources.STATEMENT, query);
+  public getStatements(query?: GetStatementsQuery): AxiosPromise<StatementsResponse> {
+    return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getMoreStatements(more: string): Promise<StatementsResponse> {
-    const params: {[key: string]: any} = getSearchQueryParamsAsObject(more);
-    return this.request(Resources.STATEMENT, params);
+  public getMoreStatements(more: string): AxiosPromise<StatementsResponse> {
+    const endpoint = new URL(this.endpoint);
+    const url = `${endpoint.protocol}//${endpoint.host}${more}`;
+    return this.requestURL(url);
   }
 
-  public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): Promise<string[]> {
+  public sendStatement(statement: Statement, attachments?: ArrayBuffer[]): AxiosPromise<string[]> {
     if (attachments?.length) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.request(Resources.STATEMENT, {}, {
+      return this.requestResource(Resources.STATEMENT, {}, {
         method: "POST",
         headers: multiPart.header,
         data: multiPart.blob
       });
     } else {
-        return this.request(Resources.STATEMENT, {}, {
+        return this.requestResource(Resources.STATEMENT, {}, {
         method: "POST",
         data: statement
       });
     }
   }
 
-  public voidStatement(actor: Actor, statementId: string): Promise<string[]> {
+  public voidStatement(actor: Actor, statementId: string): AxiosPromise<string[]> {
     const voidStatement: Statement = {
       actor,
       verb: Verbs.VOIDED,
@@ -91,15 +92,17 @@ export default class XAPI {
         id: statementId
       }
     };
-    return this.request(Resources.STATEMENT, {}, {
+    return this.requestResource(Resources.STATEMENT, {}, {
       method: "POST",
       data: voidStatement
     });
   }
 
   // State Resource
-  public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+  public createState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -108,12 +111,15 @@ export default class XAPI {
       } : {})
     }, {
       method: "POST",
-      data: state
+      data: state,
+      headers: headers
     });
   }
 
-  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+  public setState(agent: Agent, activityId: string, stateId: string, state: {[key: string]: any}, registration?: string, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -122,12 +128,13 @@ export default class XAPI {
       } : {})
     }, {
       method: "PUT",
-      data: state
+      data: state,
+      headers: headers
     });
   }
 
-  public getStates(agent: Agent, activityId: string, registration?: string): Promise<string[]> {
-    return this.request(Resources.STATE, {
+  public getStates(agent: Agent, activityId: string, registration?: string): AxiosPromise<string[]> {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       ...(registration ? {
@@ -136,8 +143,8 @@ export default class XAPI {
     });
   }
 
-  public getState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<{[key: string]: any}> {
-    return this.request(Resources.STATE, {
+  public getState(agent: Agent, activityId: string, stateId: string, registration?: string): AxiosPromise<{[key: string]: any}> {
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -147,8 +154,10 @@ export default class XAPI {
     });
   }
 
-  public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+  public deleteState(agent: Agent, activityId: string, stateId: string, registration?: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       stateId: stateId,
@@ -156,117 +165,143 @@ export default class XAPI {
         registration
       } : {})
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
-  public deleteStates(agent: Agent, activityId: string, registration?: string): Promise<void> {
-    return this.request(Resources.STATE, {
+  public deleteStates(agent: Agent, activityId: string, registration?: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
+    return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       ...(registration ? {
         registration
       } : {})
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
   // Activities Resource
-  public getActivity(activityId: string): Promise<Activity> {
-    return this.request(Resources.ACTIVITIES, {
+  public getActivity(activityId: string): AxiosPromise<Activity> {
+    return this.requestResource(Resources.ACTIVITIES, {
       activityId: activityId
     });
   }
 
   // Activity Profile Resource
-  public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+  public createActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
       method: "POST",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
-  public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+  public setActivityProfile(activityId: string, profileId: string, profile: {[key: string]: any}, etag: string, matchHeader: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    headers[matchHeader] = etag;
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
       method: "PUT",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
-  public getActivityProfiles(activityId: string): Promise<string[]> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+  public getActivityProfiles(activityId: string): AxiosPromise<string[]> {
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId
     });
   }
 
-  public getActivityProfile(activityId: string, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+  public getActivityProfile(activityId: string, profileId: string): AxiosPromise<{[key: string]: any}> {
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     });
   }
 
-  public deleteActivityProfile(activityId: string, profileId: string): Promise<void> {
-    return this.request(Resources.ACTIVITY_PROFILE, {
+  public deleteActivityProfile(activityId: string, profileId: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
+    return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
   // Agent Profile Resource
-  public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.AGENT_PROFILE, {
+  public createAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}, etag?: string, matchHeader?: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers[matchHeader] = etag;
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
       method: "POST",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
-  public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}): Promise<void> {
-    return this.request(Resources.AGENT_PROFILE, {
+  public setAgentProfile(agent: Agent, profileId: string, profile: {[key: string]: any}, etag: string, matchHeader: "If-Match" | "If-None-Match"): AxiosPromise<void> {
+    const headers = {};
+    headers[matchHeader] = etag;
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
       method: "PUT",
-      data: profile
+      data: profile,
+      headers: headers
     });
   }
 
-  public getAgentProfiles(agent: Agent): Promise<string[]> {
-    return this.request(Resources.AGENT_PROFILE, {
+  public getAgentProfiles(agent: Agent): AxiosPromise<string[]> {
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent
     });
   }
 
-  public getAgentProfile(agent: Agent, profileId: string): Promise<{[key: string]: any}> {
-    return this.request(Resources.AGENT_PROFILE, {
+  public getAgentProfile(agent: Agent, profileId: string): AxiosPromise<{[key: string]: any}> {
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     });
   }
 
-  public deleteAgentProfile(agent: Agent, profileId: string): Promise<void> {
-    return this.request(Resources.AGENT_PROFILE, {
+  public deleteAgentProfile(agent: Agent, profileId: string, etag?: string): AxiosPromise<void> {
+    const headers = {};
+    if (etag) headers["If-Match"] = etag;
+    return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId
     }, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: headers
     });
   }
 
-  private request(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): Promise<any> {
+  private requestResource(resource: Resource, params: RequestParams = {}, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> {
     const url = this.generateURL(resource, params);
+    return this.requestURL(url, initExtras);
+  }
+
+  private requestURL(url: string, initExtras?: AxiosRequestConfig | undefined): AxiosPromise<any> {
     return axios({
       method: initExtras?.method || "GET",
       url: url,
@@ -274,13 +309,18 @@ export default class XAPI {
         ...this.headers,
         ...initExtras?.headers
       },
-      data: initExtras?.data,
-      
+      data: initExtras?.data
     }).then((response) => {
-      if (response.headers["content-type"].indexOf("application/json") !== -1) {
-        return response.data;
+      const contentType = response.headers["content-type"];
+      if (
+        !contentType || 
+        contentType.indexOf("application/json") !== -1 ||
+        response.data.indexOf("--") !== 2
+      ) {
+        return response;
       } else {
-        return response.data.indexOf("--") === 2 ? parseMultiPart(response.data) : response.data;
+        response.data = parseMultiPart(response.data);
+        return response;
       }
     });
   }
