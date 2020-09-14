@@ -2,8 +2,8 @@ import babel from "@rollup/plugin-babel";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
-import sizes from "rollup-plugin-sizes";
 import pkg from "./package.json";
+import { terser } from "rollup-plugin-terser";
 
 const input = "./src/XAPI.ts";
 
@@ -30,9 +30,7 @@ export default [{
     }),
     commonjs(), // Used for Axios import
     babel(babelPluginOptions),
-    sizes({
-      details: true
-    })
+    terser()
   ],
   output: [
     {
@@ -56,9 +54,7 @@ export default [{
     commonjs(), // Used for Axios import
     json(),
     babel(babelPluginOptions),
-    sizes({
-      details: true
-    })
+    terser()
   ],
   external: ["http", "https", "url", "zlib", "stream", "assert", "tty", "util", "os", "debug", "follow-redirects", "supports-color", "ms", "has-flag"],
   output: [
