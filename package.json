@@ -57,7 +57,6 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "deepmerge": "^4.2.2"
+    "axios": "^0.19.2"
   }
 }
