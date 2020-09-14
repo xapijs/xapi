@@ -1,4 +1,4 @@
-const XAPI = require("../dist/XAPI.cjs.js");
+const XAPI = require("../../dist/XAPI.cjs.js");
 
 require("dotenv").config();
 

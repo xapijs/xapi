@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tincan xmlns="http://projecttincan.com/tincan.xsd">
+    <activities>
+        <activity id="https://github.com/xapijs/xapi/tree/master/example" type="http://adlnet.gov/expapi/activities/course">
+            <name>xAPI.js xAPI demo</name>
+            <description lang="en-US">An example course using the xAPI.js demo.</description>
+            <launch lang="en-us">index.html</launch>
+        </activity>
+    </activities>
+</tincan>
