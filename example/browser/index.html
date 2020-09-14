@@ -10,8 +10,8 @@
     const auth = `Basic ${btoa(username + ":" + password)}`;
     const xapi = new XAPI(endpoint, auth);
 
-    xapi.getAbout().then((about) => {
-      console.log(about);
+    xapi.getAbout().then((result) => {
+      console.log(result.data);
     });
   </script>
 </html>
