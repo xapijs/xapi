@@ -1,4 +1,4 @@
-const XAPI = require("../dist/XAPI.cjs.js");
+const XAPI = require("../../dist/XAPI.cjs.js");
 
 require("dotenv").config();
 
@@ -8,6 +8,6 @@ const password = process.env.LRS_PASSWORD || "";
 const auth = `Basic ${Buffer.from(username + ":" + password, "binary").toString("base64")}`;
 const xapi = new XAPI(endpoint, auth);
 
-xapi.getAbout().then((about) => {
-  console.log(about);
+xapi.getAbout().then((result) => {
+  console.log(result.data);
 });
