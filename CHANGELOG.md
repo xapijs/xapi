@@ -1,3 +1,8 @@
+# 0.6.0 (15 Sep 2020)
+- Added `getXAPILaunchData()` method
+- Added `getTinCanLaunchData()` method
+- Added Terser to produce minified bundles
+
 # 0.5.0 (12 Sep 2020)
 - Fixed `getMoreStatements()` to use correct URL
 - Fixed error if no `Content-Type` header is returned from LRS
