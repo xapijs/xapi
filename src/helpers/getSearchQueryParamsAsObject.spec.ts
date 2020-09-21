@@ -23,3 +23,47 @@ test("can parse JSON objects in querystring", () => {
     actor: actor
   });
 });
+
+test("can coerce TinCan launch actor name if string array", () => {
+  const actor: Actor = {
+    objectType: "Agent",
+    name: ["Test"] as any
+  };
+  const stringifyEncoded: string = encodeURIComponent(JSON.stringify(actor));
+  return expect(getSearchQueryParamsAsObject(`?actor=${stringifyEncoded}`)).toMatchObject({
+    actor: {
+      objectType: "Agent",
+      name: "Test"
+    }
+  });
+});
+
+test("can coerce TinCan launch actor mbox if string array", () => {
+  const actor: Actor = {
+    objectType: "Agent",
+    mbox: ["test@test.com"] as any
+  };
+  const stringifyEncoded: string = encodeURIComponent(JSON.stringify(actor));
+  return expect(getSearchQueryParamsAsObject(`?actor=${stringifyEncoded}`)).toMatchObject({
+    actor: {
+      objectType: "Agent",
+      mbox: "test@test.com"
+    }
+  });
+});
+
+test("can coerce TinCan launch actor name & mbox if string arrays", () => {
+  const actor: Actor = {
+    objectType: "Agent",
+    mbox: ["test@test.com"] as any,
+    name: ["Test"] as any
+  };
+  const stringifyEncoded: string = encodeURIComponent(JSON.stringify(actor));
+  return expect(getSearchQueryParamsAsObject(`?actor=${stringifyEncoded}`)).toMatchObject({
+    actor: {
+      objectType: "Agent",
+      mbox: "test@test.com",
+      name: "Test"
+    }
+  });
+});

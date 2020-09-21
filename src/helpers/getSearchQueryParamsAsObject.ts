@@ -5,11 +5,22 @@ export function getSearchQueryParamsAsObject(str: string): {[key: string]: any} 
   const items = queryString.split("&");
   items.forEach((n: string) => {
     const item: string[] = n.split("=");
-    const decodedItem: string = decodeURIComponent(item[1]);
+    const key = item[0];
+    const val = item[1];
+    const decodedItem: string = decodeURIComponent(val);
     try {
-      obj[item[0]] = JSON.parse(decodedItem);
+      obj[key] = JSON.parse(decodedItem);
     } catch {
-      obj[item[0]] = decodedItem;
+      obj[key] = decodedItem;
+    }
+    // Coerce actor name & mbox properties from arrays to strings if found
+    if (key === "actor") {
+      const actorKeys = ["name", "mbox"];
+      actorKeys.forEach((actorKey) => {
+        if (Array.isArray(obj[key][actorKey])) {
+          obj[key][actorKey] = obj[key][actorKey][0];
+        }
+      });
     }
   });
   return obj;
