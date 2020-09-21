@@ -1,3 +1,6 @@
+# 0.6.1 (21 Sep 2020)
+- Coerce `actor` string arrays to strings if found in query string
+
 # 0.6.0 (15 Sep 2020)
 - Added `getXAPILaunchData()` method
 - Added `getTinCanLaunchData()` method
