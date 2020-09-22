@@ -17,6 +17,15 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
+        token: [{
+          LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_SCORMCLOUD }},
+          LRS_USERNAME: ${{ secrets.LRS_USERNAME_SCORMCLOUD }},
+          LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_SCORMCLOUD }}
+        },{
+          LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }},
+          LRS_USERNAME: ${{ secrets.LRS_USERNAME_VERACITY }},
+          LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_VERACITY }}
+        }]
 
     steps:
     - uses: actions/checkout@v2
@@ -30,6 +39,6 @@ jobs:
     - run: npm test
       env:
         CI: true
-        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT }}
-        LRS_USERNAME: ${{ secrets.LRS_USERNAME }}
-        LRS_PASSWORD: ${{ secrets.LRS_PASSWORD }}
+        LRS_ENDPOINT: ${{ matrix.token.LRS_ENDPOINT }}
+        LRS_USERNAME: ${{ matrix.token.LRS_USERNAME }}
+        LRS_PASSWORD: ${{ matrix.token.LRS_PASSWORD }}
