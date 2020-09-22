@@ -27,16 +27,18 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run build --if-present
+    - name: Run SCORM Cloud tests
     - run: npm test
       env:
         CI: true
         LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_SCORMCLOUD }}
         LRS_USERNAME: ${{ secrets.LRS_USERNAME_SCORMCLOUD }}
         LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_SCORMCLOUD }}
+    - name: Run Veracity tests
     - run: npm test
       env:
         CI: true
-        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITYY }}
+        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }}
         LRS_USERNAME: ${{ secrets.LRS_USERNAME_VERACITY }}
         LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_VERACITY }}
 
