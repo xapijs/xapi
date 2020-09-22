@@ -36,7 +36,7 @@ jobs:
     - run: npm test
       env:
         CI: true
-        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }}
+        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITYY }}
         LRS_USERNAME: ${{ secrets.LRS_USERNAME_VERACITY }}
         LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_VERACITY }}
 
