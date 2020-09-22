@@ -30,6 +30,13 @@ jobs:
     - run: npm test
       env:
         CI: true
-        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT }}
-        LRS_USERNAME: ${{ secrets.LRS_USERNAME }}
-        LRS_PASSWORD: ${{ secrets.LRS_PASSWORD }}
+        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_SCORMCLOUD }}
+        LRS_USERNAME: ${{ secrets.LRS_USERNAME_SCORMCLOUD }}
+        LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_SCORMCLOUD }}
+    - run: npm test
+      env:
+        CI: true
+        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }}
+        LRS_USERNAME: ${{ secrets.LRS_USERNAME_VERACITY }}
+        LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_VERACITY }}
+
