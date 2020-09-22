@@ -1,7 +1,7 @@
 import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, RequestParams } from "./interfaces/XAPI";
 import { Statement, Actor, Agent, Person, Activity } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
-import { AttachmentUsages, Resources, Verbs } from "./constants";
+import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
@@ -26,10 +26,10 @@ export default class XAPI {
   private endpoint: string;
   private headers: {[key: string]: string};
 
-  public constructor(endpoint: string, auth?: string) {
+  public constructor(endpoint: string, auth?: string, version: Versions = "1.0.3") {
     this.endpoint = endpoint;
     this.headers = {
-      "X-Experience-API-Version": "1.0.3",
+      "X-Experience-API-Version": version,
       "Content-Type": "application/json",
       // No Authorization Process and Requirements -  https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
       Authorization : auth ? auth : `Basic ${btoa(":")}`
