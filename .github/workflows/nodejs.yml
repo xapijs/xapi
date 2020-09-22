@@ -17,9 +17,6 @@ jobs:
     strategy:
       matrix:
         - node-version: [12.x]
-        - env:
-          - { CI: true, LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_SCORMCLOUD}}, LRS_USERNAME: ${{ secrets.LRS_USERNAME_SCORMCLOUD }}, LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_SCORMCLOUD }} }
-          - { CI: true, LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }}, LRS_USERNAME: ${{ secrets.LRS_USERNAME_VERACITY }}, LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_VERACITY }} }
 
     steps:
     - uses: actions/checkout@v2
@@ -31,4 +28,15 @@ jobs:
     - run: npm run lint
     - run: npm run build --if-present
     - run: npm test
-      env: ${{ matrix.env }}
+      env:
+        CI: true
+        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_SCORMCLOUD }}
+        LRS_USERNAME: ${{ secrets.LRS_USERNAME_SCORMCLOUD }}
+        LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_SCORMCLOUD }}
+    - run: npm test
+      env:
+        CI: true
+        LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }}
+        LRS_USERNAME: ${{ secrets.LRS_USERNAME_VERACITY }}
+        LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_VERACITY }}
+
