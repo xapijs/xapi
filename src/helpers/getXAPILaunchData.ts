@@ -16,7 +16,7 @@ interface XAPILaunchData {
 export function getXAPILaunchData(): Promise<XAPILaunchData> {
   const params: XAPILaunchParameters = getSearchQueryParamsAsObject(location.href);
   if (!params.xAPILaunchService) {
-    throw new Error("xAPILaunchService parameter not found in URL.");
+    return Promise.reject(new Error("xAPILaunchService parameter not found in URL."));
   }
   const launchURL: URL = new URL(params.xAPILaunchService);
   launchURL.pathname += `launch/${params.xAPILaunchKey}`;
