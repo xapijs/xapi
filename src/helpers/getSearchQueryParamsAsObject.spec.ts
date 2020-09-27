@@ -52,18 +52,24 @@ test("can coerce TinCan launch actor mbox if string array", () => {
   });
 });
 
-test("can coerce TinCan launch actor name & mbox if string arrays", () => {
+test("can coerce TinCan launch actor account if string array", () => {
   const actor: Actor = {
     objectType: "Agent",
-    mbox: ["test@test.com"] as any,
-    name: ["Test"] as any
+    account: [
+      {
+        "accountServiceHomePage": "http://www.example.com",
+        "accountName": "ABCDEFGH|test@test.com"
+      }
+    ] as any,
   };
   const stringifyEncoded: string = encodeURIComponent(JSON.stringify(actor));
   return expect(getSearchQueryParamsAsObject(`?actor=${stringifyEncoded}`)).toMatchObject({
     actor: {
       objectType: "Agent",
-      mbox: "test@test.com",
-      name: "Test"
-    }
+      account: {
+        homePage: "http://www.example.com",
+        name: "ABCDEFGH|test@test.com",
+      }
+    } as Actor
   });
 });
