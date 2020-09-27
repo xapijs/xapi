@@ -53,6 +53,15 @@ function arrayBufferToWordArray(ab: ArrayBuffer): WordArray {
     return CryptoJS.lib.WordArray.create(a, i8a.length);
 }
 
+describe("xapi launch", () => {
+    test("catch error if failure to get data", () => {
+        return XAPI.getXAPILaunchData()
+        .catch((error) => {
+            return expect(error).toBeInstanceOf(Error);
+        });
+    });
+});
+
 describe("about resource", () => {
     test("can get about", () => {
         return xapi.getAbout()
