@@ -1,3 +1,6 @@
+# 0.6.4 (27 Sep 2020)
+- Fixed Statement query interfaces for `format` parameter
+
 # 0.6.3 (27 Sep 2020)
 - Fixed xAPI Launch not returning error in Promise
 - Added coercion for `actor.account`
