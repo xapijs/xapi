@@ -1,5 +1,5 @@
 import { Resource, GetStatementQuery, GetVoidedStatementQuery, GetStatementsQuery, StatementsResponse, RequestParams } from "./interfaces/XAPI";
-import { Statement, Actor, Agent, Person, Activity } from "./interfaces/Statement";
+import { Statement, Actor, Agent, Person, Activity, Timestamp } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart, createMultiPart, MultiPart, Part } from "./helpers/multiPart";
@@ -133,12 +133,15 @@ export default class XAPI {
     });
   }
 
-  public getStates(agent: Agent, activityId: string, registration?: string): AxiosPromise<string[]> {
+  public getStates(agent: Agent, activityId: string, registration?: string, since?: Timestamp): AxiosPromise<string[]> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
       ...(registration ? {
         registration
+      } : {}),
+      ...(since ? {
+        since
       } : {})
     });
   }
@@ -219,9 +222,12 @@ export default class XAPI {
     });
   }
 
-  public getActivityProfiles(activityId: string): AxiosPromise<string[]> {
+  public getActivityProfiles(activityId: string, since?: Timestamp): AxiosPromise<string[]> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
-      activityId: activityId
+      activityId: activityId,
+      ...(since ? {
+        since
+      }: {})
     });
   }
 
@@ -271,9 +277,12 @@ export default class XAPI {
     });
   }
 
-  public getAgentProfiles(agent: Agent): AxiosPromise<string[]> {
+  public getAgentProfiles(agent: Agent, since?: Timestamp): AxiosPromise<string[]> {
     return this.requestResource(Resources.AGENT_PROFILE, {
-      agent: agent
+      agent: agent,
+      ...(since ? {
+        since
+      } : {})
     });
   }
 
