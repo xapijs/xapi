@@ -1,3 +1,6 @@
+# 0.6.5 (4 Oct 2020)
+- Added missing parameter `since` when retrieving multiple Documents
+
 # 0.6.4 (27 Sep 2020)
 - Fixed Statement query interfaces for `format` parameter
 
