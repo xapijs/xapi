@@ -42,11 +42,6 @@ export default [{
       file: pkg.module,
       format: "esm",
       exports: "default"
-    },
-    {
-      file: pkg.main,
-      format: "cjs",
-      exports: "default"
     }
   ]
 }, {
@@ -64,12 +59,7 @@ export default [{
   external: ["http", "https", "url", "zlib", "stream", "assert", "tty", "util", "os", "debug", "follow-redirects", "supports-color", "ms", "has-flag"],
   output: [
     {
-      file: "dist/XAPI.node.esm.mjs",
-      format: "esm",
-      exports: "default"
-    },
-    {
-      file: "dist/XAPI.node.cjs.js",
+      file: pkg.main,
       format: "cjs",
       exports: "default"
     }
