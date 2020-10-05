@@ -1,6 +1,7 @@
-const XAPI = require("../../dist/XAPI.cjs.js");
+import XAPI from "../../dist/XAPI.node.esm";
+import dotenv from "dotenv";
 
-require("dotenv").config();
+dotenv.config();
 
 const endpoint = process.env.LRS_ENDPOINT || "";
 const username = process.env.LRS_USERNAME || "";

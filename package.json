@@ -16,6 +16,8 @@
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run clean && npm run build:types && npm run build:js",
     "test": "jest",
+    "test:example:node:require": "node ./example/node/require.js",
+    "test:example:node:module": "node --experimental-modules --es-module-specifier-resolution=node ./example/node/module.mjs",
     "lint": "eslint . --ext .ts,.js"
   },
   "repository": {
