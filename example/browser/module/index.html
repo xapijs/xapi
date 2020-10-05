@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <script type="module">
+    import XAPI from "https://unpkg.com/@xapi/xapi?module";
+    const { endpoint, auth } = XAPI.getTinCanLaunchData();
+    const xapi = new XAPI(endpoint, auth);
+    xapi.getAbout().then((result) => {
+      console.log(result.data);
+    });
+  </script>
+</html>
