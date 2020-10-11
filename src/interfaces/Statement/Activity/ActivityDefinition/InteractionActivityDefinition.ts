@@ -11,61 +11,71 @@ export interface InteractionComponent {
   description?: LanguageMap;
 }
 
-interface TrueFalseInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface TrueFalseInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "true-false";
   correctResponsesPattern?: ["true"] | ["false"];
 }
 
-interface ChoiceInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface ChoiceInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "choice";
   choices?: InteractionComponent[];
 }
 
-interface FillInInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface FillInInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "fill-in";
 }
 
-interface LongFillInInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface LongFillInInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "long-fill-in";
 }
 
-interface LikertInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface LikertInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "likert";
   scale?: InteractionComponent[];
 }
 
-interface MatchingInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface MatchingInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "matching";
   source?: InteractionComponent[];
   target?: InteractionComponent[];
 }
 
-interface PerformanceInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface PerformanceInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "performance";
   steps?: InteractionComponent[];
 }
 
-interface SequencingInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface SequencingInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "sequencing";
   choices?: InteractionComponent[];
 }
 
-interface NumericInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface NumericInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "numeric";
 }
 
-interface OtherInteractionActivityDefinition extends BaseInteractionActivityDefinition {
+interface OtherInteractionActivityDefinition
+  extends BaseInteractionActivityDefinition {
   interactionType: "other";
 }
 
 export type InteractionActivityDefinition =
-  TrueFalseInteractionActivityDefinition |
-  ChoiceInteractionActivityDefinition |
-  FillInInteractionActivityDefinition |
-  LongFillInInteractionActivityDefinition |
-  LikertInteractionActivityDefinition |
-  MatchingInteractionActivityDefinition |
-  PerformanceInteractionActivityDefinition |
-  SequencingInteractionActivityDefinition |
-  NumericInteractionActivityDefinition |
-  OtherInteractionActivityDefinition;
+  | TrueFalseInteractionActivityDefinition
+  | ChoiceInteractionActivityDefinition
+  | FillInInteractionActivityDefinition
+  | LongFillInInteractionActivityDefinition
+  | LikertInteractionActivityDefinition
+  | MatchingInteractionActivityDefinition
+  | PerformanceInteractionActivityDefinition
+  | SequencingInteractionActivityDefinition
+  | NumericInteractionActivityDefinition
+  | OtherInteractionActivityDefinition;

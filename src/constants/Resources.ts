@@ -5,5 +5,5 @@ export enum Resources {
   ACTIVITY_PROFILE = "activities/profile",
   STATE = "activities/state",
   AGENT_PROFILE = "agents/profile",
-  STATEMENT = "statements"
+  STATEMENT = "statements",
 }

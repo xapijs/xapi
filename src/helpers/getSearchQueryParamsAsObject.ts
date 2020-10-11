@@ -4,11 +4,15 @@ function coerceActor(actor: Actor): Actor {
   const actorKeys = ["name", "mbox", "account"];
   actorKeys.forEach((actorKey) => {
     if (Array.isArray(actor[actorKey])) {
-      switch(actorKey) {
+      switch (actorKey) {
         case "account": {
           actor[actorKey] = {
-            ...(actor.account[0].accountServiceHomePage ? {homePage: actor.account[0].accountServiceHomePage} : null),
-            ...(actor.account[0].accountName ? {name: actor.account[0].accountName} : null),
+            ...(actor.account[0].accountServiceHomePage
+              ? { homePage: actor.account[0].accountServiceHomePage }
+              : null),
+            ...(actor.account[0].accountName
+              ? { name: actor.account[0].accountName }
+              : null),
           };
           break;
         }
@@ -21,8 +25,10 @@ function coerceActor(actor: Actor): Actor {
   return actor;
 }
 
-export function getSearchQueryParamsAsObject(str: string): {[key: string]: any} {
-  const obj: {[key: string]: any} = {};
+export function getSearchQueryParamsAsObject(
+  str: string
+): { [key: string]: any } {
+  const obj: { [key: string]: any } = {};
   const queryString = str.split("?")[1] || null;
   if (!queryString) return obj;
   const items = queryString.split("&");
