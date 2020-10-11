@@ -16,6 +16,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run clean && npm run build:types && npm run build:js",
     "test": "jest",
+    "test:format": "prettier --check .",
     "lint": "eslint . --ext .ts,.js"
   },
   "repository": {
@@ -49,7 +50,10 @@
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "jest": "^25.2.4",
+    "prettier": "2.1.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.23.0",
     "rollup-plugin-terser": "^7.0.2",
