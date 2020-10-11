@@ -10,10 +10,9 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
   ],
   rules: {
-    quotes: ["error", "double"],
-    semi: ["error", "always"],
     "eol-last": ["error"],
     "@typescript-eslint/no-inferrable-types": ["off"],
     "@typescript-eslint/ban-ts-ignore": ["off"],
