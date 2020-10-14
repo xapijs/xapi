@@ -515,15 +515,13 @@ export default class XAPI {
     }).then((response) => {
       const contentType = response.headers["content-type"];
       if (
-        !contentType ||
-        contentType.indexOf("application/json") !== -1 ||
-        response.data.indexOf("--") !== 2
+        !!response.data &&
+        contentType &&
+        contentType.indexOf("multipart/mixed") !== -1
       ) {
-        return response;
-      } else {
         response.data = parseMultiPart(response.data);
-        return response;
       }
+      return response;
     });
   }
 
