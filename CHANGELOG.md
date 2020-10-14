@@ -1,3 +1,10 @@
+# 0.6.6 (14 Oct 2020)
+
+- Fixed hash data returning in launch param helpers
+- Improved multipart/mixed detection
+- Added Prettier
+- Bumped dependencies
+
 # 0.6.5 (4 Oct 2020)
 
 - Added missing parameter `since` when retrieving multiple Documents
