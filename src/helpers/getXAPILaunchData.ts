@@ -15,7 +15,7 @@ interface XAPILaunchData {
 
 export function getXAPILaunchData(): Promise<XAPILaunchData> {
   const params: XAPILaunchParameters = getSearchQueryParamsAsObject(
-    location.href
+    location.search
   );
   if (!params.xAPILaunchService) {
     return Promise.reject(

@@ -16,7 +16,7 @@ interface TinCanLaunchParameters {
 
 export function getTinCanLaunchData(): TinCanLaunchParameters {
   const params: TinCanLaunchParameters = getSearchQueryParamsAsObject(
-    location.href
+    location.search
   );
   return params;
 }
