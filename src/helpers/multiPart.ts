@@ -1,11 +1,9 @@
-import { Statement, Attachment } from "../interfaces/Statement";
-
-export interface MultiPart {
-  header: { "Content-Type": string };
-  blob: Blob;
-}
-
-export type Part = Statement | unknown;
+import {
+  Statement,
+  Attachment,
+  Part,
+  MultiPart,
+} from "../interfaces/Statement";
 
 const crlf: string = "\r\n";
 

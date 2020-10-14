@@ -13,15 +13,12 @@ import {
   Person,
   Activity,
   Timestamp,
+  Part,
+  MultiPart,
 } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
-import {
-  parseMultiPart,
-  createMultiPart,
-  MultiPart,
-  Part,
-} from "./helpers/multiPart";
+import { parseMultiPart, createMultiPart } from "./helpers/multiPart";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";

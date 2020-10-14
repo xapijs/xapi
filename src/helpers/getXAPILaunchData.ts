@@ -1,17 +1,6 @@
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
-import { Actor } from "../interfaces/Statement";
 import axios from "axios";
-
-interface XAPILaunchParameters {
-  xAPILaunchKey?: string;
-  xAPILaunchService?: string;
-  encrypted?: string;
-}
-
-interface XAPILaunchData {
-  endpoint: string;
-  actor: Actor;
-}
+import { XAPILaunchData, XAPILaunchParameters } from "../interfaces/XAPI";
 
 export function getXAPILaunchData(): Promise<XAPILaunchData> {
   const params: XAPILaunchParameters = getSearchQueryParamsAsObject(
