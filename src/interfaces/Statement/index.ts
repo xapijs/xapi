@@ -6,6 +6,8 @@ export * from "./Context";
 export * from "./ContextActivity";
 export * from "./Extensions";
 export * from "./LanguageMap";
+export * from "./MultiPart";
+export * from "./Part";
 export * from "./StatementObject";
 export * from "./Result";
 export * from "./RFC5646LanguageCodes";
