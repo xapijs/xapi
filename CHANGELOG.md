@@ -1,3 +1,7 @@
+# 0.6.9 (18 Oct 2020)
+
+- Bundle external, non built-in dependencies for axios
+
 # 0.6.8 (18 Oct 2020)
 
 - Fixed typo in TinCanLaunchData
