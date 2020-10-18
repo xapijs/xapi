@@ -1,8 +1,8 @@
-import { TinCanLaunchParameters } from "../interfaces/XAPI";
+import { TinCanLaunchData } from "../interfaces/XAPI";
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
 
-export function getTinCanLaunchData(): TinCanLaunchParameters {
-  const params: TinCanLaunchParameters = getSearchQueryParamsAsObject(
+export function getTinCanLaunchData(): TinCanLaunchData {
+  const params: TinCanLaunchData = getSearchQueryParamsAsObject(
     location.search
   );
   return params;

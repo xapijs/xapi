@@ -1,6 +1,6 @@
 import { Actor } from "../Statement";
 
-export interface TinCanLaunchParameters {
+export interface TinCanLaunchData {
   activity_id?: string;
   actor?: Actor;
   auth?: string;
