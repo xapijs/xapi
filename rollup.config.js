@@ -65,11 +65,6 @@ export default [
       "tty",
       "util",
       "os",
-      "debug",
-      "follow-redirects",
-      "supports-color",
-      "ms",
-      "has-flag",
     ],
     output: [
       {
