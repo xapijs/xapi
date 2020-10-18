@@ -1,3 +1,8 @@
+# 0.6.8 (18 Oct 2020)
+
+- Fixed typo in TinCanLaunchData
+- Bumped dependencies
+
 # 0.6.7 (14 Oct 2020)
 
 - Added exports for helper interfaces
