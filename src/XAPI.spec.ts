@@ -1,7 +1,7 @@
 import XAPI, { Agent, Statement, Activity, Attachment } from "./XAPI";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
-import axios from "axios";
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 
 interface WordArray {
   iv: string;
@@ -425,6 +425,72 @@ describe("agent profile resource", () => {
   test("can delete an agent profile", () => {
     return xapi.deleteAgentProfile(testAgent, testProfileId).then((result) => {
       return expect(result.data).toBeDefined();
+    });
+  });
+});
+[
+  {
+    endpoint: "https://example.com/xapi",
+    expectedUrlGetState: "https://example.com/xapi/activities/state",
+    expectedUrlGetProfile: "https://example.com/xapi/agents/profile",
+  },
+  {
+    endpoint: "http://other.com/exapi/",
+    expectedUrlGetState: "http://other.com/exapi/activities/state",
+    expectedUrlGetProfile: "http://other.com/exapi/agents/profile",
+  },
+].forEach((ex) => {
+  describe(`resources for endpoint ${ex.endpoint}`, () => {
+    let mockAxios: jest.SpyInstance<
+      Promise<unknown>,
+      [config: AxiosRequestConfig]
+    >;
+    beforeEach(() => {
+      mockAxios = jest.spyOn(axios, "request");
+    });
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    const xapi = new XAPI(ex.endpoint);
+
+    // helper function mocks axios with defaults
+    function _mockAxios<T extends any>(
+      fakeResponse: Partial<AxiosResponse<T>> = {}
+    ) {
+      mockAxios.mockImplementation((config?: AxiosRequestConfig) => {
+        return Promise.resolve({
+          data: fakeResponse.data || ({} as T),
+          status: fakeResponse.status || 200,
+          statusText: fakeResponse.statusText || "",
+          headers: fakeResponse.headers || {},
+          config,
+        });
+      });
+    }
+    describe("getState", () => {
+      test("requests GET activities/state", async () => {
+        _mockAxios();
+        await xapi.getState(testAgent, testActivity.id, "somestateid");
+        expect(mockAxios).toHaveBeenCalledWith(
+          expect.objectContaining({
+            method: "GET",
+            url: expect.stringMatching(ex.expectedUrlGetState),
+          })
+        );
+      });
+    });
+    describe("getAgentProfile", () => {
+      test("requests GET activities/profile", async () => {
+        _mockAxios();
+        await xapi.getAgentProfile(testAgent, "someid");
+        expect(mockAxios).toHaveBeenCalledWith(
+          expect.objectContaining({
+            method: "GET",
+            url: expect.stringMatching(ex.expectedUrlGetProfile),
+          })
+        );
+      });
     });
   });
 });
