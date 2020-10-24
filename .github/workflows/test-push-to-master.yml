@@ -26,13 +26,13 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run build --if-present
-      - run: npm test:e2e
+      - run: npm run test:e2e
         env:
           CI: true
           LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_SCORMCLOUD }}
           LRS_USERNAME: ${{ secrets.LRS_USERNAME_SCORMCLOUD }}
           LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_SCORMCLOUD }}
-      - run: npm test:e2e
+      - run: npm run test:e2e
         env:
           CI: true
           LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }}
