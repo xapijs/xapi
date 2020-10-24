@@ -15,7 +15,9 @@
     "build:js": "rollup --config",
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run clean && npm run build:types && npm run build:js",
-    "test": "jest",
+    "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
+    "test": "jest --testPathIgnorePatterns=.e2e.spec.ts",
+    "test:e2e": "jest --testPathPattern=.e2e.spec.ts",
     "test:format": "prettier --check .",
     "lint": "eslint . --ext .ts,.js"
   },
