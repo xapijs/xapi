@@ -47,7 +47,7 @@ export default class XAPI {
     auth?: string,
     version: Versions = "1.0.3"
   ) {
-    this.endpoint = endpoint;
+    this.endpoint = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
     this.headers = {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",
@@ -501,25 +501,27 @@ export default class XAPI {
     url: string,
     initExtras?: AxiosRequestConfig | undefined
   ): AxiosPromise<any> {
-    return axios({
-      method: initExtras?.method || "GET",
-      url: url,
-      headers: {
-        ...this.headers,
-        ...initExtras?.headers,
-      },
-      data: initExtras?.data,
-    }).then((response) => {
-      const contentType = response.headers["content-type"];
-      if (
-        !!response.data &&
-        contentType &&
-        contentType.indexOf("multipart/mixed") !== -1
-      ) {
-        response.data = parseMultiPart(response.data);
-      }
-      return response;
-    });
+    return axios
+      .request({
+        method: initExtras?.method || "GET",
+        url: url,
+        headers: {
+          ...this.headers,
+          ...initExtras?.headers,
+        },
+        data: initExtras?.data,
+      })
+      .then((response) => {
+        const contentType = response.headers["content-type"];
+        if (
+          !!response.data &&
+          contentType &&
+          contentType.indexOf("multipart/mixed") !== -1
+        ) {
+          response.data = parseMultiPart(response.data);
+        }
+        return response;
+      });
   }
 
   private generateURL(
