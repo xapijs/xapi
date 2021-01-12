@@ -1,3 +1,8 @@
+# 0.6.10 (12 Jan 2021)
+
+- Bumped `axios` to solve security vulnerability
+- Bumped `node-notifier` to solve security vulnerability
+
 # 0.6.9 (18 Oct 2020)
 
 - Bundle external, non built-in dependencies for axios
