@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/xapijs/xapi/issues"
   },
-  "homepage": "https://github.com/xapijs/xapi",
+  "homepage": "https://www.xapijs.dev",
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
