@@ -6,7 +6,7 @@
 
 **xAPI.js** is a strongly typed JavaScript library for enabling learning content and learning systems to speak to each other. It is a complete implementation and fully compliant against the [xAPI Specification](https://github.com/adlnet/xAPI-Spec) (v1.0.0 - v1.0.3).
 
-- [API Documentation](https://app.gitbook.com/@cookiecookson/s/xapijs/~/drafts/-MVBsMYNTgfOILALwshl/xapi-wrapper-library/xapi-class)
+- [API Documentation](https://www.xapijs.dev/xapi-wrapper-library/xapi-class)
 - [Getting Started](https://www.xapijs.dev/xapi-wrapper-library/getting-started)
 - [Basic Examples](https://github.com/xapijs/xapi/tree/master/example)
 - [Demo](https://github.com/xapijs/xapi-demo)
