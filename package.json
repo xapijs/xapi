@@ -19,6 +19,8 @@
     "test": "jest --testPathIgnorePatterns=.e2e.spec.ts",
     "test:e2e": "jest --testPathPattern=.e2e.spec.ts",
     "test:format": "prettier --check .",
+    "test:example:node:require": "node ./example/node/require.js",
+    "test:example:node:import": "node --experimental-modules --es-module-specifier-resolution=node ./example/node/import.mjs",
     "lint": "eslint . --ext .ts,.js"
   },
   "repository": {
