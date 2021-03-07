@@ -1,3 +1,9 @@
+# 1.0.0 (7 Mar 2020)
+
+- The officially stable launch of xAPI.js v1.0.0! 🎉
+- Added additional getting started examples
+- Improved readme
+
 # 0.6.10 (12 Jan 2021)
 
 - Bumped `axios` to solve security vulnerability
