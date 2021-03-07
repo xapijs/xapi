@@ -1,11 +1,9 @@
-import { Statement, Attachment } from "../interfaces/Statement";
-
-export interface MultiPart {
-  header: {"Content-Type": string};
-  blob: Blob;
-}
-
-export type Part = Statement | unknown;
+import {
+  Statement,
+  Attachment,
+  Part,
+  MultiPart,
+} from "../interfaces/Statement";
 
 const crlf: string = "\r\n";
 
@@ -13,8 +11,8 @@ export function parseMultiPart(data: string): Part[] {
   const boundary = data.trim().split(crlf)[0].trim();
   const parts = data
     .split(boundary)
-    .map(part => part.trim())
-    .filter(part => part !== "" && part !== "--");
+    .map((part) => part.trim())
+    .filter((part) => part !== "" && part !== "--");
 
   const parsedParts: Part[] = [];
   for (let partIndex: number = 0; partIndex < parts.length; partIndex++) {
@@ -33,33 +31,42 @@ export function parseMultiPart(data: string): Part[] {
   return parsedParts;
 }
 
-export function createMultiPart(statement: Statement, attachments: ArrayBuffer[]): MultiPart {
+export function createMultiPart(
+  statement: Statement,
+  attachments: ArrayBuffer[]
+): MultiPart {
   const blobParts: BlobPart[] = [];
 
-  const boundary = (Math.random() + " ").substring(2, 10) + (Math.random() + " ").substring(2, 10);
+  const boundary =
+    (Math.random() + " ").substring(2, 10) +
+    (Math.random() + " ").substring(2, 10);
   const header: MultiPart["header"] = {
-    "Content-Type": `multipart/mixed; boundary=${boundary}`
+    "Content-Type": `multipart/mixed; boundary=${boundary}`,
   };
 
   // Add statement to blob
-  const statementHeader: string = [
-    `--${boundary}`,
-    "Content-Type: application/json",
-    "Content-Disposition: form-data; name=\"statement\"",
-    "",
-    JSON.stringify(statement)
-  ].join(crlf) + crlf;
+  const statementHeader: string =
+    [
+      `--${boundary}`,
+      "Content-Type: application/json",
+      'Content-Disposition: form-data; name="statement"',
+      "",
+      JSON.stringify(statement),
+    ].join(crlf) + crlf;
   blobParts.push(statementHeader);
 
   // Add attachments to blob
   attachments.forEach((attachmentArrayBuffer, index) => {
     const attachmentMeta: Attachment = statement.attachments[index];
-    const attachmentHeader: string = [
-      `--${boundary}`,
-      `Content-Type: ${attachmentMeta.contentType}`,
-      "Content-Transfer-Encoding: binary",
-      `X-Experience-API-Hash: ${attachmentMeta.sha2}`
-    ].join(crlf) + crlf + crlf;
+    const attachmentHeader: string =
+      [
+        `--${boundary}`,
+        `Content-Type: ${attachmentMeta.contentType}`,
+        "Content-Transfer-Encoding: binary",
+        `X-Experience-API-Hash: ${attachmentMeta.sha2}`,
+      ].join(crlf) +
+      crlf +
+      crlf;
     blobParts.push(attachmentHeader);
     blobParts.push(attachmentArrayBuffer);
   });
@@ -67,6 +74,6 @@ export function createMultiPart(statement: Statement, attachments: ArrayBuffer[]
 
   return {
     header: header,
-    blob: new Blob(blobParts)
+    blob: new Blob(blobParts),
   };
 }

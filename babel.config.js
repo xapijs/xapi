@@ -10,7 +10,5 @@ module.exports = {
     ],
     "@babel/preset-typescript",
   ],
-  plugins: [
-    "transform-class-properties"
-  ]
+  plugins: ["transform-class-properties"],
 };

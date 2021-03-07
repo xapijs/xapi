@@ -7,61 +7,71 @@ import { terser } from "rollup-plugin-terser";
 
 const input = "./src/XAPI.ts";
 
-const extensions = [
-  ".js",
-  ".ts"
-];
+const extensions = [".js", ".ts"];
 
 const resolveOptions = {
-  extensions: extensions
+  extensions: extensions,
 };
 
 const babelPluginOptions = {
   babelHelpers: "bundled",
-  extensions: extensions
+  extensions: extensions,
 };
 
-export default [{
-  input: input,
-  plugins: [
-    resolve({
-      ...resolveOptions,
-      browser: true
-    }),
-    commonjs(), // Used for Axios import
-    babel(babelPluginOptions),
-    terser()
-  ],
-  output: [
-    {
-      file: pkg.browser,
-      format: "umd",
-      name: "XAPI"
-    },
-    {
-      file: pkg.module,
-      format: "esm",
-      exports: "default"
-    }
-  ]
-}, {
-  input: input,
-  plugins: [
-    resolve({
-      ...resolveOptions,
-      browser: false
-    }),
-    commonjs(), // Used for Axios import
-    json(),
-    babel(babelPluginOptions),
-    terser()
-  ],
-  external: ["http", "https", "url", "zlib", "stream", "assert", "tty", "util", "os", "debug", "follow-redirects", "supports-color", "ms", "has-flag"],
-  output: [
-    {
-      file: pkg.main,
-      format: "cjs",
-      exports: "default"
-    }
-  ]
-}];
+export default [
+  {
+    input: input,
+    plugins: [
+      resolve({
+        ...resolveOptions,
+        browser: true,
+      }),
+      commonjs(), // Used for Axios import
+      babel(babelPluginOptions),
+      terser(),
+    ],
+    output: [
+      {
+        file: pkg.browser,
+        format: "umd",
+        name: "XAPI",
+      },
+      {
+        file: pkg.module,
+        format: "esm",
+        exports: "default",
+      },
+    ],
+  },
+  {
+    input: input,
+    plugins: [
+      resolve({
+        ...resolveOptions,
+        browser: false,
+      }),
+      commonjs(), // Used for Axios import
+      json(),
+      babel(babelPluginOptions),
+      terser(),
+    ],
+    external: [
+      "http",
+      "https",
+      "url",
+      "zlib",
+      "stream",
+      "assert",
+      "tty",
+      "util",
+      "os",
+    ],
+    output: [
+      {
+        file: pkg.main,
+        format: "cjs",
+        exports: "default",
+      },
+    ],
+  },
+];

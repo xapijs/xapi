@@ -1,4 +1,3 @@
-
 import { calculateISO8601Duration } from "./calculateISO8601Duration";
 
 test("should create correct timestring for seconds", () => {

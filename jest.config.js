@@ -1,5 +1,5 @@
 require("dotenv").config();
 
 module.exports = {
-  preset: "ts-jest"
+  preset: "ts-jest",
 };
