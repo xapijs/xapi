@@ -1,5 +1,9 @@
 export function toBasicAuth(username: string, password: string): string {
-  return `Basic ${Buffer.from(username + ":" + password, "binary").toString(
-    "base64"
-  )}`;
+  const credentials = `${username}:${password}`;
+  if (typeof window !== "undefined" && window.btoa) {
+    return `Basic ${btoa(credentials)}`;
+  } else if (typeof Buffer !== "undefined") {
+    return `Basic ${Buffer.from(credentials, "binary").toString("base64")}`;
+  }
+  throw new Error("Environment does not support base64 conversion.");
 }
