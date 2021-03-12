@@ -1,4 +1,8 @@
-# 1.0.0 (7 Mar 2020)
+# 1.0.1 (12 Mar 2021)
+
+- Fixed optional chaining not being transpiled with Babel on arm-64 devices ([#146](https://github.com/xapijs/xapi/issues/146))
+
+# 1.0.0 (7 Mar 2021)
 
 - The officially stable launch of xAPI.js v1.0.0! 🎉
 - Added additional getting started examples
