@@ -39,6 +39,7 @@
   "homepage": "https://www.xapijs.dev",
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-typescript": "^7.12.1",
     "@rollup/plugin-babel": "^5.0.0",
