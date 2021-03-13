@@ -54,7 +54,7 @@ export default class XAPI {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",
       // No Authorization Process and Requirements -  https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
-      Authorization: auth ? auth : `Basic ${toBasicAuth("", "")}`,
+      Authorization: auth ? auth : toBasicAuth("", ""),
     };
   }
 
