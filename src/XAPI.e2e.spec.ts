@@ -9,6 +9,7 @@ import XAPI, {
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
 import axios from "axios";
+import { StatementsResponseWithAttachments } from "./interfaces/XAPI";
 
 interface WordArray {
   iv: string;
@@ -49,6 +50,26 @@ const testStatement: Statement = {
     },
   },
   object: testActivity,
+};
+
+const testAttachmentContent: string = "hello world";
+
+const testAttachmentArrayBuffer: ArrayBuffer = new TextEncoder().encode(
+  testAttachmentContent
+);
+const testAttachment: Attachment = {
+  usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
+  display: {
+    "en-US": "Text Attachment",
+  },
+  description: {
+    "en-US": `The text attachment contains "${testAttachmentContent}"`,
+  },
+  contentType: "text/plain",
+  length: testAttachmentArrayBuffer.byteLength,
+  sha2: CryptoJS.SHA256(
+    arrayBufferToWordArray(testAttachmentArrayBuffer)
+  ).toString(),
 };
 
 function arrayBufferToWordArray(ab: ArrayBuffer): WordArray {
@@ -126,26 +147,13 @@ describe("statement resource", () => {
 
   test("can send a statement with an embedded attachment", () => {
     const statement: Statement = Object.assign({}, testStatement);
-    const attachmentContent: string = "hello world";
-    const arrayBuffer: ArrayBuffer = new TextEncoder().encode(
-      attachmentContent
-    );
-    const attachment: Attachment = {
-      usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
-      display: {
-        "en-US": "Text Attachment",
-      },
-      description: {
-        "en-US": `The text attachment contains "${attachmentContent}"`,
-      },
-      contentType: "text/plain",
-      length: arrayBuffer.byteLength,
-      sha2: CryptoJS.SHA256(arrayBufferToWordArray(arrayBuffer)).toString(),
-    };
-    statement.attachments = [attachment];
-    return xapi.sendStatement(statement, [arrayBuffer]).then((result) => {
-      return expect(result.data).toHaveLength(1);
-    });
+
+    statement.attachments = [testAttachment];
+    return xapi
+      .sendStatement(statement, [testAttachmentArrayBuffer])
+      .then((result) => {
+        return expect(result.data).toHaveLength(1);
+      });
   });
 
   test("can send multiple statements", () => {
@@ -158,25 +166,12 @@ describe("statement resource", () => {
 
   test("can send multiple statements with embedded attachments", () => {
     const statement: Statement = Object.assign({}, testStatement);
-    const attachmentContent: string = "hello world";
-    const arrayBuffer: ArrayBuffer = new TextEncoder().encode(
-      attachmentContent
-    );
-    const attachment: Attachment = {
-      usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
-      display: {
-        "en-US": "Text Attachment",
-      },
-      description: {
-        "en-US": `The text attachment contains "${attachmentContent}"`,
-      },
-      contentType: "text/plain",
-      length: arrayBuffer.byteLength,
-      sha2: CryptoJS.SHA256(arrayBufferToWordArray(arrayBuffer)).toString(),
-    };
-    statement.attachments = [attachment];
+    statement.attachments = [testAttachment];
     return xapi
-      .sendStatements([statement, statement], [arrayBuffer, arrayBuffer])
+      .sendStatements(
+        [statement, statement],
+        [testAttachmentArrayBuffer, testAttachmentArrayBuffer]
+      )
       .then((result) => {
         return expect(result.data).toHaveLength(2);
       });
@@ -197,25 +192,9 @@ describe("statement resource", () => {
 
   test("can get a statement with an embedded attachment", () => {
     const statement: Statement = Object.assign({}, testStatement);
-    const attachmentContent: string = "hello world";
-    const arrayBuffer: ArrayBuffer = new TextEncoder().encode(
-      attachmentContent
-    );
-    const attachment: Attachment = {
-      usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
-      display: {
-        "en-US": "Text Attachment",
-      },
-      description: {
-        "en-US": `The text attachment contains "${attachmentContent}"`,
-      },
-      contentType: "text/plain",
-      length: arrayBuffer.byteLength,
-      sha2: CryptoJS.SHA256(arrayBufferToWordArray(arrayBuffer)).toString(),
-    };
-    statement.attachments = [attachment];
+    statement.attachments = [testAttachment];
     return xapi
-      .sendStatement(statement, [arrayBuffer])
+      .sendStatement(statement, [testAttachmentArrayBuffer])
       .then((result) => {
         return xapi.getStatement({
           statementId: result.data[0],
@@ -225,7 +204,7 @@ describe("statement resource", () => {
       .then((response) => {
         const parts = response.data as StatementResponseWithAttachments;
         const attachmentData = parts[1];
-        return expect(attachmentData).toEqual(attachmentContent);
+        return expect(attachmentData).toEqual(testAttachmentContent);
       });
   });
 
@@ -266,14 +245,15 @@ describe("statement resource", () => {
     });
   });
 
-  test("can get multiple statements", () => {
+  test("can get multiple statements with attachments", () => {
     return xapi
       .getStatements({
         attachments: true,
+        limit: 2,
       })
       .then((result) => {
-        console.log(result.data);
-        // return expect(result.data.statements).toBeTruthy();
+        const statementsResponse = (result.data as StatementsResponseWithAttachments)[0];
+        return expect(statementsResponse.statements).toHaveLength(2);
       });
   });
 
