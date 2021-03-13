@@ -5,6 +5,8 @@ import {
   GetStatementsQuery,
   StatementsResponse,
   RequestParams,
+  StatementResponseWithAttachments,
+  StatementsResponseWithAttachments,
 } from "./interfaces/XAPI";
 import {
   Statement,
@@ -14,7 +16,6 @@ import {
   Activity,
   Timestamp,
   MultiPart,
-  StatementWithAttachments,
 } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
@@ -71,19 +72,19 @@ export default class XAPI {
   // Statement Resource
   public getStatement(
     query: GetStatementQuery
-  ): AxiosPromise<Statement | StatementWithAttachments> {
+  ): AxiosPromise<Statement | StatementResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getVoidedStatement(
     query: GetVoidedStatementQuery
-  ): AxiosPromise<Statement | StatementWithAttachments> {
+  ): AxiosPromise<Statement | StatementResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getStatements(
     query?: GetStatementsQuery
-  ): AxiosPromise<StatementsResponse> {
+  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
@@ -97,7 +98,8 @@ export default class XAPI {
     statement: Statement,
     attachments?: ArrayBuffer[]
   ): AxiosPromise<string[]> {
-    if (attachments?.length) {
+    const hasAttachments = attachments?.length;
+    if (hasAttachments) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
       return this.requestResource(
         Resources.STATEMENT,
@@ -115,6 +117,31 @@ export default class XAPI {
         {
           method: "POST",
           data: statement,
+        }
+      );
+    }
+  }
+
+  public sendStatements(statements: Statement[], attachments?: ArrayBuffer[]) {
+    const hasAttachments = attachments?.length;
+    if (hasAttachments) {
+      const multiPart: MultiPart = createMultiPart(statements, attachments);
+      return this.requestResource(
+        Resources.STATEMENT,
+        {},
+        {
+          method: "POST",
+          headers: multiPart.header,
+          data: multiPart.blob,
+        }
+      );
+    } else {
+      return this.requestResource(
+        Resources.STATEMENT,
+        {},
+        {
+          method: "POST",
+          data: statements,
         }
       );
     }

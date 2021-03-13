@@ -3,7 +3,8 @@ import XAPI, {
   Statement,
   Activity,
   Attachment,
-  StatementWithAttachments,
+  StatementResponseWithAttachments,
+  StatementsResponse,
 } from "./XAPI";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
@@ -82,13 +83,13 @@ describe("about resource", () => {
 });
 
 describe("statement resource", () => {
-  test("can create a statement", () => {
+  test("can send a statement", () => {
     return xapi.sendStatement(testStatement).then((result) => {
       return expect(result.data).toHaveLength(1);
     });
   });
 
-  test("can create a statement with a remote attachment", () => {
+  test("can send a statement with a remote attachment", () => {
     const statement: Statement = Object.assign({}, testStatement);
     const imageURL: string =
       "https://raw.githubusercontent.com/RusticiSoftware/TinCanJS/8733f14ddcaeea77a0579505300bc8f38921a6b1/test/files/image.jpg";
@@ -123,7 +124,7 @@ describe("statement resource", () => {
       });
   });
 
-  test("can create a statement with an embedded attachment", () => {
+  test("can send a statement with an embedded attachment", () => {
     const statement: Statement = Object.assign({}, testStatement);
     const attachmentContent: string = "hello world";
     const arrayBuffer: ArrayBuffer = new TextEncoder().encode(
@@ -147,6 +148,40 @@ describe("statement resource", () => {
     });
   });
 
+  test("can send multiple statements", () => {
+    return xapi
+      .sendStatements([testStatement, testStatement])
+      .then((result) => {
+        return expect(result.data).toHaveLength(2);
+      });
+  });
+
+  test("can send multiple statements with embedded attachments", () => {
+    const statement: Statement = Object.assign({}, testStatement);
+    const attachmentContent: string = "hello world";
+    const arrayBuffer: ArrayBuffer = new TextEncoder().encode(
+      attachmentContent
+    );
+    const attachment: Attachment = {
+      usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
+      display: {
+        "en-US": "Text Attachment",
+      },
+      description: {
+        "en-US": `The text attachment contains "${attachmentContent}"`,
+      },
+      contentType: "text/plain",
+      length: arrayBuffer.byteLength,
+      sha2: CryptoJS.SHA256(arrayBufferToWordArray(arrayBuffer)).toString(),
+    };
+    statement.attachments = [attachment];
+    return xapi
+      .sendStatements([statement, statement], [arrayBuffer, arrayBuffer])
+      .then((result) => {
+        return expect(result.data).toHaveLength(2);
+      });
+  });
+
   test("can get a single statement", () => {
     return xapi
       .sendStatement(testStatement)
@@ -156,7 +191,7 @@ describe("statement resource", () => {
         });
       })
       .then((result) => {
-        return expect(result.data).toHaveProperty("id");
+        return expect((result.data as Statement).id).toBeTruthy();
       });
   });
 
@@ -188,7 +223,7 @@ describe("statement resource", () => {
         });
       })
       .then((response) => {
-        const parts = response.data as StatementWithAttachments;
+        const parts = response.data as StatementResponseWithAttachments;
         const attachmentData = parts[1];
         return expect(attachmentData).toEqual(attachmentContent);
       });
@@ -223,10 +258,23 @@ describe("statement resource", () => {
       });
   });
 
-  test("can get an array of statements", () => {
+  test("can get multiple statements", () => {
     return xapi.getStatements().then((result) => {
-      return expect(result.data.statements).toBeTruthy();
+      return expect(
+        (result.data as StatementsResponse).statements
+      ).toBeTruthy();
     });
+  });
+
+  test("can get multiple statements", () => {
+    return xapi
+      .getStatements({
+        attachments: true,
+      })
+      .then((result) => {
+        console.log(result.data);
+        // return expect(result.data.statements).toBeTruthy();
+      });
   });
 
   test("can query for statements using the actor property", () => {
@@ -235,7 +283,9 @@ describe("statement resource", () => {
         agent: testAgent,
       })
       .then((result) => {
-        return expect(result.data.statements).toBeTruthy();
+        return expect(
+          (result.data as StatementsResponse).statements
+        ).toBeTruthy();
       });
   });
 
@@ -245,7 +295,9 @@ describe("statement resource", () => {
         limit: 1,
       })
       .then((result) => {
-        return expect(result.data.statements).toHaveLength(1);
+        return expect(
+          (result.data as StatementsResponse).statements
+        ).toHaveLength(1);
       });
   });
 
@@ -255,7 +307,7 @@ describe("statement resource", () => {
         limit: 1,
       })
       .then((result) => {
-        return xapi.getMoreStatements(result.data.more);
+        return xapi.getMoreStatements((result.data as StatementsResponse).more);
       })
       .then((result) => {
         return expect(result.data.statements).toBeTruthy();
