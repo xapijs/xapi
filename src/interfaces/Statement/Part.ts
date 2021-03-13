@@ -1,3 +1,1 @@
-import { Statement } from ".";
-
-export type Part = Statement | unknown;
+export type Part = unknown;

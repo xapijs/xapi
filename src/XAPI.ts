@@ -13,8 +13,8 @@ import {
   Person,
   Activity,
   Timestamp,
-  Part,
   MultiPart,
+  StatementWithAttachments,
 } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
@@ -71,13 +71,13 @@ export default class XAPI {
   // Statement Resource
   public getStatement(
     query: GetStatementQuery
-  ): AxiosPromise<Statement | Part[]> {
+  ): AxiosPromise<Statement | StatementWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getVoidedStatement(
     query: GetVoidedStatementQuery
-  ): AxiosPromise<Statement | Part[]> {
+  ): AxiosPromise<Statement | StatementWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 

@@ -13,5 +13,6 @@ export * from "./Result";
 export * from "./RFC5646LanguageCodes";
 export * from "./Statement";
 export * from "./StatementRef";
+export * from "./StatementWithAttachments";
 export * from "./Timestamp";
 export * from "./Verb";

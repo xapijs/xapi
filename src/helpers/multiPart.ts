@@ -1,25 +1,29 @@
 import {
   Statement,
   Attachment,
-  Part,
   MultiPart,
+  StatementWithAttachments,
 } from "../interfaces/Statement";
 
 const crlf: string = "\r\n";
 
-export function parseMultiPart(data: string): Part[] {
+export function parseMultiPart(data: string): StatementWithAttachments {
   const boundary = data.trim().split(crlf)[0].trim();
   const parts = data
     .split(boundary)
     .map((part) => part.trim())
     .filter((part) => part !== "" && part !== "--");
 
-  const parsedParts: Part[] = [];
+  const parsedParts: Partial<StatementWithAttachments> = [];
   for (let partIndex: number = 0; partIndex < parts.length; partIndex++) {
     const headers = {};
     const items = parts[partIndex].split(crlf);
-    for (let j: number = 0; j < items.length - 2; j++) {
-      const header = items[j].split(":");
+    for (
+      let headerIndex: number = 0;
+      headerIndex < items.length - 2;
+      headerIndex++
+    ) {
+      const header = items[headerIndex].split(":");
       headers[header[0]] = header[1];
     }
     let data: unknown = items[items.length - 1];
@@ -28,7 +32,7 @@ export function parseMultiPart(data: string): Part[] {
     }
     parsedParts.push(data);
   }
-  return parsedParts;
+  return parsedParts as StatementWithAttachments;
 }
 
 export function createMultiPart(

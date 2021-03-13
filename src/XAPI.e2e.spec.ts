@@ -1,4 +1,10 @@
-import XAPI, { Agent, Statement, Activity, Attachment } from "./XAPI";
+import XAPI, {
+  Agent,
+  Statement,
+  Activity,
+  Attachment,
+  StatementWithAttachments,
+} from "./XAPI";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
 import axios from "axios";
@@ -182,8 +188,8 @@ describe("statement resource", () => {
         });
       })
       .then((response) => {
-        const parts = response.data;
-        const attachmentData: unknown = parts[1];
+        const parts = response.data as StatementWithAttachments;
+        const attachmentData = parts[1];
         return expect(attachmentData).toEqual(attachmentContent);
       });
   });
