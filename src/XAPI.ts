@@ -152,7 +152,10 @@ export default class XAPI {
     }
   }
 
-  public sendStatements(statements: Statement[], attachments?: ArrayBuffer[]) {
+  public sendStatements(
+    statements: Statement[],
+    attachments?: ArrayBuffer[]
+  ): AxiosPromise<string[]> {
     const hasAttachments = attachments?.length;
     if (hasAttachments) {
       const multiPart: MultiPart = createMultiPart(statements, attachments);
