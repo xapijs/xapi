@@ -239,9 +239,7 @@ describe("statement resource", () => {
 
   test("can get multiple statements", () => {
     return xapi.getStatements().then((result) => {
-      return expect(
-        (result.data as StatementsResponse).statements
-      ).toBeTruthy();
+      return expect(result.data.statements).toBeTruthy();
     });
   });
 
@@ -252,7 +250,7 @@ describe("statement resource", () => {
         limit: 2,
       })
       .then((result) => {
-        const statementsResponse = (result.data as StatementsResponseWithAttachments)[0];
+        const statementsResponse = result.data[0];
         return expect(statementsResponse.statements).toHaveLength(2);
       });
   });
@@ -263,9 +261,7 @@ describe("statement resource", () => {
         agent: testAgent,
       })
       .then((result) => {
-        return expect(
-          (result.data as StatementsResponse).statements
-        ).toBeTruthy();
+        return expect(result.data.statements).toBeTruthy();
       });
   });
 
@@ -275,9 +271,7 @@ describe("statement resource", () => {
         limit: 1,
       })
       .then((result) => {
-        return expect(
-          (result.data as StatementsResponse).statements
-        ).toHaveLength(1);
+        return expect(result.data.statements).toHaveLength(1);
       });
   });
 
@@ -287,7 +281,7 @@ describe("statement resource", () => {
         limit: 1,
       })
       .then((result) => {
-        return xapi.getMoreStatements((result.data as StatementsResponse).more);
+        return xapi.getMoreStatements(result.data.more);
       })
       .then((result) => {
         return expect(result.data.statements).toBeTruthy();

@@ -11,6 +11,8 @@ import {
   GetStatementQueryWithoutAttachments,
   GetVoidedStatementQueryWithAttachments,
   GetVoidedStatementQueryWithoutAttachments,
+  GetStatementsQueryWithAttachments,
+  GetStatementsQueryWithoutAttachments,
 } from "./interfaces/XAPI";
 import {
   Statement,
@@ -101,6 +103,14 @@ export default class XAPI {
   ): AxiosPromise<Statement | StatementResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
+
+  public getStatements(
+    query: GetStatementsQueryWithAttachments
+  ): AxiosPromise<StatementsResponseWithAttachments>;
+
+  public getStatements(
+    query?: GetStatementsQueryWithoutAttachments
+  ): AxiosPromise<StatementsResponse>;
 
   public getStatements(
     query?: GetStatementsQuery

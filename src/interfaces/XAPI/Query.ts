@@ -57,7 +57,7 @@ export type GetVoidedStatementQuery =
   | GetVoidedStatementQueryWithAttachments
   | GetVoidedStatementQueryWithoutAttachments;
 
-export interface GetStatementsQuery extends BaseQuery {
+interface BaseGetStatementsQuery extends BaseQuery {
   /**
    * JSON encoded object containing an IFI to match an agent or group.
    */
@@ -99,3 +99,17 @@ export interface GetStatementsQuery extends BaseQuery {
    */
   ascending?: boolean;
 }
+
+export interface GetStatementsQueryWithAttachments
+  extends BaseGetStatementsQuery {
+  attachments: true;
+}
+
+export interface GetStatementsQueryWithoutAttachments
+  extends BaseGetStatementsQuery {
+  attachments?: false;
+}
+
+export type GetStatementsQuery =
+  | GetStatementsQueryWithAttachments
+  | GetStatementsQueryWithoutAttachments;
