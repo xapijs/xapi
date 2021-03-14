@@ -7,6 +7,10 @@ import {
   RequestParams,
   StatementResponseWithAttachments,
   StatementsResponseWithAttachments,
+  GetStatementQueryWithAttachments,
+  GetStatementQueryWithoutAttachments,
+  GetVoidedStatementQueryWithAttachments,
+  GetVoidedStatementQueryWithoutAttachments,
 } from "./interfaces/XAPI";
 import {
   Statement,
@@ -71,10 +75,26 @@ export default class XAPI {
 
   // Statement Resource
   public getStatement(
+    query: GetStatementQueryWithAttachments
+  ): AxiosPromise<StatementResponseWithAttachments>;
+
+  public getStatement(
+    query: GetStatementQueryWithoutAttachments
+  ): AxiosPromise<Statement>;
+
+  public getStatement(
     query: GetStatementQuery
   ): AxiosPromise<Statement | StatementResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
+
+  public getVoidedStatement(
+    query: GetVoidedStatementQueryWithAttachments
+  ): AxiosPromise<StatementResponseWithAttachments>;
+
+  public getVoidedStatement(
+    query: GetVoidedStatementQueryWithoutAttachments
+  ): AxiosPromise<Statement>;
 
   public getVoidedStatement(
     query: GetVoidedStatementQuery

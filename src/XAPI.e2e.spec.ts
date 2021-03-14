@@ -186,7 +186,7 @@ describe("statement resource", () => {
         });
       })
       .then((result) => {
-        return expect((result.data as Statement).id).toBeTruthy();
+        return expect(result.data.id).toBeTruthy();
       });
   });
 
@@ -202,7 +202,7 @@ describe("statement resource", () => {
         });
       })
       .then((response) => {
-        const parts = response.data as StatementResponseWithAttachments;
+        const parts = response.data;
         const attachmentData = parts[1];
         return expect(attachmentData).toEqual(testAttachmentContent);
       });

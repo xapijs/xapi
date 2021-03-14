@@ -15,19 +15,47 @@ interface BaseQuery {
   format?: "exact" | "ids" | "canonical";
 }
 
-export interface GetStatementQuery extends BaseQuery {
+interface BaseGetStatementQuery extends BaseQuery {
   /**
    * The UUID of the statement.
    */
   statementId: string;
 }
 
-export interface GetVoidedStatementQuery extends BaseQuery {
+export interface GetStatementQueryWithAttachments
+  extends BaseGetStatementQuery {
+  attachments: true;
+}
+
+export interface GetStatementQueryWithoutAttachments
+  extends BaseGetStatementQuery {
+  attachments?: false;
+}
+
+export type GetStatementQuery =
+  | GetStatementQueryWithoutAttachments
+  | GetStatementQueryWithAttachments;
+
+interface BaseGetVoidedStatementQuery extends BaseQuery {
   /**
    * The original UUID of the statement before it was voided.
    */
   voidedStatementId: string;
 }
+
+export interface GetVoidedStatementQueryWithAttachments
+  extends BaseGetVoidedStatementQuery {
+  attachments: true;
+}
+
+export interface GetVoidedStatementQueryWithoutAttachments
+  extends BaseGetVoidedStatementQuery {
+  attachments?: false;
+}
+
+export type GetVoidedStatementQuery =
+  | GetVoidedStatementQueryWithAttachments
+  | GetVoidedStatementQueryWithoutAttachments;
 
 export interface GetStatementsQuery extends BaseQuery {
   /**
