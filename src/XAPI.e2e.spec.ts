@@ -1,15 +1,7 @@
-import XAPI, {
-  Agent,
-  Statement,
-  Activity,
-  Attachment,
-  StatementResponseWithAttachments,
-  StatementsResponse,
-} from "./XAPI";
+import XAPI, { Agent, Statement, Activity, Attachment } from "./XAPI";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
 import axios from "axios";
-import { StatementsResponseWithAttachments } from "./interfaces/XAPI";
 
 interface WordArray {
   iv: string;
