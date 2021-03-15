@@ -118,7 +118,9 @@ export default class XAPI {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getMoreStatements(more: string): AxiosPromise<StatementsResponse> {
+  public getMoreStatements(
+    more: string
+  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
     const endpoint = new URL(this.endpoint);
     const url = `${endpoint.protocol}//${endpoint.host}${more}`;
     return this.requestURL(url);

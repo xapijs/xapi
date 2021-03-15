@@ -1,4 +1,10 @@
-import XAPI, { Agent, Statement, Activity, Attachment } from "./XAPI";
+import XAPI, {
+  Agent,
+  Statement,
+  Activity,
+  Attachment,
+  StatementsResponse,
+} from "./XAPI";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
 import axios from "axios";
@@ -276,9 +282,25 @@ describe("statement resource", () => {
         return xapi.getMoreStatements(result.data.more);
       })
       .then((result) => {
-        return expect(result.data.statements).toBeTruthy();
+        return expect(
+          (result.data as StatementsResponse).statements
+        ).toBeTruthy();
       });
   });
+});
+
+test("can get more statements with attachments using the more property", () => {
+  return xapi
+    .getStatements({
+      limit: 1,
+      attachments: true,
+    })
+    .then((result) => {
+      return xapi.getMoreStatements(result.data[0].more);
+    })
+    .then((result) => {
+      return expect(result.data[0].statements).toBeTruthy();
+    });
 });
 
 describe("state resource", () => {
