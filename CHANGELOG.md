@@ -1,3 +1,10 @@
+# 1.1.0 (16 Mar 2021)
+
+- Added `sendStatements()` method
+- Added `voidStatements()` method
+- Fixed return types for `getStatement()`, `getStatements()` and `getMoreStatements()` when requesting attachments
+- Bumped dependencies
+
 # 1.0.1 (12 Mar 2021)
 
 - Fixed optional chaining not being transpiled with Babel on arm-64 devices ([#146](https://github.com/xapijs/xapi/issues/146))
