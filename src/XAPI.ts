@@ -5,6 +5,14 @@ import {
   GetStatementsQuery,
   StatementsResponse,
   RequestParams,
+  StatementResponseWithAttachments,
+  StatementsResponseWithAttachments,
+  GetStatementQueryWithAttachments,
+  GetStatementQueryWithoutAttachments,
+  GetVoidedStatementQueryWithAttachments,
+  GetVoidedStatementQueryWithoutAttachments,
+  GetStatementsQueryWithAttachments,
+  GetStatementsQueryWithoutAttachments,
 } from "./interfaces/XAPI";
 import {
   Statement,
@@ -13,7 +21,6 @@ import {
   Person,
   Activity,
   Timestamp,
-  Part,
   MultiPart,
 } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
@@ -70,24 +77,50 @@ export default class XAPI {
 
   // Statement Resource
   public getStatement(
+    query: GetStatementQueryWithAttachments
+  ): AxiosPromise<StatementResponseWithAttachments>;
+
+  public getStatement(
+    query: GetStatementQueryWithoutAttachments
+  ): AxiosPromise<Statement>;
+
+  public getStatement(
     query: GetStatementQuery
-  ): AxiosPromise<Statement | Part[]> {
+  ): AxiosPromise<Statement | StatementResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getVoidedStatement(
+    query: GetVoidedStatementQueryWithAttachments
+  ): AxiosPromise<StatementResponseWithAttachments>;
+
+  public getVoidedStatement(
+    query: GetVoidedStatementQueryWithoutAttachments
+  ): AxiosPromise<Statement>;
+
+  public getVoidedStatement(
     query: GetVoidedStatementQuery
-  ): AxiosPromise<Statement | Part[]> {
+  ): AxiosPromise<Statement | StatementResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
   public getStatements(
+    query: GetStatementsQueryWithAttachments
+  ): AxiosPromise<StatementsResponseWithAttachments>;
+
+  public getStatements(
+    query?: GetStatementsQueryWithoutAttachments
+  ): AxiosPromise<StatementsResponse>;
+
+  public getStatements(
     query?: GetStatementsQuery
-  ): AxiosPromise<StatementsResponse> {
+  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
     return this.requestResource(Resources.STATEMENT, query);
   }
 
-  public getMoreStatements(more: string): AxiosPromise<StatementsResponse> {
+  public getMoreStatements(
+    more: string
+  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
     const endpoint = new URL(this.endpoint);
     const url = `${endpoint.protocol}//${endpoint.host}${more}`;
     return this.requestURL(url);
@@ -97,7 +130,8 @@ export default class XAPI {
     statement: Statement,
     attachments?: ArrayBuffer[]
   ): AxiosPromise<string[]> {
-    if (attachments?.length) {
+    const hasAttachments = attachments?.length;
+    if (hasAttachments) {
       const multiPart: MultiPart = createMultiPart(statement, attachments);
       return this.requestResource(
         Resources.STATEMENT,
@@ -120,6 +154,34 @@ export default class XAPI {
     }
   }
 
+  public sendStatements(
+    statements: Statement[],
+    attachments?: ArrayBuffer[]
+  ): AxiosPromise<string[]> {
+    const hasAttachments = attachments?.length;
+    if (hasAttachments) {
+      const multiPart: MultiPart = createMultiPart(statements, attachments);
+      return this.requestResource(
+        Resources.STATEMENT,
+        {},
+        {
+          method: "POST",
+          headers: multiPart.header,
+          data: multiPart.blob,
+        }
+      );
+    } else {
+      return this.requestResource(
+        Resources.STATEMENT,
+        {},
+        {
+          method: "POST",
+          data: statements,
+        }
+      );
+    }
+  }
+
   public voidStatement(
     actor: Actor,
     statementId: string
@@ -132,14 +194,24 @@ export default class XAPI {
         id: statementId,
       },
     };
-    return this.requestResource(
-      Resources.STATEMENT,
-      {},
-      {
-        method: "POST",
-        data: voidStatement,
-      }
-    );
+    return this.sendStatement(voidStatement);
+  }
+
+  public voidStatements(
+    actor: Actor,
+    statementIds: string[]
+  ): AxiosPromise<string[]> {
+    const voidStatements: Statement[] = statementIds.map((statementId) => {
+      return {
+        actor,
+        verb: Verbs.VOIDED,
+        object: {
+          objectType: "StatementRef",
+          id: statementId,
+        },
+      };
+    });
+    return this.sendStatements(voidStatements);
   }
 
   // State Resource
