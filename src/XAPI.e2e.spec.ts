@@ -217,6 +217,17 @@ describe("statement resource", () => {
       });
   });
 
+  test("can void multiple statements", () => {
+    return xapi
+      .sendStatements([testStatement, testStatement])
+      .then((result) => {
+        return xapi.voidStatements(testAgent, result.data);
+      })
+      .then((result) => {
+        return expect(result.data).toHaveLength(2);
+      });
+  });
+
   test("can get a voided statement", () => {
     let statementId: string;
     return xapi

@@ -194,14 +194,24 @@ export default class XAPI {
         id: statementId,
       },
     };
-    return this.requestResource(
-      Resources.STATEMENT,
-      {},
-      {
-        method: "POST",
-        data: voidStatement,
-      }
-    );
+    return this.sendStatement(voidStatement);
+  }
+
+  public voidStatements(
+    actor: Actor,
+    statementIds: string[]
+  ): AxiosPromise<string[]> {
+    const voidStatements: Statement[] = statementIds.map((statementId) => {
+      return {
+        actor,
+        verb: Verbs.VOIDED,
+        object: {
+          objectType: "StatementRef",
+          id: statementId,
+        },
+      };
+    });
+    return this.sendStatements(voidStatements);
   }
 
   // State Resource
