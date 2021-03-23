@@ -1,3 +1,8 @@
+# 1.2.0 (23 Mar 2021)
+
+- Added `toBasicAuth()` helper method ([#145](https://github.com/xapijs/xapi/pull/145))
+- Updated e2e GitHub Actions workflow to run simultaneously ([#155](https://github.com/xapijs/xapi/pull/155))
+
 # 1.1.0 (16 Mar 2021)
 
 - Added `sendStatements()` method
