@@ -25,7 +25,7 @@ interface Encoder {
 const endpoint: string = process.env.LRS_ENDPOINT || "";
 const username: string = process.env.LRS_USERNAME || "";
 const password: string = process.env.LRS_PASSWORD || "";
-const auth: string = `Basic ${btoa(username + ":" + password)}`;
+const auth: string = XAPI.toBasicAuth(username, password);
 const xapi: XAPI = new XAPI(endpoint, auth);
 
 const testAgent: Agent = {

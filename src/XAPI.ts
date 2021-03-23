@@ -30,6 +30,7 @@ import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsOb
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
 import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData";
+import { toBasicAuth } from "./helpers/toBasicAuth";
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
 
 export * from "./interfaces/XAPI";
@@ -45,6 +46,7 @@ export default class XAPI {
   public static getSearchQueryParamsAsObject = getSearchQueryParamsAsObject;
   public static getXAPILaunchData = getXAPILaunchData;
   public static getTinCanLaunchData = getTinCanLaunchData;
+  public static toBasicAuth = toBasicAuth;
 
   private endpoint: string;
   private headers: { [key: string]: string };
@@ -59,7 +61,7 @@ export default class XAPI {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",
       // No Authorization Process and Requirements -  https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
-      Authorization: auth ? auth : `Basic ${btoa(":")}`,
+      Authorization: auth ? auth : toBasicAuth("", ""),
     };
   }
 
