@@ -30,6 +30,7 @@ import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsOb
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
 import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData";
+import { formatEndpoint } from "./helpers/formatEndpoint";
 import { toBasicAuth } from "./helpers/toBasicAuth";
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
 
@@ -56,7 +57,7 @@ export default class XAPI {
     auth?: string,
     version: Versions = "1.0.3"
   ) {
-    this.endpoint = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
+    this.endpoint = formatEndpoint(endpoint);
     this.headers = {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",
