@@ -81,6 +81,19 @@ function arrayBufferToWordArray(ab: ArrayBuffer): WordArray {
   return CryptoJS.lib.WordArray.create(a, i8a.length);
 }
 
+describe("xapi constructor", () => {
+  test("can perform basic authentication challenges when no authorization process is required", () => {
+    const noAuthXapi = new XAPI(endpoint);
+    return noAuthXapi.getAbout().then((result) => {
+      return expect(result.data).toEqual(
+        expect.objectContaining({
+          version: expect.any(Array),
+        })
+      );
+    });
+  });
+});
+
 describe("xapi launch", () => {
   test("catch error if failure to get data", () => {
     return XAPI.getXAPILaunchData().catch((error) => {
