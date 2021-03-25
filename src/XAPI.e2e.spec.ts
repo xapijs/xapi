@@ -7,6 +7,7 @@ import XAPI, {
 } from "./XAPI";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 interface WordArray {
@@ -341,6 +342,50 @@ describe("state resource", () => {
       });
   });
 
+  test("can create state with registration", () => {
+    return xapi
+      .createState(testAgent, testActivity.id, testStateId, testState, uuidv4())
+      .then((response) => {
+        return expect(response.data).toBeDefined();
+      });
+  });
+
+  test("can add to a state using an etag", () => {
+    const stateId = new Date().getTime().toString();
+    return xapi
+      .createState(testAgent, testActivity.id, stateId, {
+        x: "foo",
+        y: "bar",
+      })
+      .then(() => {
+        return xapi.getState(testAgent, testActivity.id, stateId);
+      })
+      .then((response) => {
+        return xapi.createState(
+          testAgent,
+          testActivity.id,
+          stateId,
+          {
+            x: "bash",
+            z: "faz",
+          },
+          null,
+          response.headers.etag,
+          "If-Match"
+        );
+      })
+      .then(() => {
+        return xapi.getState(testAgent, testActivity.id, stateId);
+      })
+      .then((response) => {
+        return expect(response.data).toEqual({
+          x: "bash",
+          y: "bar",
+          z: "faz",
+        });
+      });
+  });
+
   test("can set state", () => {
     return xapi
       .setState(testAgent, testActivity.id, testStateId, testState)
@@ -351,7 +396,9 @@ describe("state resource", () => {
 
   test("can get all states", () => {
     return xapi.getStates(testAgent, testActivity.id).then((result) => {
-      return expect(result.data).toHaveLength(1);
+      return expect(result.data).toEqual(
+        expect.arrayContaining([expect.objectContaining({})])
+      );
     });
   });
 
