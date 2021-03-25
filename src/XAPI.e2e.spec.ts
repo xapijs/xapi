@@ -394,6 +394,49 @@ describe("state resource", () => {
       });
   });
 
+  test("can set state with registration", () => {
+    return xapi
+      .setState(testAgent, testActivity.id, testStateId, testState, uuidv4())
+      .then((result) => {
+        return expect(result.data).toBeDefined();
+      });
+  });
+
+  test("can set a state using an etag", () => {
+    const stateId = new Date().getTime().toString();
+    return xapi
+      .setState(testAgent, testActivity.id, stateId, {
+        x: "foo",
+        y: "bar",
+      })
+      .then(() => {
+        return xapi.getState(testAgent, testActivity.id, stateId);
+      })
+      .then((response) => {
+        return xapi.setState(
+          testAgent,
+          testActivity.id,
+          stateId,
+          {
+            x: "bash",
+            z: "faz",
+          },
+          null,
+          response.headers.etag,
+          "If-Match"
+        );
+      })
+      .then(() => {
+        return xapi.getState(testAgent, testActivity.id, stateId);
+      })
+      .then((response) => {
+        return expect(response.data).toEqual({
+          x: "bash",
+          z: "faz",
+        });
+      });
+  });
+
   test("can get all states", () => {
     return xapi.getStates(testAgent, testActivity.id).then((result) => {
       return expect(result.data).toEqual(
@@ -402,11 +445,67 @@ describe("state resource", () => {
     });
   });
 
+  test("can get all states with a registration", () => {
+    const registration = uuidv4();
+    const stateId = new Date().getTime().toString();
+    return xapi
+      .createState(
+        testAgent,
+        testActivity.id,
+        stateId,
+        { foo: "bar" },
+        registration
+      )
+      .then(() => {
+        return xapi.getStates(testAgent, testActivity.id, registration);
+      })
+      .then((response) => {
+        return expect(response.data).toEqual(
+          expect.arrayContaining([expect.objectContaining({})])
+        );
+      });
+  });
+
+  test("can get all states since a certain date", () => {
+    const since = new Date();
+    since.setDate(since.getDate() - 1); // yesterday
+    return xapi
+      .getStates(testAgent, testActivity.id, null, since.toISOString())
+      .then((response) => {
+        return expect(response.data).toEqual(
+          expect.arrayContaining([expect.objectContaining({})])
+        );
+      });
+  });
+
   test("can get a state", () => {
     return xapi
       .getState(testAgent, testActivity.id, testStateId)
       .then((result) => {
         return expect(result.data).toMatchObject(testState);
+      });
+  });
+
+  test("can get a state with a registration", () => {
+    const registration = uuidv4();
+    return xapi
+      .createState(
+        testAgent,
+        testActivity.id,
+        testStateId,
+        testState,
+        registration
+      )
+      .then(() => {
+        return xapi.getState(
+          testAgent,
+          testActivity.id,
+          testStateId,
+          registration
+        );
+      })
+      .then((response) => {
+        return expect(response.data).toMatchObject(testState);
       });
   });
 
