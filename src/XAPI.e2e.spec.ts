@@ -517,10 +517,88 @@ describe("state resource", () => {
       });
   });
 
+  test("can delete a state with a registration", () => {
+    const registration = uuidv4();
+    return xapi
+      .createState(
+        testAgent,
+        testActivity.id,
+        testStateId,
+        testState,
+        registration
+      )
+      .then(() => {
+        return xapi.deleteState(
+          testAgent,
+          testActivity.id,
+          testStateId,
+          registration
+        );
+      })
+      .then((response) => {
+        return expect(response.data).toBeDefined();
+      });
+  });
+
+  test("can delete a state with an etag", () => {
+    return xapi
+      .createState(testAgent, testActivity.id, testStateId, testState)
+      .then(() => {
+        return xapi.getState(testAgent, testActivity.id, testStateId);
+      })
+      .then((response) => {
+        console.log(response.headers.etag);
+        return xapi.deleteState(
+          testAgent,
+          testActivity.id,
+          testStateId,
+          null,
+          response.headers.etag
+        );
+      })
+      .then((response) => {
+        return expect(response.data).toBeDefined();
+      });
+  });
+
   test("can delete all states", () => {
     return xapi.deleteStates(testAgent, testActivity.id).then((result) => {
       return expect(result.data).toBeDefined();
     });
+  });
+
+  test("can delete all states for a registration", () => {
+    const registration = uuidv4();
+    return xapi
+      .createState(
+        testAgent,
+        testActivity.id,
+        testStateId,
+        testState,
+        registration
+      )
+      .then(() => {
+        return xapi.deleteStates(testAgent, testActivity.id, registration);
+      })
+      .then((response) => {
+        return expect(response.data).toBeDefined();
+      });
+  });
+
+  test("can delete all states with an etag", () => {
+    return xapi
+      .getStates(testAgent, testActivity.id)
+      .then((response) => {
+        return xapi.deleteStates(
+          testAgent,
+          testActivity.id,
+          null,
+          response.headers.etag
+        );
+      })
+      .then((response) => {
+        return expect(response.data).toBeDefined();
+      });
   });
 });
 
