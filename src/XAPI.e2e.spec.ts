@@ -95,14 +95,6 @@ describe("xapi constructor", () => {
   });
 });
 
-describe("xapi launch", () => {
-  test("catch error if failure to get data", () => {
-    return XAPI.getXAPILaunchData().catch((error) => {
-      return expect(error).toBeInstanceOf(Error);
-    });
-  });
-});
-
 describe("about resource", () => {
   test("can get about", () => {
     return xapi.getAbout().then((result) => {
@@ -686,8 +678,10 @@ describe("activity profile resource", () => {
     since.setDate(since.getDate() - 1); // yesterday
     return xapi
       .getActivityProfiles(testActivity.id, since.toISOString())
-      .then((result) => {
-        return expect(result.data).toHaveLength(1);
+      .then((response) => {
+        return expect(response.data).toEqual(
+          expect.arrayContaining([expect.objectContaining({})])
+        );
       });
   });
 
