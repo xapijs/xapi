@@ -11,4 +11,14 @@ module.exports = {
       statements: 100,
     },
   },
+  projects: [
+    {
+      displayName: "dom",
+      testEnvironment: "jsdom",
+    },
+    {
+      displayName: "node",
+      testEnvironment: "node",
+    },
+  ],
 };
