@@ -16,7 +16,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run clean && npm run build:types && npm run build:js",
     "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
-    "test": "npm run test:unit && npm run test:e2e",
+    "test": "jest",
     "test:unit": "jest --testPathIgnorePatterns=.e2e.spec.ts",
     "test:e2e": "jest --testPathPattern=.e2e.spec.ts --collectCoverageFrom='src/XAPI.ts'",
     "test:format": "prettier --check .",
