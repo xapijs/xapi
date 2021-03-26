@@ -7,18 +7,16 @@ test("converts username and password into Basic Auth header", () => {
     ["Mr}VBHb^)zyc39`<", '?YrAhvP{}"s94:%%'],
   ];
 
-  const bufferFunction = (pair) =>
-    `Basic ${Buffer.from(pair[0] + ":" + pair[1], "binary").toString(
-      "base64"
-    )}`;
-  const btoaFunction = (pair) => `Basic ${btoa(`${pair[0]}:${pair[1]}`)}`;
+  const encodedPairs = [
+    "Basic dG9tOjEyMzQ=",
+    "Basic QlVHLW1iJzUjLDosZkM4Mzo0alhHdGd3WSVcJ3htLms7",
+    "Basic TXJ9VkJIYl4penljMzlgPDo/WXJBaHZQe30iczk0OiUl",
+  ];
+
   const helperFunction = (pair) => toBasicAuth(pair[0], pair[1]);
 
-  const results = pairs.map((pair) => {
-    return (
-      bufferFunction(pair) === helperFunction(pair) &&
-      btoaFunction(pair) === helperFunction(pair)
-    );
+  const results = pairs.map((pair, index) => {
+    return encodedPairs[index] === helperFunction(pair);
   });
 
   return expect(results).not.toContain(false);
