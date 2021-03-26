@@ -547,7 +547,6 @@ describe("state resource", () => {
         return xapi.getState(testAgent, testActivity.id, testStateId);
       })
       .then((response) => {
-        console.log(response.headers.etag);
         return xapi.deleteState(
           testAgent,
           testActivity.id,
@@ -624,6 +623,40 @@ describe("activity profile resource", () => {
       });
   });
 
+  test("can add to an activity profile using an etag", () => {
+    const profileId = uuidv4();
+    return xapi
+      .createActivityProfile(testActivity.id, profileId, {
+        x: "foo",
+        y: "bar",
+      })
+      .then(() => {
+        return xapi.getActivityProfile(testActivity.id, profileId);
+      })
+      .then((response) => {
+        return xapi.createActivityProfile(
+          testActivity.id,
+          profileId,
+          {
+            x: "bash",
+            z: "faz",
+          },
+          response.headers.etag,
+          "If-Match"
+        );
+      })
+      .then(() => {
+        return xapi.getActivityProfile(testActivity.id, profileId);
+      })
+      .then((response) => {
+        return expect(response.data).toEqual({
+          x: "bash",
+          y: "bar",
+          z: "faz",
+        });
+      });
+  });
+
   test("can set activity profile", () => {
     return xapi
       .getActivityProfile(testActivity.id, testProfileId)
@@ -648,6 +681,16 @@ describe("activity profile resource", () => {
     });
   });
 
+  test("can get all activity profiles since a certain date", () => {
+    const since = new Date();
+    since.setDate(since.getDate() - 1); // yesterday
+    return xapi
+      .getActivityProfiles(testActivity.id, since.toISOString())
+      .then((result) => {
+        return expect(result.data).toHaveLength(1);
+      });
+  });
+
   test("can get an activity profile", () => {
     return xapi
       .getActivityProfile(testActivity.id, testProfileId)
@@ -661,6 +704,25 @@ describe("activity profile resource", () => {
       .deleteActivityProfile(testActivity.id, testProfileId)
       .then((result) => {
         return expect(result.data).toBeDefined();
+      });
+  });
+
+  test("can delete an activity profile with an etag", () => {
+    const profileId = uuidv4();
+    return xapi
+      .createActivityProfile(testActivity.id, profileId, testProfile)
+      .then(() => {
+        return xapi.getActivityProfile(testActivity.id, profileId);
+      })
+      .then((response) => {
+        return xapi.deleteActivityProfile(
+          testActivity.id,
+          profileId,
+          response.headers.etag
+        );
+      })
+      .then((response) => {
+        return expect(response.data).toBeDefined();
       });
   });
 });
