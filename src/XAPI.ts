@@ -25,12 +25,12 @@ import {
 } from "./interfaces/Statement";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
-import { parseMultiPart, createMultiPart } from "./helpers/multiPart";
+import { parseMultiPart, createMultiPart } from "./internal/multiPart";
+import { formatEndpoint } from "./internal/formatEndpoint";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
 import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData";
-import { formatEndpoint } from "./helpers/formatEndpoint";
 import { toBasicAuth } from "./helpers/toBasicAuth";
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
 
