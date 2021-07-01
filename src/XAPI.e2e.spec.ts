@@ -298,20 +298,20 @@ describe("statement resource", () => {
         ).toBeTruthy();
       });
   });
-});
 
-test("can get more statements with attachments using the more property", () => {
-  return xapi
-    .getStatements({
-      limit: 1,
-      attachments: true,
-    })
-    .then((result) => {
-      return xapi.getMoreStatements(result.data[0].more);
-    })
-    .then((result) => {
-      return expect(result.data[0].statements).toBeTruthy();
-    });
+  test("can get more statements with attachments using the more property", () => {
+    return xapi
+      .getStatements({
+        limit: 1,
+        attachments: true,
+      })
+      .then((result) => {
+        return xapi.getMoreStatements(result.data[0].more);
+      })
+      .then((result) => {
+        return expect(result.data[0].statements).toBeTruthy();
+      });
+  });
 });
 
 describe("state resource", () => {
@@ -331,6 +331,23 @@ describe("state resource", () => {
   test("can set state", () => {
     return xapi
       .setState(testAgent, testActivity.id, testStateId, testState)
+      .then((result) => {
+        return expect(result.data).toBeDefined();
+      });
+  });
+
+  test("can set state with text/plain content type", () => {
+    return xapi
+      .setState(
+        testAgent,
+        testActivity.id,
+        testStateId,
+        testState.test,
+        null,
+        null,
+        null,
+        "text/plain"
+      )
       .then((result) => {
         return expect(result.data).toBeDefined();
       });
@@ -405,9 +422,30 @@ describe("activity profile resource", () => {
       });
   });
 
+  test("can set activity profile with text/plain content type", () => {
+    return xapi
+      .getActivityProfile(testActivity.id, testProfileId)
+      .then((result) => {
+        return xapi
+          .setActivityProfile(
+            testActivity.id,
+            testProfileId,
+            testProfile.test,
+            result.headers.etag,
+            "If-Match",
+            "text/plain"
+          )
+          .then((result) => {
+            return expect(result.data).toBeDefined();
+          });
+      });
+  });
+
   test("can get all activity profiles", () => {
-    return xapi.getActivityProfiles(testActivity.id).then((result) => {
-      return expect(result.data).toHaveLength(1);
+    return xapi.getActivityProfiles(testActivity.id).then((response) => {
+      return expect(response.data).toEqual(
+        expect.arrayContaining([expect.objectContaining({})])
+      );
     });
   });
 
@@ -460,6 +498,24 @@ describe("agent profile resource", () => {
           testProfile,
           result.headers.etag,
           "If-Match"
+        );
+      })
+      .then((result) => {
+        return expect(result.data).toBeDefined();
+      });
+  });
+
+  test("can set agent profile with text/plain content type", () => {
+    return xapi
+      .getAgentProfile(testAgent, testProfileId)
+      .then((result) => {
+        return xapi.setAgentProfile(
+          testAgent,
+          testProfileId,
+          testProfile.test,
+          result.headers.etag,
+          "If-Match",
+          "text/plain"
         );
       })
       .then((result) => {
