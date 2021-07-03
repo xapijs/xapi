@@ -23,6 +23,7 @@ import {
   Timestamp,
   MultiPart,
 } from "./interfaces/Statement";
+import { Document, DocumentJson } from "./interfaces/Document";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart, createMultiPart } from "./helpers/multiPart";
@@ -221,7 +222,7 @@ export default class XAPI {
     agent: Agent,
     activityId: string,
     stateId: string,
-    state: { [key: string]: any },
+    state: DocumentJson,
     registration?: string,
     etag?: string,
     matchHeader?: "If-Match" | "If-None-Match"
@@ -252,13 +253,15 @@ export default class XAPI {
     agent: Agent,
     activityId: string,
     stateId: string,
-    state: { [key: string]: any },
+    state: Document,
     registration?: string,
     etag?: string,
-    matchHeader?: "If-Match" | "If-None-Match"
+    matchHeader?: "If-Match" | "If-None-Match",
+    contentType?: string
   ): AxiosPromise<void> {
     const headers = {};
     if (etag) headers[matchHeader] = etag;
+    if (contentType) headers["Content-Type"] = contentType;
     return this.requestResource(
       Resources.STATE,
       {
@@ -306,7 +309,7 @@ export default class XAPI {
     activityId: string,
     stateId: string,
     registration?: string
-  ): AxiosPromise<{ [key: string]: any }> {
+  ): AxiosPromise<Document> {
     return this.requestResource(Resources.STATE, {
       agent: agent,
       activityId: activityId,
@@ -384,7 +387,7 @@ export default class XAPI {
   public createActivityProfile(
     activityId: string,
     profileId: string,
-    profile: { [key: string]: any },
+    profile: DocumentJson,
     etag?: string,
     matchHeader?: "If-Match" | "If-None-Match"
   ): AxiosPromise<void> {
@@ -407,12 +410,14 @@ export default class XAPI {
   public setActivityProfile(
     activityId: string,
     profileId: string,
-    profile: { [key: string]: any },
+    profile: Document,
     etag: string,
-    matchHeader: "If-Match" | "If-None-Match"
+    matchHeader: "If-Match" | "If-None-Match",
+    contentType?: string
   ): AxiosPromise<void> {
     const headers = {};
     headers[matchHeader] = etag;
+    if (contentType) headers["Content-Type"] = contentType;
     return this.requestResource(
       Resources.ACTIVITY_PROFILE,
       {
@@ -444,7 +449,7 @@ export default class XAPI {
   public getActivityProfile(
     activityId: string,
     profileId: string
-  ): AxiosPromise<{ [key: string]: any }> {
+  ): AxiosPromise<Document> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId,
@@ -475,7 +480,7 @@ export default class XAPI {
   public createAgentProfile(
     agent: Agent,
     profileId: string,
-    profile: { [key: string]: any },
+    profile: DocumentJson,
     etag?: string,
     matchHeader?: "If-Match" | "If-None-Match"
   ): AxiosPromise<void> {
@@ -498,12 +503,14 @@ export default class XAPI {
   public setAgentProfile(
     agent: Agent,
     profileId: string,
-    profile: { [key: string]: any },
+    profile: Document,
     etag: string,
-    matchHeader: "If-Match" | "If-None-Match"
+    matchHeader: "If-Match" | "If-None-Match",
+    contentType?: string
   ): AxiosPromise<void> {
     const headers = {};
     headers[matchHeader] = etag;
+    if (contentType) headers["Content-Type"] = contentType;
     return this.requestResource(
       Resources.AGENT_PROFILE,
       {
@@ -535,7 +542,7 @@ export default class XAPI {
   public getAgentProfile(
     agent: Agent,
     profileId: string
-  ): AxiosPromise<{ [key: string]: any }> {
+  ): AxiosPromise<Document> {
     return this.requestResource(Resources.AGENT_PROFILE, {
       agent: agent,
       profileId: profileId,
