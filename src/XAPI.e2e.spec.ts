@@ -494,7 +494,7 @@ describe("agent profile resource", () => {
           testProfileId,
           testProfile,
           result.headers.etag,
-          "If-None-Match"
+          "If-Match"
         );
       })
       .then((result) => {
@@ -505,14 +505,17 @@ describe("agent profile resource", () => {
   test("can set agent profile with text/plain content type", () => {
     const testProfileId: string = `${testActivity.id}/profiles/test-text-plain`;
     return xapi
-      .setAgentProfile(
-        testAgent,
-        testProfileId,
-        testProfile.test,
-        "*",
-        "If-None-Match",
-        "text/plain"
-      )
+      .deleteAgentProfile(testAgent, testProfileId)
+      .then(() => {
+        return xapi.setAgentProfile(
+          testAgent,
+          testProfileId,
+          testProfile.test,
+          "*",
+          "If-None-Match",
+          "text/plain"
+        );
+      })
       .then((result) => {
         return expect(result.data).toBeDefined();
       });
