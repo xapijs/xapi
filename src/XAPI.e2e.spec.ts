@@ -442,10 +442,8 @@ describe("activity profile resource", () => {
   });
 
   test("can get all activity profiles", () => {
-    return xapi.getActivityProfiles(testActivity.id).then((response) => {
-      return expect(response.data).toEqual(
-        expect.arrayContaining([expect.objectContaining({})])
-      );
+    return xapi.getActivityProfiles(testActivity.id).then((result) => {
+      return expect(result.data).toEqual(expect.any(Array));
     });
   });
 
