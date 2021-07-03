@@ -11,6 +11,12 @@ test("converts querystring into object", () => {
   });
 });
 
+test("can decode plus signs into spaces", () => {
+  return expect(getSearchQueryParamsAsObject("?test=Test+User")).toMatchObject({
+    test: "Test User",
+  });
+});
+
 test("converts relative URL with querystring into object", () => {
   return expect(
     getSearchQueryParamsAsObject("/lrs/test/statements?test=test")
