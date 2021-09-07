@@ -25,9 +25,9 @@ function coerceActor(actor: Actor): Actor {
   return actor;
 }
 
-export function getSearchQueryParamsAsObject(
-  str: string
-): { [key: string]: any } {
+export function getSearchQueryParamsAsObject(str: string): {
+  [key: string]: any;
+} {
   const obj: { [key: string]: any } = {};
   const queryString = str.split("?")[1] || null;
   if (!queryString) return obj;
