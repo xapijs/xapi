@@ -1,3 +1,8 @@
+# 1.2.2 (7 Sep 2021)
+
+- Bumped `axios` to solve security vulnerability
+- Bumped dependencies
+
 # 1.2.1 (3 Jul 2021)
 
 - Document resources can now accept any content type ([#167](https://github.com/xapijs/xapi/issues/167))
