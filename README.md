@@ -1,4 +1,5 @@
-[![npm version](https://img.shields.io/npm/v/@xapi/xapi.svg)](https://www.npmjs.com/package/@xapi/xapi) [![E2E Tests](https://github.com/xapijs/xapi/workflows/E2E%20Tests/badge.svg)](https://github.com/xapijs/xapi/actions/workflows/test-push-to-master.yml)
+[![npm version](https://img.shields.io/npm/v/@xapi/xapi.svg)](https://www.npmjs.com/package/@xapi/xapi) [![dependencies](https://david-dm.org/xapijs/xapi.svg)](https://david-dm.org/xapijs/xapi)
+ [![E2E Tests](https://github.com/xapijs/xapi/workflows/E2E%20Tests/badge.svg)](https://github.com/xapijs/xapi/actions/workflows/test-push-to-master.yml)
 
 [<img width="100" src="https://avatars3.githubusercontent.com/u/65084607?s=200&v=4" alt="xAPI.js logo">](https://www.xapijs.dev)
 
