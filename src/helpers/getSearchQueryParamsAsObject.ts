@@ -25,22 +25,18 @@ function coerceActor(actor: Actor): Actor {
   return actor;
 }
 
-export function getSearchQueryParamsAsObject(
-  str: string
-): { [key: string]: any } {
+export function getSearchQueryParamsAsObject(str: string): {
+  [key: string]: any;
+} {
   const obj: { [key: string]: any } = {};
   const queryString = str.split("?")[1] || null;
   if (!queryString) return obj;
-  const items = queryString.split("&");
-  items.forEach((n: string) => {
-    const item: string[] = n.split("=");
-    const key = item[0];
-    const val = item[1];
-    const decodedItem: string = decodeURIComponent(val);
+  const usp = new URLSearchParams(queryString);
+  usp.forEach((val, key) => {
     try {
-      obj[key] = JSON.parse(decodedItem);
+      obj[key] = JSON.parse(val);
     } catch {
-      obj[key] = decodedItem;
+      obj[key] = val;
     }
     if (key === "actor") {
       obj.actor = coerceActor(obj.actor);

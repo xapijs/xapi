@@ -304,20 +304,20 @@ describe("statement resource", () => {
         ).toBeTruthy();
       });
   });
-});
 
-test("can get more statements with attachments using the more property", () => {
-  return xapi
-    .getStatements({
-      limit: 1,
-      attachments: true,
-    })
-    .then((result) => {
-      return xapi.getMoreStatements(result.data[0].more);
-    })
-    .then((result) => {
-      return expect(result.data[0].statements).toBeTruthy();
-    });
+  test("can get more statements with attachments using the more property", () => {
+    return xapi
+      .getStatements({
+        limit: 1,
+        attachments: true,
+      })
+      .then((result) => {
+        return xapi.getMoreStatements(result.data[0].more);
+      })
+      .then((result) => {
+        return expect(result.data[0].statements).toBeTruthy();
+      });
+  });
 });
 
 describe("state resource", () => {
@@ -394,6 +394,24 @@ describe("state resource", () => {
       });
   });
 
+  test("can set state with text/plain content type", () => {
+    const testStateId: string = `${testActivity.id}/states/test-text-plain`;
+    return xapi
+      .setState(
+        testAgent,
+        testActivity.id,
+        testStateId,
+        testState.test,
+        null,
+        null,
+        null,
+        "text/plain"
+      )
+      .then((result) => {
+        return expect(result.data).toBeDefined();
+      });
+  });
+
   test("can set a state using an etag", () => {
     const stateId = new Date().getTime().toString();
     return xapi
@@ -431,9 +449,7 @@ describe("state resource", () => {
 
   test("can get all states", () => {
     return xapi.getStates(testAgent, testActivity.id).then((result) => {
-      return expect(result.data).toEqual(
-        expect.arrayContaining([expect.objectContaining({})])
-      );
+      return expect(result.data).toEqual(expect.any(Array));
     });
   });
 
@@ -667,11 +683,26 @@ describe("activity profile resource", () => {
       });
   });
 
+  test("can set activity profile with text/plain content type", () => {
+    const testProfileId: string = `${testActivity.id}/profiles/test-text-plain`;
+
+    return xapi
+      .setActivityProfile(
+        testActivity.id,
+        testProfileId,
+        testProfile.test,
+        "*",
+        "If-Match",
+        "text/plain"
+      )
+      .then((result) => {
+        return expect(result.data).toBeDefined();
+      });
+  });
+
   test("can get all activity profiles", () => {
-    return xapi.getActivityProfiles(testActivity.id).then((response) => {
-      return expect(response.data).toEqual(
-        expect.arrayContaining([expect.objectContaining({})])
-      );
+    return xapi.getActivityProfiles(testActivity.id).then((result) => {
+      return expect(result.data).toEqual(expect.any(Array));
     });
   });
 
@@ -680,10 +711,8 @@ describe("activity profile resource", () => {
     since.setDate(since.getDate() - 1); // yesterday
     return xapi
       .getActivityProfiles(testActivity.id, since.toISOString())
-      .then((response) => {
-        return expect(response.data).toEqual(
-          expect.arrayContaining([expect.objectContaining({})])
-        );
+      .then((result) => {
+        return expect(result.data).toEqual(expect.any(Array));
       });
   });
 
@@ -762,9 +791,28 @@ describe("agent profile resource", () => {
       });
   });
 
+  test("can set agent profile with text/plain content type", () => {
+    const testProfileId: string = `${testActivity.id}/profiles/test-text-plain`;
+    return xapi
+      .deleteAgentProfile(testAgent, testProfileId)
+      .then(() => {
+        return xapi.setAgentProfile(
+          testAgent,
+          testProfileId,
+          testProfile.test,
+          "*",
+          "If-None-Match",
+          "text/plain"
+        );
+      })
+      .then((result) => {
+        return expect(result.data).toBeDefined();
+      });
+  });
+
   test("can get all agent profiles", () => {
     return xapi.getAgentProfiles(testAgent).then((result) => {
-      return expect(result.data).toHaveLength(1);
+      return expect(result.data).toEqual(expect.any(Array));
     });
   });
 

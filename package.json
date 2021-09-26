@@ -1,6 +1,6 @@
 {
   "name": "@xapi/xapi",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Communicate over xAPI using JavaScript.",
   "main": "dist/XAPI.cjs.js",
   "module": "dist/XAPI.esm.js",
@@ -43,20 +43,20 @@
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-typescript": "^7.13.0",
     "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.2.0",
-    "@types/jest": "^26.0.20",
-    "@types/node": "^14.14.34",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.10",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
-    "babel-jest": "^26.6.3",
+    "babel-jest": "^27.1.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "crypto-js": "^4.0.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-prettier": "^4.0.0",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
@@ -67,6 +67,6 @@
     "uuid": "^8.3.2"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.4"
   }
 }

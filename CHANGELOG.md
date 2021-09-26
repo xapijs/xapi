@@ -1,3 +1,14 @@
+# 1.2.2 (7 Sep 2021)
+
+- Bumped `axios` to solve security vulnerability
+- Bumped dependencies
+
+# 1.2.1 (3 Jul 2021)
+
+- Document resources can now accept any content type ([#167](https://github.com/xapijs/xapi/issues/167))
+- Query parameter decoding now correctly handling plus signs ([#175](https://github.com/xapijs/xapi/issues/175))
+- Bumped dependencies
+
 # 1.2.0 (23 Mar 2021)
 
 - Added `toBasicAuth()` helper method ([#145](https://github.com/xapijs/xapi/pull/145))
