@@ -9,6 +9,7 @@ import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { testIf, isNode } from "../test/jestUtils";
 
 interface WordArray {
   iv: string;
@@ -149,7 +150,7 @@ describe("statement resource", () => {
       });
   });
 
-  test("can send a statement with an embedded attachment", () => {
+  testIf(!isNode())("can send a statement with an embedded attachment", () => {
     const statement: Statement = Object.assign({}, testStatement);
 
     statement.attachments = [testAttachment];
@@ -168,18 +169,21 @@ describe("statement resource", () => {
       });
   });
 
-  test("can send multiple statements with embedded attachments", () => {
-    const statement: Statement = Object.assign({}, testStatement);
-    statement.attachments = [testAttachment];
-    return xapi
-      .sendStatements(
-        [statement, statement],
-        [testAttachmentArrayBuffer, testAttachmentArrayBuffer]
-      )
-      .then((result) => {
-        return expect(result.data).toHaveLength(2);
-      });
-  });
+  testIf(!isNode())(
+    "can send multiple statements with embedded attachments",
+    () => {
+      const statement: Statement = Object.assign({}, testStatement);
+      statement.attachments = [testAttachment];
+      return xapi
+        .sendStatements(
+          [statement, statement],
+          [testAttachmentArrayBuffer, testAttachmentArrayBuffer]
+        )
+        .then((result) => {
+          return expect(result.data).toHaveLength(2);
+        });
+    }
+  );
 
   test("can get a single statement", () => {
     return xapi
@@ -194,7 +198,7 @@ describe("statement resource", () => {
       });
   });
 
-  test("can get a statement with an embedded attachment", () => {
+  testIf(!isNode())("can get a statement with an embedded attachment", () => {
     const statement: Statement = Object.assign({}, testStatement);
     statement.attachments = [testAttachment];
     return xapi
