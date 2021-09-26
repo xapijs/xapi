@@ -54,36 +54,7 @@ jobs:
         with:
           path: ./*
           key: ${{ github.sha }}
-      - name: Run e2e tests against SCORM Cloud LRS
+      - name: Run e2e tests
         run: npm run test:e2e
         env:
           CI: true
-          LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_SCORMCLOUD }}
-          LRS_USERNAME: ${{ secrets.LRS_USERNAME_SCORMCLOUD }}
-          LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_SCORMCLOUD }}
-
-  test-e2e-veracity-learning:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Restore Build
-        uses: actions/cache@v2
-        id: restore-build
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-      - name: Run e2e tests against Veracity Learning LRS
-        run: npm run test:e2e
-        env:
-          CI: true
-          LRS_ENDPOINT: ${{ secrets.LRS_ENDPOINT_VERACITY }}
-          LRS_USERNAME: ${{ secrets.LRS_USERNAME_VERACITY }}
-          LRS_PASSWORD: ${{ secrets.LRS_PASSWORD_VERACITY }}
