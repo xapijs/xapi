@@ -26,7 +26,8 @@ import {
 import { Document, DocumentJson } from "./interfaces/Document";
 import { About } from "./interfaces/About/About";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
-import { parseMultiPart, createMultiPart } from "./helpers/multiPart";
+import { parseMultiPart, createMultiPart } from "./internal/multiPart";
+import { formatEndpoint } from "./internal/formatEndpoint";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
 import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
@@ -57,7 +58,7 @@ export default class XAPI {
     auth?: string,
     version: Versions = "1.0.3"
   ) {
-    this.endpoint = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
+    this.endpoint = formatEndpoint(endpoint);
     this.headers = {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",

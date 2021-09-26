@@ -16,8 +16,9 @@
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run clean && npm run build:types && npm run build:js",
     "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
-    "test": "jest --testPathIgnorePatterns=.e2e.spec.ts",
-    "test:e2e": "jest --testPathPattern=.e2e.spec.ts",
+    "test": "jest --runInBand",
+    "test:unit": "jest --testPathIgnorePatterns=.e2e.spec.ts",
+    "test:e2e": "jest --testPathPattern=.e2e.spec.ts --collectCoverageFrom='src/XAPI.ts' --runInBand",
     "test:format": "prettier --check .",
     "test:example:node:require": "node ./example/node/require.js",
     "test:example:node:import": "node --experimental-modules --es-module-specifier-resolution=node ./example/node/import.mjs",
@@ -63,7 +64,8 @@
     "rollup": "^2.41.2",
     "rollup-plugin-terser": "^7.0.2",
     "ts-jest": "^26.5.3",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "uuid": "^8.3.2"
   },
   "dependencies": {
     "axios": "^0.21.4"
