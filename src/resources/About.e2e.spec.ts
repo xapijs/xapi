@@ -1,4 +1,4 @@
-import XAPI from "./XAPI";
+import XAPI from "../XAPI";
 
 const credentials: {
   endpoint: string;
@@ -8,11 +8,14 @@ const credentials: {
 
 credentials.forEach((credential) => {
   const endpoint: string = credential.endpoint || "";
+  const username: string = credential.username || "";
+  const password: string = credential.password || "";
+  const auth: string = XAPI.toBasicAuth(username, password);
+  const xapi: XAPI = new XAPI(endpoint, auth);
 
-  describe("xapi constructor", () => {
-    test("can perform basic authentication challenges when no authorization process is required", () => {
-      const noAuthXapi = new XAPI(endpoint);
-      return noAuthXapi.getAbout().then((result) => {
+  describe("about resource", () => {
+    test("can get about", () => {
+      return xapi.getAbout().then((result) => {
         return expect(result.data).toEqual(
           expect.objectContaining({
             version: expect.any(Array),

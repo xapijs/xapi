@@ -18,7 +18,7 @@
     "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
     "test": "jest --runInBand",
     "test:unit": "jest --testPathIgnorePatterns=.e2e.spec.ts",
-    "test:e2e": "jest --testPathPattern=.e2e.spec.ts --collectCoverageFrom='src/XAPI.ts' --runInBand",
+    "test:e2e": "jest --testPathPattern=.e2e.spec.ts --runInBand",
     "test:format": "prettier --check .",
     "test:example:node:require": "node ./example/node/require.js",
     "test:example:node:import": "node --experimental-modules --es-module-specifier-resolution=node ./example/node/import.mjs",
