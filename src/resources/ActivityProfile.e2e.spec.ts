@@ -23,7 +23,11 @@ credentials.forEach((credential) => {
 
     test("can create activity profile", () => {
       return xapi
-        .createActivityProfile(testActivity.id, testProfileId, testProfile)
+        .createActivityProfile({
+          activityId: testActivity.id,
+          profileId: testProfileId,
+          profile: testProfile,
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -32,27 +36,37 @@ credentials.forEach((credential) => {
     test("can add to an activity profile using an etag", () => {
       const profileId = uuidv4();
       return xapi
-        .createActivityProfile(testActivity.id, profileId, {
-          x: "foo",
-          y: "bar",
+        .createActivityProfile({
+          activityId: testActivity.id,
+          profileId: profileId,
+          profile: {
+            x: "foo",
+            y: "bar",
+          },
         })
         .then(() => {
-          return xapi.getActivityProfile(testActivity.id, profileId);
+          return xapi.getActivityProfile({
+            activityId: testActivity.id,
+            profileId: profileId,
+          });
         })
         .then((response) => {
-          return xapi.createActivityProfile(
-            testActivity.id,
-            profileId,
-            {
+          return xapi.createActivityProfile({
+            activityId: testActivity.id,
+            profileId: profileId,
+            profile: {
               x: "bash",
               z: "faz",
             },
-            response.headers.etag,
-            "If-Match"
-          );
+            etag: response.headers.etag,
+            matchHeader: "If-Match",
+          });
         })
         .then(() => {
-          return xapi.getActivityProfile(testActivity.id, profileId);
+          return xapi.getActivityProfile({
+            activityId: testActivity.id,
+            profileId: profileId,
+          });
         })
         .then((response) => {
           return expect(response.data).toEqual({
@@ -65,16 +79,19 @@ credentials.forEach((credential) => {
 
     test("can set activity profile", () => {
       return xapi
-        .getActivityProfile(testActivity.id, testProfileId)
+        .getActivityProfile({
+          activityId: testActivity.id,
+          profileId: testProfileId,
+        })
         .then((result) => {
           return xapi
-            .setActivityProfile(
-              testActivity.id,
-              testProfileId,
-              testProfile,
-              result.headers.etag,
-              "If-Match"
-            )
+            .setActivityProfile({
+              activityId: testActivity.id,
+              profileId: testProfileId,
+              profile: testProfile,
+              etag: result.headers.etag,
+              matchHeader: "If-Match",
+            })
             .then((result) => {
               return expect(result.data).toBeDefined();
             });
@@ -83,32 +100,38 @@ credentials.forEach((credential) => {
 
     test("can set activity profile with text/plain content type", () => {
       const testProfileId: string = `${testActivity.id}/profiles/test-text-plain`;
-
       return xapi
-        .setActivityProfile(
-          testActivity.id,
-          testProfileId,
-          testProfile.test,
-          "*",
-          "If-Match",
-          "text/plain"
-        )
+        .setActivityProfile({
+          activityId: testActivity.id,
+          profileId: testProfileId,
+          profile: testProfile.test,
+          etag: "*",
+          matchHeader: "If-Match",
+          contentType: "text/plain",
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
     });
 
     test("can get all activity profiles", () => {
-      return xapi.getActivityProfiles(testActivity.id).then((result) => {
-        return expect(result.data).toEqual(expect.any(Array));
-      });
+      return xapi
+        .getActivityProfiles({
+          activityId: testActivity.id,
+        })
+        .then((result) => {
+          return expect(result.data).toEqual(expect.any(Array));
+        });
     });
 
     test("can get all activity profiles since a certain date", () => {
       const since = new Date();
       since.setDate(since.getDate() - 1); // yesterday
       return xapi
-        .getActivityProfiles(testActivity.id, since.toISOString())
+        .getActivityProfiles({
+          activityId: testActivity.id,
+          since: since.toISOString(),
+        })
         .then((result) => {
           return expect(result.data).toEqual(expect.any(Array));
         });
@@ -116,7 +139,10 @@ credentials.forEach((credential) => {
 
     test("can get an activity profile", () => {
       return xapi
-        .getActivityProfile(testActivity.id, testProfileId)
+        .getActivityProfile({
+          activityId: testActivity.id,
+          profileId: testProfileId,
+        })
         .then((result) => {
           return expect(result.data).toMatchObject(testProfile);
         });
@@ -124,7 +150,10 @@ credentials.forEach((credential) => {
 
     test("can delete an activity profile", () => {
       return xapi
-        .deleteActivityProfile(testActivity.id, testProfileId)
+        .deleteActivityProfile({
+          activityId: testActivity.id,
+          profileId: testProfileId,
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -133,16 +162,23 @@ credentials.forEach((credential) => {
     test("can delete an activity profile with an etag", () => {
       const profileId = uuidv4();
       return xapi
-        .createActivityProfile(testActivity.id, profileId, testProfile)
+        .createActivityProfile({
+          activityId: testActivity.id,
+          profileId: profileId,
+          profile: testProfile,
+        })
         .then(() => {
-          return xapi.getActivityProfile(testActivity.id, profileId);
+          return xapi.getActivityProfile({
+            activityId: testActivity.id,
+            profileId: profileId,
+          });
         })
         .then((response) => {
-          return xapi.deleteActivityProfile(
-            testActivity.id,
-            profileId,
-            response.headers.etag
-          );
+          return xapi.deleteActivityProfile({
+            activityId: testActivity.id,
+            profileId: profileId,
+            etag: response.headers.etag,
+          });
         })
         .then((response) => {
           return expect(response.data).toBeDefined();

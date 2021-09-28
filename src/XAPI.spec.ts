@@ -55,7 +55,11 @@ const testActivity: Activity = {
     describe("getState", () => {
       test("requests GET activities/state", async () => {
         _mockAxios();
-        await xapi.getState(testAgent, testActivity.id, "somestateid");
+        await xapi.getState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: "somestateid",
+        });
         expect(mockAxios).toHaveBeenCalledWith(
           expect.objectContaining({
             method: "GET",
@@ -67,7 +71,10 @@ const testActivity: Activity = {
     describe("getAgentProfile", () => {
       test("requests GET activities/profile", async () => {
         _mockAxios();
-        await xapi.getAgentProfile(testAgent, "someid");
+        await xapi.getAgentProfile({
+          agent: testAgent,
+          profileId: "someid",
+        });
         expect(mockAxios).toHaveBeenCalledWith(
           expect.objectContaining({
             method: "GET",

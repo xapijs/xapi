@@ -5,23 +5,25 @@ import XAPI, { Agent, Timestamp } from "../XAPI";
 
 export function createAgentProfile(
   this: XAPI,
-  agent: Agent,
-  profileId: string,
-  profile: DocumentJson,
-  etag?: string,
-  matchHeader?: "If-Match" | "If-None-Match"
+  params: {
+    agent: Agent;
+    profileId: string;
+    profile: DocumentJson;
+    etag?: string;
+    matchHeader?: "If-Match" | "If-None-Match";
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers[matchHeader] = etag;
+  if (params.etag) headers[params.matchHeader] = params.etag;
   return this.requestResource(
     Resources.AGENT_PROFILE,
     {
-      agent: agent,
-      profileId: profileId,
+      agent: params.agent,
+      profileId: params.profileId,
     },
     {
       method: "POST",
-      data: profile,
+      data: params.profile,
       headers: headers,
     }
   );
@@ -29,25 +31,27 @@ export function createAgentProfile(
 
 export function setAgentProfile(
   this: XAPI,
-  agent: Agent,
-  profileId: string,
-  profile: Document,
-  etag: string,
-  matchHeader: "If-Match" | "If-None-Match",
-  contentType?: string
+  params: {
+    agent: Agent;
+    profileId: string;
+    profile: Document;
+    etag: string;
+    matchHeader: "If-Match" | "If-None-Match";
+    contentType?: string;
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  headers[matchHeader] = etag;
-  if (contentType) headers["Content-Type"] = contentType;
+  headers[params.matchHeader] = params.etag;
+  if (params.contentType) headers["Content-Type"] = params.contentType;
   return this.requestResource(
     Resources.AGENT_PROFILE,
     {
-      agent: agent,
-      profileId: profileId,
+      agent: params.agent,
+      profileId: params.profileId,
     },
     {
       method: "PUT",
-      data: profile,
+      data: params.profile,
       headers: headers,
     }
   );
@@ -55,14 +59,16 @@ export function setAgentProfile(
 
 export function getAgentProfiles(
   this: XAPI,
-  agent: Agent,
-  since?: Timestamp
+  params: {
+    agent: Agent;
+    since?: Timestamp;
+  }
 ): AxiosPromise<string[]> {
   return this.requestResource(Resources.AGENT_PROFILE, {
-    agent: agent,
-    ...(since
+    agent: params.agent,
+    ...(params.since
       ? {
-          since,
+          since: params.since,
         }
       : {}),
   });
@@ -70,28 +76,32 @@ export function getAgentProfiles(
 
 export function getAgentProfile(
   this: XAPI,
-  agent: Agent,
-  profileId: string
+  params: {
+    agent: Agent;
+    profileId: string;
+  }
 ): AxiosPromise<Document> {
   return this.requestResource(Resources.AGENT_PROFILE, {
-    agent: agent,
-    profileId: profileId,
+    agent: params.agent,
+    profileId: params.profileId,
   });
 }
 
 export function deleteAgentProfile(
   this: XAPI,
-  agent: Agent,
-  profileId: string,
-  etag?: string
+  params: {
+    agent: Agent;
+    profileId: string;
+    etag?: string;
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers["If-Match"] = etag;
+  if (params.etag) headers["If-Match"] = params.etag;
   return this.requestResource(
     Resources.AGENT_PROFILE,
     {
-      agent: agent,
-      profileId: profileId,
+      agent: params.agent,
+      profileId: params.profileId,
     },
     {
       method: "DELETE",

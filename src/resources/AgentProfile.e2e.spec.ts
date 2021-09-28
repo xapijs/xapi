@@ -22,7 +22,11 @@ credentials.forEach((credential) => {
 
     test("can create agent profile", () => {
       return xapi
-        .createAgentProfile(testAgent, testProfileId, testProfile)
+        .createAgentProfile({
+          agent: testAgent,
+          profileId: testProfileId,
+          profile: testProfile,
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -30,15 +34,18 @@ credentials.forEach((credential) => {
 
     test("can set agent profile", () => {
       return xapi
-        .getAgentProfile(testAgent, testProfileId)
+        .getAgentProfile({
+          agent: testAgent,
+          profileId: testProfileId,
+        })
         .then((result) => {
-          return xapi.setAgentProfile(
-            testAgent,
-            testProfileId,
-            testProfile,
-            result.headers.etag,
-            "If-Match"
-          );
+          return xapi.setAgentProfile({
+            agent: testAgent,
+            profileId: testProfileId,
+            profile: testProfile,
+            etag: result.headers.etag,
+            matchHeader: "If-Match",
+          });
         })
         .then((result) => {
           return expect(result.data).toBeDefined();
@@ -48,16 +55,19 @@ credentials.forEach((credential) => {
     test("can set agent profile with text/plain content type", () => {
       const testProfileId: string = `${testActivity.id}/profiles/test-text-plain`;
       return xapi
-        .deleteAgentProfile(testAgent, testProfileId)
+        .deleteAgentProfile({
+          agent: testAgent,
+          profileId: testProfileId,
+        })
         .then(() => {
-          return xapi.setAgentProfile(
-            testAgent,
-            testProfileId,
-            testProfile.test,
-            "*",
-            "If-None-Match",
-            "text/plain"
-          );
+          return xapi.setAgentProfile({
+            agent: testAgent,
+            profileId: testProfileId,
+            profile: testProfile.test,
+            etag: "*",
+            matchHeader: "If-None-Match",
+            contentType: "text/plain",
+          });
         })
         .then((result) => {
           return expect(result.data).toBeDefined();
@@ -65,20 +75,32 @@ credentials.forEach((credential) => {
     });
 
     test("can get all agent profiles", () => {
-      return xapi.getAgentProfiles(testAgent).then((result) => {
-        return expect(result.data).toEqual(expect.any(Array));
-      });
+      return xapi
+        .getAgentProfiles({
+          agent: testAgent,
+        })
+        .then((result) => {
+          return expect(result.data).toEqual(expect.any(Array));
+        });
     });
 
     test("can get an agent profile", () => {
-      return xapi.getAgentProfile(testAgent, testProfileId).then((result) => {
-        return expect(result.data).toMatchObject(testProfile);
-      });
+      return xapi
+        .getAgentProfile({
+          agent: testAgent,
+          profileId: testProfileId,
+        })
+        .then((result) => {
+          return expect(result.data).toMatchObject(testProfile);
+        });
     });
 
     test("can delete an agent profile", () => {
       return xapi
-        .deleteAgentProfile(testAgent, testProfileId)
+        .deleteAgentProfile({
+          agent: testAgent,
+          profileId: testProfileId,
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });

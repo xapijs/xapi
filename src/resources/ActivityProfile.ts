@@ -5,23 +5,25 @@ import XAPI, { Timestamp } from "../XAPI";
 
 export function createActivityProfile(
   this: XAPI,
-  activityId: string,
-  profileId: string,
-  profile: DocumentJson,
-  etag?: string,
-  matchHeader?: "If-Match" | "If-None-Match"
+  params: {
+    activityId: string;
+    profileId: string;
+    profile: DocumentJson;
+    etag?: string;
+    matchHeader?: "If-Match" | "If-None-Match";
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers[matchHeader] = etag;
+  if (params.etag) headers[params.matchHeader] = params.etag;
   return this.requestResource(
     Resources.ACTIVITY_PROFILE,
     {
-      activityId: activityId,
-      profileId: profileId,
+      activityId: params.activityId,
+      profileId: params.profileId,
     },
     {
       method: "POST",
-      data: profile,
+      data: params.profile,
       headers: headers,
     }
   );
@@ -29,25 +31,27 @@ export function createActivityProfile(
 
 export function setActivityProfile(
   this: XAPI,
-  activityId: string,
-  profileId: string,
-  profile: Document,
-  etag: string,
-  matchHeader: "If-Match" | "If-None-Match",
-  contentType?: string
+  params: {
+    activityId: string;
+    profileId: string;
+    profile: Document;
+    etag: string;
+    matchHeader: "If-Match" | "If-None-Match";
+    contentType?: string;
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  headers[matchHeader] = etag;
-  if (contentType) headers["Content-Type"] = contentType;
+  headers[params.matchHeader] = params.etag;
+  if (params.contentType) headers["Content-Type"] = params.contentType;
   return this.requestResource(
     Resources.ACTIVITY_PROFILE,
     {
-      activityId: activityId,
-      profileId: profileId,
+      activityId: params.activityId,
+      profileId: params.profileId,
     },
     {
       method: "PUT",
-      data: profile,
+      data: params.profile,
       headers: headers,
     }
   );
@@ -55,14 +59,16 @@ export function setActivityProfile(
 
 export function getActivityProfiles(
   this: XAPI,
-  activityId: string,
-  since?: Timestamp
+  params: {
+    activityId: string;
+    since?: Timestamp;
+  }
 ): AxiosPromise<string[]> {
   return this.requestResource(Resources.ACTIVITY_PROFILE, {
-    activityId: activityId,
-    ...(since
+    activityId: params.activityId,
+    ...(params.since
       ? {
-          since,
+          since: params.since,
         }
       : {}),
   });
@@ -70,28 +76,32 @@ export function getActivityProfiles(
 
 export function getActivityProfile(
   this: XAPI,
-  activityId: string,
-  profileId: string
+  params: {
+    activityId: string;
+    profileId: string;
+  }
 ): AxiosPromise<Document> {
   return this.requestResource(Resources.ACTIVITY_PROFILE, {
-    activityId: activityId,
-    profileId: profileId,
+    activityId: params.activityId,
+    profileId: params.profileId,
   });
 }
 
 export function deleteActivityProfile(
   this: XAPI,
-  activityId: string,
-  profileId: string,
-  etag?: string
+  params: {
+    activityId: string;
+    profileId: string;
+    etag?: string;
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers["If-Match"] = etag;
+  if (params.etag) headers["If-Match"] = params.etag;
   return this.requestResource(
     Resources.ACTIVITY_PROFILE,
     {
-      activityId: activityId,
-      profileId: profileId,
+      activityId: params.activityId,
+      profileId: params.profileId,
     },
     {
       method: "DELETE",

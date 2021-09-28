@@ -16,9 +16,13 @@ credentials.forEach((credential) => {
 
   describe("agent resource", () => {
     test("can get person by agent", () => {
-      return xapi.getAgent(testAgent).then((result) => {
-        return expect(result.data).toBeDefined();
-      });
+      return xapi
+        .getAgent({
+          agent: testAgent,
+        })
+        .then((result) => {
+          return expect(result.data).toBeDefined();
+        });
     });
   });
 });

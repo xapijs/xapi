@@ -26,9 +26,13 @@ credentials.forEach((credential) => {
 
   describe("statement resource", () => {
     test("can send a statement", () => {
-      return xapi.sendStatement(testStatement).then((result) => {
-        return expect(result.data).toHaveLength(1);
-      });
+      return xapi
+        .sendStatement({
+          statement: testStatement,
+        })
+        .then((result) => {
+          return expect(result.data).toHaveLength(1);
+        });
     });
 
     test("can send a statement with a remote attachment", () => {
@@ -59,7 +63,9 @@ credentials.forEach((credential) => {
             ).toString(),
           };
           statement.attachments = [attachment];
-          return xapi.sendStatement(statement);
+          return xapi.sendStatement({
+            statement: statement,
+          });
         })
         .then((result) => {
           return expect(result.data).toHaveLength(1);
@@ -73,7 +79,10 @@ credentials.forEach((credential) => {
 
         statement.attachments = [testAttachment];
         return xapi
-          .sendStatement(statement, [testAttachmentArrayBuffer])
+          .sendStatement({
+            statement: statement,
+            attachments: [testAttachmentArrayBuffer],
+          })
           .then((result) => {
             return expect(result.data).toHaveLength(1);
           });
@@ -82,7 +91,9 @@ credentials.forEach((credential) => {
 
     test("can send multiple statements", () => {
       return xapi
-        .sendStatements([testStatement, testStatement])
+        .sendStatements({
+          statements: [testStatement, testStatement],
+        })
         .then((result) => {
           return expect(result.data).toHaveLength(2);
         });
@@ -94,10 +105,10 @@ credentials.forEach((credential) => {
         const statement: Statement = Object.assign({}, testStatement);
         statement.attachments = [testAttachment];
         return xapi
-          .sendStatements(
-            [statement, statement],
-            [testAttachmentArrayBuffer, testAttachmentArrayBuffer]
-          )
+          .sendStatements({
+            statements: [statement, statement],
+            attachments: [testAttachmentArrayBuffer, testAttachmentArrayBuffer],
+          })
           .then((result) => {
             return expect(result.data).toHaveLength(2);
           });
@@ -106,7 +117,9 @@ credentials.forEach((credential) => {
 
     test("can get a single statement", () => {
       return xapi
-        .sendStatement(testStatement)
+        .sendStatement({
+          statement: testStatement,
+        })
         .then((result) => {
           return xapi.getStatement({
             statementId: result.data[0],
@@ -121,7 +134,10 @@ credentials.forEach((credential) => {
       const statement: Statement = Object.assign({}, testStatement);
       statement.attachments = [testAttachment];
       return xapi
-        .sendStatement(statement, [testAttachmentArrayBuffer])
+        .sendStatement({
+          statement: statement,
+          attachments: [testAttachmentArrayBuffer],
+        })
         .then((result) => {
           return xapi.getStatement({
             statementId: result.data[0],
@@ -137,9 +153,14 @@ credentials.forEach((credential) => {
 
     test("can void a single statement", () => {
       return xapi
-        .sendStatement(testStatement)
+        .sendStatement({
+          statement: testStatement,
+        })
         .then((result) => {
-          return xapi.voidStatement(testAgent, result.data[0]);
+          return xapi.voidStatement({
+            actor: testAgent,
+            statementId: result.data[0],
+          });
         })
         .then((result) => {
           return expect(result.data).toHaveLength(1);
@@ -148,9 +169,14 @@ credentials.forEach((credential) => {
 
     test("can void multiple statements", () => {
       return xapi
-        .sendStatements([testStatement, testStatement])
+        .sendStatements({
+          statements: [testStatement, testStatement],
+        })
         .then((result) => {
-          return xapi.voidStatements(testAgent, result.data);
+          return xapi.voidStatements({
+            actor: testAgent,
+            statementIds: result.data,
+          });
         })
         .then((result) => {
           return expect(result.data).toHaveLength(2);
@@ -160,10 +186,15 @@ credentials.forEach((credential) => {
     test("can get a voided statement", () => {
       let statementId: string;
       return xapi
-        .sendStatement(testStatement)
+        .sendStatement({
+          statement: testStatement,
+        })
         .then((result) => {
           statementId = result.data[0];
-          return xapi.voidStatement(testAgent, statementId);
+          return xapi.voidStatement({
+            actor: testAgent,
+            statementId: statementId,
+          });
         })
         .then(() => {
           return xapi.getVoidedStatement({
@@ -219,7 +250,9 @@ credentials.forEach((credential) => {
           limit: 1,
         })
         .then((result) => {
-          return xapi.getMoreStatements(result.data.more);
+          return xapi.getMoreStatements({
+            more: result.data.more,
+          });
         })
         .then((result) => {
           return expect(
@@ -235,7 +268,9 @@ credentials.forEach((credential) => {
           attachments: true,
         })
         .then((result) => {
-          return xapi.getMoreStatements(result.data[0].more);
+          return xapi.getMoreStatements({
+            more: result.data[0].more,
+          });
         })
         .then((result) => {
           return expect(result.data[0].statements).toBeTruthy();

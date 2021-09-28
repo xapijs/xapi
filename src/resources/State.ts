@@ -5,31 +5,34 @@ import XAPI, { Agent, Timestamp } from "../XAPI";
 
 export function createState(
   this: XAPI,
-  agent: Agent,
-  activityId: string,
-  stateId: string,
-  state: DocumentJson,
-  registration?: string,
-  etag?: string,
-  matchHeader?: "If-Match" | "If-None-Match"
+  params: {
+    agent: Agent;
+    activityId: string;
+    stateId: string;
+    state: DocumentJson;
+    registration?: string;
+    etag?: string;
+    matchHeader?: "If-Match" | "If-None-Match";
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers[matchHeader] = etag;
+  if (params.etag && params.matchHeader)
+    headers[params.matchHeader] = params.etag;
   return this.requestResource(
     Resources.STATE,
     {
-      agent: agent,
-      activityId: activityId,
-      stateId: stateId,
-      ...(registration
+      agent: params.agent,
+      activityId: params.activityId,
+      stateId: params.stateId,
+      ...(params.registration
         ? {
-            registration,
+            registration: params.registration,
           }
         : {}),
     },
     {
       method: "POST",
-      data: state,
+      data: params.state,
       headers: headers,
     }
   );
@@ -37,33 +40,36 @@ export function createState(
 
 export function setState(
   this: XAPI,
-  agent: Agent,
-  activityId: string,
-  stateId: string,
-  state: Document,
-  registration?: string,
-  etag?: string,
-  matchHeader?: "If-Match" | "If-None-Match",
-  contentType?: string
+  params: {
+    agent: Agent;
+    activityId: string;
+    stateId: string;
+    state: Document;
+    registration?: string;
+    etag?: string;
+    matchHeader?: "If-Match" | "If-None-Match";
+    contentType?: string;
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers[matchHeader] = etag;
-  if (contentType) headers["Content-Type"] = contentType;
+  if (params.etag && params.matchHeader)
+    headers[params.matchHeader] = params.etag;
+  if (params.contentType) headers["Content-Type"] = params.contentType;
   return this.requestResource(
     Resources.STATE,
     {
-      agent: agent,
-      activityId: activityId,
-      stateId: stateId,
-      ...(registration
+      agent: params.agent,
+      activityId: params.activityId,
+      stateId: params.stateId,
+      ...(params.registration
         ? {
-            registration,
+            registration: params.registration,
           }
         : {}),
     },
     {
       method: "PUT",
-      data: state,
+      data: params.state,
       headers: headers,
     }
   );
@@ -71,22 +77,24 @@ export function setState(
 
 export function getStates(
   this: XAPI,
-  agent: Agent,
-  activityId: string,
-  registration?: string,
-  since?: Timestamp
+  params: {
+    agent: Agent;
+    activityId: string;
+    registration?: string;
+    since?: Timestamp;
+  }
 ): AxiosPromise<string[]> {
   return this.requestResource(Resources.STATE, {
-    agent: agent,
-    activityId: activityId,
-    ...(registration
+    agent: params.agent,
+    activityId: params.activityId,
+    ...(params.registration
       ? {
-          registration,
+          registration: params.registration,
         }
       : {}),
-    ...(since
+    ...(params.since
       ? {
-          since,
+          since: params.since,
         }
       : {}),
   });
@@ -94,18 +102,20 @@ export function getStates(
 
 export function getState(
   this: XAPI,
-  agent: Agent,
-  activityId: string,
-  stateId: string,
-  registration?: string
+  params: {
+    agent: Agent;
+    activityId: string;
+    stateId: string;
+    registration?: string;
+  }
 ): AxiosPromise<Document> {
   return this.requestResource(Resources.STATE, {
-    agent: agent,
-    activityId: activityId,
-    stateId: stateId,
-    ...(registration
+    agent: params.agent,
+    activityId: params.activityId,
+    stateId: params.stateId,
+    ...(params.registration
       ? {
-          registration,
+          registration: params.registration,
         }
       : {}),
   });
@@ -113,23 +123,25 @@ export function getState(
 
 export function deleteState(
   this: XAPI,
-  agent: Agent,
-  activityId: string,
-  stateId: string,
-  registration?: string,
-  etag?: string
+  params: {
+    agent: Agent;
+    activityId: string;
+    stateId: string;
+    registration?: string;
+    etag?: string;
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers["If-Match"] = etag;
+  if (params.etag) headers["If-Match"] = params.etag;
   return this.requestResource(
     Resources.STATE,
     {
-      agent: agent,
-      activityId: activityId,
-      stateId: stateId,
-      ...(registration
+      agent: params.agent,
+      activityId: params.activityId,
+      stateId: params.stateId,
+      ...(params.registration
         ? {
-            registration,
+            registration: params.registration,
           }
         : {}),
     },
@@ -142,21 +154,23 @@ export function deleteState(
 
 export function deleteStates(
   this: XAPI,
-  agent: Agent,
-  activityId: string,
-  registration?: string,
-  etag?: string
+  params: {
+    agent: Agent;
+    activityId: string;
+    registration?: string;
+    etag?: string;
+  }
 ): AxiosPromise<void> {
   const headers = {};
-  if (etag) headers["If-Match"] = etag;
+  if (params.etag) headers["If-Match"] = params.etag;
   return this.requestResource(
     Resources.STATE,
     {
-      agent: agent,
-      activityId: activityId,
-      ...(registration
+      agent: params.agent,
+      activityId: params.activityId,
+      ...(params.registration
         ? {
-            registration,
+            registration: params.registration,
           }
         : {}),
     },

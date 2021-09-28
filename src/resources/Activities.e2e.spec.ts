@@ -16,9 +16,13 @@ credentials.forEach((credential) => {
 
   describe("activities resource", () => {
     test("can get activity", () => {
-      return xapi.getActivity(testActivity.id).then((result) => {
-        return expect(result.data).toMatchObject(testActivity);
-      });
+      return xapi
+        .getActivity({
+          activityId: testActivity.id,
+        })
+        .then((result) => {
+          return expect(result.data).toMatchObject(testActivity);
+        });
     });
   });
 });

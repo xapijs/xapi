@@ -4,9 +4,9 @@ import XAPI, { Activity } from "../XAPI";
 
 export function getActivity(
   this: XAPI,
-  activityId: string
+  params: {
+    activityId: string;
+  }
 ): AxiosPromise<Activity> {
-  return this.requestResource(Resources.ACTIVITIES, {
-    activityId: activityId,
-  });
+  return this.requestResource(Resources.ACTIVITIES, params);
 }

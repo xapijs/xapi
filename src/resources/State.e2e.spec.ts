@@ -23,7 +23,12 @@ credentials.forEach((credential) => {
 
     test("can create state", () => {
       return xapi
-        .createState(testAgent, testActivity.id, testStateId, testState)
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -31,13 +36,13 @@ credentials.forEach((credential) => {
 
     test("can create state with registration", () => {
       return xapi
-        .createState(
-          testAgent,
-          testActivity.id,
-          testStateId,
-          testState,
-          uuidv4()
-        )
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+          registration: uuidv4(),
+        })
         .then((response) => {
           return expect(response.data).toBeDefined();
         });
@@ -46,29 +51,41 @@ credentials.forEach((credential) => {
     test("can add to a state using an etag", () => {
       const stateId = new Date().getTime().toString();
       return xapi
-        .createState(testAgent, testActivity.id, stateId, {
-          x: "foo",
-          y: "bar",
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: stateId,
+          state: {
+            x: "foo",
+            y: "bar",
+          },
         })
         .then(() => {
-          return xapi.getState(testAgent, testActivity.id, stateId);
+          return xapi.getState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: stateId,
+          });
         })
         .then((response) => {
-          return xapi.createState(
-            testAgent,
-            testActivity.id,
-            stateId,
-            {
+          return xapi.createState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: stateId,
+            state: {
               x: "bash",
               z: "faz",
             },
-            null,
-            response.headers.etag,
-            "If-Match"
-          );
+            etag: response.headers.etag,
+            matchHeader: "If-Match",
+          });
         })
         .then(() => {
-          return xapi.getState(testAgent, testActivity.id, stateId);
+          return xapi.getState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: stateId,
+          });
         })
         .then((response) => {
           return expect(response.data).toEqual({
@@ -81,7 +98,12 @@ credentials.forEach((credential) => {
 
     test("can set state", () => {
       return xapi
-        .setState(testAgent, testActivity.id, testStateId, testState)
+        .setState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -89,7 +111,13 @@ credentials.forEach((credential) => {
 
     test("can set state with registration", () => {
       return xapi
-        .setState(testAgent, testActivity.id, testStateId, testState, uuidv4())
+        .setState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+          registration: uuidv4(),
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -98,16 +126,13 @@ credentials.forEach((credential) => {
     test("can set state with text/plain content type", () => {
       const testStateId: string = `${testActivity.id}/states/test-text-plain`;
       return xapi
-        .setState(
-          testAgent,
-          testActivity.id,
-          testStateId,
-          testState.test,
-          null,
-          null,
-          null,
-          "text/plain"
-        )
+        .setState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState.test,
+          contentType: "text/plain",
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -116,29 +141,41 @@ credentials.forEach((credential) => {
     test("can set a state using an etag", () => {
       const stateId = new Date().getTime().toString();
       return xapi
-        .setState(testAgent, testActivity.id, stateId, {
-          x: "foo",
-          y: "bar",
+        .setState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: stateId,
+          state: {
+            x: "foo",
+            y: "bar",
+          },
         })
         .then(() => {
-          return xapi.getState(testAgent, testActivity.id, stateId);
+          return xapi.getState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: stateId,
+          });
         })
         .then((response) => {
-          return xapi.setState(
-            testAgent,
-            testActivity.id,
-            stateId,
-            {
+          return xapi.setState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: stateId,
+            state: {
               x: "bash",
               z: "faz",
             },
-            null,
-            response.headers.etag,
-            "If-Match"
-          );
+            etag: response.headers.etag,
+            matchHeader: "If-Match",
+          });
         })
         .then(() => {
-          return xapi.getState(testAgent, testActivity.id, stateId);
+          return xapi.getState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: stateId,
+          });
         })
         .then((response) => {
           return expect(response.data).toEqual({
@@ -149,24 +186,33 @@ credentials.forEach((credential) => {
     });
 
     test("can get all states", () => {
-      return xapi.getStates(testAgent, testActivity.id).then((result) => {
-        return expect(result.data).toEqual(expect.any(Array));
-      });
+      return xapi
+        .getStates({
+          agent: testAgent,
+          activityId: testActivity.id,
+        })
+        .then((result) => {
+          return expect(result.data).toEqual(expect.any(Array));
+        });
     });
 
     test("can get all states with a registration", () => {
       const registration = uuidv4();
       const stateId = new Date().getTime().toString();
       return xapi
-        .createState(
-          testAgent,
-          testActivity.id,
-          stateId,
-          { foo: "bar" },
-          registration
-        )
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: stateId,
+          state: { foo: "bar" },
+          registration: registration,
+        })
         .then(() => {
-          return xapi.getStates(testAgent, testActivity.id, registration);
+          return xapi.getStates({
+            agent: testAgent,
+            activityId: testActivity.id,
+            registration: registration,
+          });
         })
         .then((response) => {
           return expect(response.data).toEqual(
@@ -179,7 +225,11 @@ credentials.forEach((credential) => {
       const since = new Date();
       since.setDate(since.getDate() - 1); // yesterday
       return xapi
-        .getStates(testAgent, testActivity.id, null, since.toISOString())
+        .getStates({
+          agent: testAgent,
+          activityId: testActivity.id,
+          since: since.toISOString(),
+        })
         .then((response) => {
           return expect(response.data).toEqual(
             expect.arrayContaining([expect.objectContaining({})])
@@ -189,7 +239,11 @@ credentials.forEach((credential) => {
 
     test("can get a state", () => {
       return xapi
-        .getState(testAgent, testActivity.id, testStateId)
+        .getState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+        })
         .then((result) => {
           return expect(result.data).toMatchObject(testState);
         });
@@ -198,20 +252,20 @@ credentials.forEach((credential) => {
     test("can get a state with a registration", () => {
       const registration = uuidv4();
       return xapi
-        .createState(
-          testAgent,
-          testActivity.id,
-          testStateId,
-          testState,
-          registration
-        )
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+          registration: registration,
+        })
         .then(() => {
-          return xapi.getState(
-            testAgent,
-            testActivity.id,
-            testStateId,
-            registration
-          );
+          return xapi.getState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: testStateId,
+            registration: registration,
+          });
         })
         .then((response) => {
           return expect(response.data).toMatchObject(testState);
@@ -220,7 +274,11 @@ credentials.forEach((credential) => {
 
     test("can delete a state", () => {
       return xapi
-        .deleteState(testAgent, testActivity.id, testStateId)
+        .deleteState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+        })
         .then((result) => {
           return expect(result.data).toBeDefined();
         });
@@ -229,20 +287,20 @@ credentials.forEach((credential) => {
     test("can delete a state with a registration", () => {
       const registration = uuidv4();
       return xapi
-        .createState(
-          testAgent,
-          testActivity.id,
-          testStateId,
-          testState,
-          registration
-        )
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+          registration: registration,
+        })
         .then(() => {
-          return xapi.deleteState(
-            testAgent,
-            testActivity.id,
-            testStateId,
-            registration
-          );
+          return xapi.deleteState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: testStateId,
+            registration: registration,
+          });
         })
         .then((response) => {
           return expect(response.data).toBeDefined();
@@ -251,18 +309,26 @@ credentials.forEach((credential) => {
 
     test("can delete a state with an etag", () => {
       return xapi
-        .createState(testAgent, testActivity.id, testStateId, testState)
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+        })
         .then(() => {
-          return xapi.getState(testAgent, testActivity.id, testStateId);
+          return xapi.getState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: testStateId,
+          });
         })
         .then((response) => {
-          return xapi.deleteState(
-            testAgent,
-            testActivity.id,
-            testStateId,
-            null,
-            response.headers.etag
-          );
+          return xapi.deleteState({
+            agent: testAgent,
+            activityId: testActivity.id,
+            stateId: testStateId,
+            etag: response.headers.etag,
+          });
         })
         .then((response) => {
           return expect(response.data).toBeDefined();
@@ -270,23 +336,32 @@ credentials.forEach((credential) => {
     });
 
     test("can delete all states", () => {
-      return xapi.deleteStates(testAgent, testActivity.id).then((result) => {
-        return expect(result.data).toBeDefined();
-      });
+      return xapi
+        .deleteStates({
+          agent: testAgent,
+          activityId: testActivity.id,
+        })
+        .then((result) => {
+          return expect(result.data).toBeDefined();
+        });
     });
 
     test("can delete all states for a registration", () => {
       const registration = uuidv4();
       return xapi
-        .createState(
-          testAgent,
-          testActivity.id,
-          testStateId,
-          testState,
-          registration
-        )
+        .createState({
+          agent: testAgent,
+          activityId: testActivity.id,
+          stateId: testStateId,
+          state: testState,
+          registration: registration,
+        })
         .then(() => {
-          return xapi.deleteStates(testAgent, testActivity.id, registration);
+          return xapi.deleteStates({
+            agent: testAgent,
+            activityId: testActivity.id,
+            registration: registration,
+          });
         })
         .then((response) => {
           return expect(response.data).toBeDefined();
@@ -295,14 +370,16 @@ credentials.forEach((credential) => {
 
     test("can delete all states with an etag", () => {
       return xapi
-        .getStates(testAgent, testActivity.id)
+        .getStates({
+          agent: testAgent,
+          activityId: testActivity.id,
+        })
         .then((response) => {
-          return xapi.deleteStates(
-            testAgent,
-            testActivity.id,
-            null,
-            response.headers.etag
-          );
+          return xapi.deleteStates({
+            agent: testAgent,
+            activityId: testActivity.id,
+            etag: response.headers.etag,
+          });
         })
         .then((response) => {
           return expect(response.data).toBeDefined();

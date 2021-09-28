@@ -166,10 +166,7 @@ export default class XAPI {
       });
   }
 
-  private generateURL(
-    resource: Resource,
-    params: { [key: string]: any }
-  ): string {
+  private generateURL(resource: Resource, params: RequestParams): string {
     const queryString = Object.keys(params)
       .map((key) => {
         let val = key === "agent" ? JSON.stringify(params[key]) : params[key];
