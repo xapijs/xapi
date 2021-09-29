@@ -71,7 +71,7 @@ export default class XAPI {
     this.headers = {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",
-      // No Authorization Process and Requirements -  https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
+      // No Authorization Process and Requirements - https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
       Authorization: auth ? auth : toBasicAuth("", ""),
     };
   }
