@@ -1,14 +1,13 @@
 import {
+  returnTestStatementWithRemoteAttachment,
   testAgent,
   testAttachment,
   testAttachmentArrayBuffer,
   testAttachmentContent,
   testStatement,
+  testStatementWithEmbeddedAttachments,
 } from "../../test/constants";
-import XAPI, { Attachment, Statement, StatementsResponse } from "../XAPI";
-import axios from "axios";
-import CryptoJS from "crypto-js";
-import { arrayBufferToWordArray } from "../../test/arrayBufferToWordArray";
+import XAPI, { Statement, StatementsResponse } from "../XAPI";
 import { isNode, testIf } from "../../test/jestUtils";
 import { getCredentials } from "../../test/getCredentials";
 
@@ -31,35 +30,10 @@ getCredentials().forEach((credential) => {
     });
 
     test("can send a statement with a remote attachment", () => {
-      const statement: Statement = Object.assign({}, testStatement);
-      const imageURL: string =
-        "https://raw.githubusercontent.com/RusticiSoftware/TinCanJS/8733f14ddcaeea77a0579505300bc8f38921a6b1/test/files/image.jpg";
-      return axios
-        .get(imageURL, {
-          responseType: "arraybuffer",
-        })
-        .then((response) => {
-          return response.data as ArrayBuffer;
-        })
-        .then((imageAsArrayBuffer) => {
-          const attachment: Attachment = {
-            usageType: XAPI.AttachmentUsages.SUPPORTING_MEDIA,
-            display: {
-              "en-US": "Image Attachment",
-            },
-            description: {
-              "en-US": "One does not simply send an attachment with JavaScript",
-            },
-            contentType: "image/jpeg",
-            length: imageAsArrayBuffer.byteLength,
-            fileUrl: imageURL,
-            sha2: CryptoJS.SHA256(
-              arrayBufferToWordArray(imageAsArrayBuffer)
-            ).toString(),
-          };
-          statement.attachments = [attachment];
+      return returnTestStatementWithRemoteAttachment()
+        .then((testStatementWithRemoteAttachment) => {
           return xapi.sendStatement({
-            statement: statement,
+            statement: testStatementWithRemoteAttachment,
           });
         })
         .then((result) => {
@@ -70,12 +44,9 @@ getCredentials().forEach((credential) => {
     testIf(!isNode())(
       "can send a statement with an embedded attachment",
       () => {
-        const statement: Statement = Object.assign({}, testStatement);
-
-        statement.attachments = [testAttachment];
         return xapi
           .sendStatement({
-            statement: statement,
+            statement: testStatementWithEmbeddedAttachments,
             attachments: [testAttachmentArrayBuffer],
           })
           .then((result) => {
@@ -97,11 +68,12 @@ getCredentials().forEach((credential) => {
     testIf(!isNode())(
       "can send multiple statements with embedded attachments",
       () => {
-        const statement: Statement = Object.assign({}, testStatement);
-        statement.attachments = [testAttachment];
         return xapi
           .sendStatements({
-            statements: [statement, statement],
+            statements: [
+              testStatementWithEmbeddedAttachments,
+              testStatementWithEmbeddedAttachments,
+            ],
             attachments: [testAttachmentArrayBuffer, testAttachmentArrayBuffer],
           })
           .then((result) => {

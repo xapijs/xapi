@@ -1,16 +1,6 @@
-import XAPI, { Agent, Activity } from "./XAPI";
+import XAPI from "./XAPI";
 import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
-
-const testAgent: Agent = {
-  objectType: "Agent",
-  name: "Jest",
-  mbox: "mailto:hello@example.com",
-};
-
-const testActivity: Activity = {
-  objectType: "Activity",
-  id: "https://github.com/xapijs/xapi",
-};
+import { testAgent, testActivity } from "../test/constants";
 
 [
   {

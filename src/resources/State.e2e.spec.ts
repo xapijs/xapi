@@ -1,4 +1,10 @@
-import { testActivity, testAgent } from "../../test/constants";
+import {
+  testActivity,
+  testAgent,
+  testDocument,
+  testStateId,
+  testStateIdTextPlain,
+} from "../../test/constants";
 import XAPI from "../XAPI";
 import { v4 as uuidv4 } from "uuid";
 import { getCredentials } from "../../test/getCredentials";
@@ -11,18 +17,13 @@ getCredentials().forEach((credential) => {
   const xapi: XAPI = new XAPI(credential.endpoint, auth);
 
   describe("state resource", () => {
-    const testStateId: string = `${testActivity.id}/states/test`;
-    const testState: { [key: string]: any } = {
-      test: "test",
-    };
-
     test("can create state", () => {
       return xapi
         .createState({
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
         })
         .then((result) => {
           return expect(result.data).toBeDefined();
@@ -35,7 +36,7 @@ getCredentials().forEach((credential) => {
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
           registration: uuidv4(),
         })
         .then((response) => {
@@ -97,7 +98,7 @@ getCredentials().forEach((credential) => {
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
         })
         .then((result) => {
           return expect(result.data).toBeDefined();
@@ -110,7 +111,7 @@ getCredentials().forEach((credential) => {
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
           registration: uuidv4(),
         })
         .then((result) => {
@@ -119,13 +120,12 @@ getCredentials().forEach((credential) => {
     });
 
     test("can set state with text/plain content type", () => {
-      const testStateId: string = `${testActivity.id}/states/test-text-plain`;
       return xapi
         .setState({
           agent: testAgent,
           activityId: testActivity.id,
-          stateId: testStateId,
-          state: testState.test,
+          stateId: testStateIdTextPlain,
+          state: testDocument.test,
           contentType: "text/plain",
         })
         .then((result) => {
@@ -240,7 +240,7 @@ getCredentials().forEach((credential) => {
           stateId: testStateId,
         })
         .then((result) => {
-          return expect(result.data).toMatchObject(testState);
+          return expect(result.data).toMatchObject(testDocument);
         });
     });
 
@@ -251,7 +251,7 @@ getCredentials().forEach((credential) => {
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
           registration: registration,
         })
         .then(() => {
@@ -263,7 +263,7 @@ getCredentials().forEach((credential) => {
           });
         })
         .then((response) => {
-          return expect(response.data).toMatchObject(testState);
+          return expect(response.data).toMatchObject(testDocument);
         });
     });
 
@@ -286,7 +286,7 @@ getCredentials().forEach((credential) => {
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
           registration: registration,
         })
         .then(() => {
@@ -308,7 +308,7 @@ getCredentials().forEach((credential) => {
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
         })
         .then(() => {
           return xapi.getState({
@@ -348,7 +348,7 @@ getCredentials().forEach((credential) => {
           agent: testAgent,
           activityId: testActivity.id,
           stateId: testStateId,
-          state: testState,
+          state: testDocument,
           registration: registration,
         })
         .then(() => {

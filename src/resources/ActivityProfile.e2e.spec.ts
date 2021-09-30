@@ -1,4 +1,9 @@
-import { testActivity } from "../../test/constants";
+import {
+  testActivity,
+  testDocument,
+  testProfileId,
+  testProfileIdTextPlain,
+} from "../../test/constants";
 import XAPI from "../XAPI";
 import { v4 as uuidv4 } from "uuid";
 import { getCredentials } from "../../test/getCredentials";
@@ -11,17 +16,12 @@ getCredentials().forEach((credential) => {
   const xapi: XAPI = new XAPI(credential.endpoint, auth);
 
   describe("activity profile resource", () => {
-    const testProfileId: string = `${testActivity.id}/profiles/test`;
-    const testProfile: { [key: string]: any } = {
-      test: "test",
-    };
-
     test("can create activity profile", () => {
       return xapi
         .createActivityProfile({
           activityId: testActivity.id,
           profileId: testProfileId,
-          profile: testProfile,
+          profile: testDocument,
         })
         .then((result) => {
           return expect(result.data).toBeDefined();
@@ -83,7 +83,7 @@ getCredentials().forEach((credential) => {
             .setActivityProfile({
               activityId: testActivity.id,
               profileId: testProfileId,
-              profile: testProfile,
+              profile: testDocument,
               etag: result.headers.etag,
               matchHeader: "If-Match",
             })
@@ -94,12 +94,11 @@ getCredentials().forEach((credential) => {
     });
 
     test("can set activity profile with text/plain content type", () => {
-      const testProfileId: string = `${testActivity.id}/profiles/test-text-plain`;
       return xapi
         .setActivityProfile({
           activityId: testActivity.id,
-          profileId: testProfileId,
-          profile: testProfile.test,
+          profileId: testProfileIdTextPlain,
+          profile: testDocument.test,
           etag: "*",
           matchHeader: "If-Match",
           contentType: "text/plain",
@@ -139,7 +138,7 @@ getCredentials().forEach((credential) => {
           profileId: testProfileId,
         })
         .then((result) => {
-          return expect(result.data).toMatchObject(testProfile);
+          return expect(result.data).toMatchObject(testDocument);
         });
     });
 
@@ -160,7 +159,7 @@ getCredentials().forEach((credential) => {
         .createActivityProfile({
           activityId: testActivity.id,
           profileId: profileId,
-          profile: testProfile,
+          profile: testDocument,
         })
         .then(() => {
           return xapi.getActivityProfile({

@@ -1,4 +1,9 @@
-import { testActivity, testAgent } from "../../test/constants";
+import {
+  testAgent,
+  testDocument,
+  testProfileId,
+  testProfileIdTextPlain,
+} from "../../test/constants";
 import { getCredentials } from "../../test/getCredentials";
 import XAPI from "../XAPI";
 
@@ -10,17 +15,12 @@ getCredentials().forEach((credential) => {
   const xapi: XAPI = new XAPI(credential.endpoint, auth);
 
   describe("agent profile resource", () => {
-    const testProfileId: string = `${testActivity.id}/profiles/test`;
-    const testProfile: { [key: string]: any } = {
-      test: "test",
-    };
-
     test("can create agent profile", () => {
       return xapi
         .createAgentProfile({
           agent: testAgent,
           profileId: testProfileId,
-          profile: testProfile,
+          profile: testDocument,
         })
         .then((result) => {
           return expect(result.data).toBeDefined();
@@ -37,7 +37,7 @@ getCredentials().forEach((credential) => {
           return xapi.setAgentProfile({
             agent: testAgent,
             profileId: testProfileId,
-            profile: testProfile,
+            profile: testDocument,
             etag: result.headers.etag,
             matchHeader: "If-Match",
           });
@@ -48,17 +48,16 @@ getCredentials().forEach((credential) => {
     });
 
     test("can set agent profile with text/plain content type", () => {
-      const testProfileId: string = `${testActivity.id}/profiles/test-text-plain`;
       return xapi
         .deleteAgentProfile({
           agent: testAgent,
-          profileId: testProfileId,
+          profileId: testProfileIdTextPlain,
         })
         .then(() => {
           return xapi.setAgentProfile({
             agent: testAgent,
-            profileId: testProfileId,
-            profile: testProfile.test,
+            profileId: testProfileIdTextPlain,
+            profile: testDocument.test,
             etag: "*",
             matchHeader: "If-None-Match",
             contentType: "text/plain",
@@ -86,7 +85,7 @@ getCredentials().forEach((credential) => {
           profileId: testProfileId,
         })
         .then((result) => {
-          return expect(result.data).toMatchObject(testProfile);
+          return expect(result.data).toMatchObject(testDocument);
         });
     });
 
