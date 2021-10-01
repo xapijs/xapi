@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
-const testIf = (condition) => (condition ? test : test.skip);
+const testIf = (condition: boolean): jest.It => (condition ? test : test.skip);
 
-const isNode = () => typeof window === "undefined";
+const isNode = (): boolean => typeof window === "undefined";
 
 export { testIf, isNode };

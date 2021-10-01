@@ -16,13 +16,13 @@
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run clean && npm run build:types && npm run build:js",
     "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand && npm run test:example:node:require && npm run test:example:node:import",
     "test:unit": "jest --testPathIgnorePatterns=.e2e.spec.ts",
     "test:e2e": "jest --testPathPattern=.e2e.spec.ts --runInBand",
     "test:format": "prettier --check .",
     "test:example:node:require": "node ./example/node/require.js",
     "test:example:node:import": "node --experimental-modules --es-module-specifier-resolution=node ./example/node/import.mjs",
-    "lint": "eslint . --ext .ts,.js"
+    "lint": "eslint . --ext .ts,.js --max-warnings=0"
   },
   "repository": {
     "type": "git",
