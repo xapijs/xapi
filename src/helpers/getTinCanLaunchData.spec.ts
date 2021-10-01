@@ -1,4 +1,4 @@
-import { TinCanLaunchData } from "../interfaces/XAPI";
+import { TinCanLaunchData } from "../XAPI";
 import { getTinCanLaunchData } from "./getTinCanLaunchData";
 import { testIf, isNode } from "../../test/jestUtils";
 

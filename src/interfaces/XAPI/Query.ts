@@ -1,4 +1,4 @@
-import { Agent, Timestamp } from "../Statement";
+import { Agent, Timestamp } from "..";
 
 interface BaseQuery {
   /**

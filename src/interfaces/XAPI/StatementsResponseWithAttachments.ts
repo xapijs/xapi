@@ -1,4 +1,4 @@
-import { Part } from "../Statement";
-import { StatementsResponse } from "./StatementsResponse";
+import { Part } from "..";
+import { StatementsResponse } from ".";
 
 export type StatementsResponseWithAttachments = [StatementsResponse, ...Part[]];

@@ -1,4 +1,5 @@
-import { Actor, Verb, StatementObject, Result, Context, Attachment } from ".";
+import { Verb, StatementObject, Result, Context, Attachment } from ".";
+import { Actor } from "..";
 
 export interface Statement {
   actor: Actor;

@@ -1,7 +1,6 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../constants";
-import { Document, DocumentJson } from "../interfaces/Document";
-import XAPI, { Agent, Timestamp } from "../XAPI";
+import XAPI, { Agent, Timestamp, Document, DocumentJson } from "../XAPI";
 
 export function createState(
   this: XAPI,

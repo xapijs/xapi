@@ -1,7 +1,6 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../constants";
-import { Document, DocumentJson } from "../interfaces/Document";
-import XAPI, { Timestamp } from "../XAPI";
+import XAPI, { Timestamp, Document, DocumentJson } from "../XAPI";
 
 export function createActivityProfile(
   this: XAPI,

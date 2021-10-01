@@ -1,4 +1,4 @@
-import { Actor } from "../Statement";
+import { Actor } from "..";
 
 export interface XAPILaunchData {
   endpoint: string;

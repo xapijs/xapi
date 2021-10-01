@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
-import { Resource, RequestParams } from "./interfaces/XAPI";
+import { Resource, RequestParams } from "./XAPI";
 import { AttachmentUsages, Verbs, Versions } from "./constants";
 import { parseMultiPart } from "./internal/multiPart";
 import { formatEndpoint } from "./internal/formatEndpoint";
@@ -44,8 +44,7 @@ import {
   voidStatements,
 } from "./resources/Statement";
 
-export * from "./interfaces/XAPI";
-export * from "./interfaces/Statement";
+export * from "./interfaces";
 
 export default class XAPI {
   public static default = XAPI;

@@ -1,4 +1,4 @@
-import { Statement } from "../Statement";
+import { Statement } from "..";
 
 export interface StatementsResponse {
   statements: Statement[];
