@@ -1,18 +1,18 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../constants";
-import XAPI, { Agent, Timestamp, Document, DocumentJson } from "../XAPI";
+import XAPI, {
+  Document,
+  CreateStateParams,
+  SetStateParams,
+  GetStatesParams,
+  GetStateParams,
+  DeleteStateParams,
+  DeleteStatesParams,
+} from "../XAPI";
 
 export function createState(
   this: XAPI,
-  params: {
-    agent: Agent;
-    activityId: string;
-    stateId: string;
-    state: DocumentJson;
-    registration?: string;
-    etag?: string;
-    matchHeader?: "If-Match" | "If-None-Match";
-  }
+  params: CreateStateParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag && params.matchHeader)
@@ -39,16 +39,7 @@ export function createState(
 
 export function setState(
   this: XAPI,
-  params: {
-    agent: Agent;
-    activityId: string;
-    stateId: string;
-    state: Document;
-    registration?: string;
-    etag?: string;
-    matchHeader?: "If-Match" | "If-None-Match";
-    contentType?: string;
-  }
+  params: SetStateParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag && params.matchHeader)
@@ -76,12 +67,7 @@ export function setState(
 
 export function getStates(
   this: XAPI,
-  params: {
-    agent: Agent;
-    activityId: string;
-    registration?: string;
-    since?: Timestamp;
-  }
+  params: GetStatesParams
 ): AxiosPromise<string[]> {
   return this.requestResource(Resources.STATE, {
     agent: params.agent,
@@ -101,12 +87,7 @@ export function getStates(
 
 export function getState(
   this: XAPI,
-  params: {
-    agent: Agent;
-    activityId: string;
-    stateId: string;
-    registration?: string;
-  }
+  params: GetStateParams
 ): AxiosPromise<Document> {
   return this.requestResource(Resources.STATE, {
     agent: params.agent,
@@ -122,13 +103,7 @@ export function getState(
 
 export function deleteState(
   this: XAPI,
-  params: {
-    agent: Agent;
-    activityId: string;
-    stateId: string;
-    registration?: string;
-    etag?: string;
-  }
+  params: DeleteStateParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;
@@ -153,12 +128,7 @@ export function deleteState(
 
 export function deleteStates(
   this: XAPI,
-  params: {
-    agent: Agent;
-    activityId: string;
-    registration?: string;
-    etag?: string;
-  }
+  params: DeleteStatesParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;

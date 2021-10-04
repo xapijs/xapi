@@ -1,12 +1,10 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../constants";
-import XAPI, { Activity } from "../XAPI";
+import XAPI, { Activity, GetActivityParams } from "../XAPI";
 
 export function getActivity(
   this: XAPI,
-  params: {
-    activityId: string;
-  }
+  params: GetActivityParams
 ): AxiosPromise<Activity> {
   return this.requestResource(Resources.ACTIVITIES, params);
 }

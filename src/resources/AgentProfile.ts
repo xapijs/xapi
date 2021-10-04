@@ -1,16 +1,17 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../constants";
-import XAPI, { Agent, Timestamp, Document, DocumentJson } from "../XAPI";
+import XAPI, {
+  Document,
+  CreateAgentProfileParams,
+  SetAgentProfileParams,
+  GetAgentProfilesParams,
+  GetAgentProfileParams,
+  DeleteAgentProfileParams,
+} from "../XAPI";
 
 export function createAgentProfile(
   this: XAPI,
-  params: {
-    agent: Agent;
-    profileId: string;
-    profile: DocumentJson;
-    etag?: string;
-    matchHeader?: "If-Match" | "If-None-Match";
-  }
+  params: CreateAgentProfileParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers[params.matchHeader] = params.etag;
@@ -30,14 +31,7 @@ export function createAgentProfile(
 
 export function setAgentProfile(
   this: XAPI,
-  params: {
-    agent: Agent;
-    profileId: string;
-    profile: Document;
-    etag: string;
-    matchHeader: "If-Match" | "If-None-Match";
-    contentType?: string;
-  }
+  params: SetAgentProfileParams
 ): AxiosPromise<void> {
   const headers = {};
   headers[params.matchHeader] = params.etag;
@@ -58,10 +52,7 @@ export function setAgentProfile(
 
 export function getAgentProfiles(
   this: XAPI,
-  params: {
-    agent: Agent;
-    since?: Timestamp;
-  }
+  params: GetAgentProfilesParams
 ): AxiosPromise<string[]> {
   return this.requestResource(Resources.AGENT_PROFILE, {
     agent: params.agent,
@@ -75,10 +66,7 @@ export function getAgentProfiles(
 
 export function getAgentProfile(
   this: XAPI,
-  params: {
-    agent: Agent;
-    profileId: string;
-  }
+  params: GetAgentProfileParams
 ): AxiosPromise<Document> {
   return this.requestResource(Resources.AGENT_PROFILE, {
     agent: params.agent,
@@ -88,11 +76,7 @@ export function getAgentProfile(
 
 export function deleteAgentProfile(
   this: XAPI,
-  params: {
-    agent: Agent;
-    profileId: string;
-    etag?: string;
-  }
+  params: DeleteAgentProfileParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;

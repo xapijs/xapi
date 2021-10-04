@@ -1,16 +1,17 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../constants";
-import XAPI, { Timestamp, Document, DocumentJson } from "../XAPI";
+import XAPI, {
+  Document,
+  CreateActivityProfileParams,
+  SetActivityProfileParams,
+  GetActivityProfilesParams,
+  GetActivityProfileParams,
+  DeleteActivityProfileParams,
+} from "../XAPI";
 
 export function createActivityProfile(
   this: XAPI,
-  params: {
-    activityId: string;
-    profileId: string;
-    profile: DocumentJson;
-    etag?: string;
-    matchHeader?: "If-Match" | "If-None-Match";
-  }
+  params: CreateActivityProfileParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers[params.matchHeader] = params.etag;
@@ -30,14 +31,7 @@ export function createActivityProfile(
 
 export function setActivityProfile(
   this: XAPI,
-  params: {
-    activityId: string;
-    profileId: string;
-    profile: Document;
-    etag: string;
-    matchHeader: "If-Match" | "If-None-Match";
-    contentType?: string;
-  }
+  params: SetActivityProfileParams
 ): AxiosPromise<void> {
   const headers = {};
   headers[params.matchHeader] = params.etag;
@@ -58,10 +52,7 @@ export function setActivityProfile(
 
 export function getActivityProfiles(
   this: XAPI,
-  params: {
-    activityId: string;
-    since?: Timestamp;
-  }
+  params: GetActivityProfilesParams
 ): AxiosPromise<string[]> {
   return this.requestResource(Resources.ACTIVITY_PROFILE, {
     activityId: params.activityId,
@@ -75,10 +66,7 @@ export function getActivityProfiles(
 
 export function getActivityProfile(
   this: XAPI,
-  params: {
-    activityId: string;
-    profileId: string;
-  }
+  params: GetActivityProfileParams
 ): AxiosPromise<Document> {
   return this.requestResource(Resources.ACTIVITY_PROFILE, {
     activityId: params.activityId,
@@ -88,11 +76,7 @@ export function getActivityProfile(
 
 export function deleteActivityProfile(
   this: XAPI,
-  params: {
-    activityId: string;
-    profileId: string;
-    etag?: string;
-  }
+  params: DeleteActivityProfileParams
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;

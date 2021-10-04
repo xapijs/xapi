@@ -1,4 +1,4 @@
-import { StatementRef, Activity, Statement } from ".";
-import { Actor } from "..";
+import { StatementRef, Statement } from ".";
+import { Activity, Actor } from "..";
 
 export type StatementObject = Activity | Actor | StatementRef | Statement;

@@ -1,12 +1,11 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../constants";
-import XAPI, { Agent, Person } from "../XAPI";
+import { GetAgentParams } from "../interfaces/Actor/AgentParams";
+import XAPI, { Person } from "../XAPI";
 
 export function getAgent(
   this: XAPI,
-  params: {
-    agent: Agent;
-  }
+  params: GetAgentParams
 ): AxiosPromise<Person> {
   return this.requestResource(Resources.AGENTS, {
     agent: params.agent,

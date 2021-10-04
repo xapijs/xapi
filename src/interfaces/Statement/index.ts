@@ -1,4 +1,3 @@
-export * from "./Activity";
 export * from "./Attachment";
 export * from "./AttachmentUsage";
 export * from "./Context";
@@ -11,6 +10,10 @@ export * from "./StatementObject";
 export * from "./Result";
 export * from "./RFC5646LanguageCodes";
 export * from "./Statement";
+export * from "./StatementParams";
 export * from "./StatementRef";
+export * from "./StatementResponseWithAttachments";
+export * from "./StatementsResponse";
+export * from "./StatementsResponseWithAttachments";
 export * from "./Timestamp";
 export * from "./Verb";

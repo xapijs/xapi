@@ -2,79 +2,81 @@ import { AxiosPromise } from "axios";
 import { Resources, Verbs } from "../constants";
 import { createMultiPart } from "../internal/multiPart";
 import XAPI, {
-  Actor,
-  GetStatementQuery,
-  GetStatementQueryWithAttachments,
-  GetStatementQueryWithoutAttachments,
-  GetStatementsQuery,
-  GetStatementsQueryWithAttachments,
-  GetStatementsQueryWithoutAttachments,
-  GetVoidedStatementQuery,
-  GetVoidedStatementQueryWithAttachments,
-  GetVoidedStatementQueryWithoutAttachments,
+  GetMoreStatementsParams,
+  GetStatementParams,
+  GetStatementParamsWithAttachments,
+  GetStatementParamsWithoutAttachments,
+  GetStatementsParams,
+  GetStatementsParamsWithAttachments,
+  GetStatementsParamsWithoutAttachments,
+  GetVoidedStatementParams,
+  GetVoidedStatementParamsWithAttachments,
+  GetVoidedStatementParamsWithoutAttachments,
   MultiPart,
+  SendStatementParams,
+  SendStatementsParams,
   Statement,
   StatementResponseWithAttachments,
   StatementsResponse,
   StatementsResponseWithAttachments,
+  VoidStatementParams,
+  VoidStatementsParams,
 } from "../XAPI";
 
 export function getStatement(
   this: XAPI,
-  params: GetStatementQueryWithAttachments
+  params: GetStatementParamsWithAttachments
 ): AxiosPromise<StatementResponseWithAttachments>;
 
 export function getStatement(
   this: XAPI,
-  params: GetStatementQueryWithoutAttachments
+  params: GetStatementParamsWithoutAttachments
 ): AxiosPromise<Statement>;
 
 export function getStatement(
   this: XAPI,
-  params: GetStatementQuery
+  params: GetStatementParams
 ): AxiosPromise<Statement | StatementResponseWithAttachments> {
   return this.requestResource(Resources.STATEMENT, params);
 }
 
 export function getVoidedStatement(
   this: XAPI,
-  params: GetVoidedStatementQueryWithAttachments
+  params: GetVoidedStatementParamsWithAttachments
 ): AxiosPromise<StatementResponseWithAttachments>;
 
 export function getVoidedStatement(
   this: XAPI,
-  params: GetVoidedStatementQueryWithoutAttachments
+  params: GetVoidedStatementParamsWithoutAttachments
 ): AxiosPromise<Statement>;
 
 export function getVoidedStatement(
   this: XAPI,
-  params: GetVoidedStatementQuery
+  params: GetVoidedStatementParams
 ): AxiosPromise<Statement | StatementResponseWithAttachments> {
   return this.requestResource(Resources.STATEMENT, params);
 }
 
 export function getStatements(
   this: XAPI,
-  params: GetStatementsQueryWithAttachments
+  params: GetStatementsParamsWithAttachments
 ): AxiosPromise<StatementsResponseWithAttachments>;
 
 export function getStatements(
   this: XAPI,
-  params?: GetStatementsQueryWithoutAttachments
+  params?: GetStatementsParamsWithoutAttachments
 ): AxiosPromise<StatementsResponse>;
 
 export function getStatements(
   this: XAPI,
-  params?: GetStatementsQuery
+  params?: GetStatementsParams
 ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
   return this.requestResource(Resources.STATEMENT, params);
 }
 
 export function getMoreStatements(
   this: XAPI,
-  params: {
-    more: string;
-  }
+  params: GetMoreStatementsParams
 ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
   const endpoint = new URL(this.endpoint);
   const url = `${endpoint.protocol}//${endpoint.host}${params.more}`;
@@ -83,10 +85,7 @@ export function getMoreStatements(
 
 export function sendStatement(
   this: XAPI,
-  params: {
-    statement: Statement;
-    attachments?: ArrayBuffer[];
-  }
+  params: SendStatementParams
 ): AxiosPromise<string[]> {
   const hasAttachments = params.attachments?.length;
   if (hasAttachments) {
@@ -117,10 +116,7 @@ export function sendStatement(
 
 export function sendStatements(
   this: XAPI,
-  params: {
-    statements: Statement[];
-    attachments?: ArrayBuffer[];
-  }
+  params: SendStatementsParams
 ): AxiosPromise<string[]> {
   const hasAttachments = params.attachments?.length;
   if (hasAttachments) {
@@ -151,10 +147,7 @@ export function sendStatements(
 
 export function voidStatement(
   this: XAPI,
-  params: {
-    actor: Actor;
-    statementId: string;
-  }
+  params: VoidStatementParams
 ): AxiosPromise<string[]> {
   const voidStatement: Statement = {
     actor: params.actor,
@@ -171,10 +164,7 @@ export function voidStatement(
 
 export function voidStatements(
   this: XAPI,
-  params: {
-    actor: Actor;
-    statementIds: string[];
-  }
+  params: VoidStatementsParams
 ): AxiosPromise<string[]> {
   const voidStatements: Statement[] = params.statementIds.map((statementId) => {
     return {

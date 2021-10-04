@@ -1,6 +1,6 @@
-import { Agent, Timestamp } from "..";
+import { Actor, Agent, Statement, Timestamp } from "..";
 
-interface BaseQuery {
+interface StatementParamsBase {
   /**
    * Boolean determining if the statements’ attachments should be returned. Defaults to `false`.
    */
@@ -15,49 +15,49 @@ interface BaseQuery {
   format?: "exact" | "ids" | "canonical";
 }
 
-interface BaseGetStatementQuery extends BaseQuery {
+interface GetStatementParamsBase extends StatementParamsBase {
   /**
    * The UUID of the statement.
    */
   statementId: string;
 }
 
-export interface GetStatementQueryWithAttachments
-  extends BaseGetStatementQuery {
+export interface GetStatementParamsWithAttachments
+  extends GetStatementParamsBase {
   attachments: true;
 }
 
-export interface GetStatementQueryWithoutAttachments
-  extends BaseGetStatementQuery {
+export interface GetStatementParamsWithoutAttachments
+  extends GetStatementParamsBase {
   attachments?: false;
 }
 
-export type GetStatementQuery =
-  | GetStatementQueryWithoutAttachments
-  | GetStatementQueryWithAttachments;
+export type GetStatementParams =
+  | GetStatementParamsWithoutAttachments
+  | GetStatementParamsWithAttachments;
 
-interface BaseGetVoidedStatementQuery extends BaseQuery {
+interface GetVoidedStatementParamsBase extends StatementParamsBase {
   /**
    * The original UUID of the statement before it was voided.
    */
   voidedStatementId: string;
 }
 
-export interface GetVoidedStatementQueryWithAttachments
-  extends BaseGetVoidedStatementQuery {
+export interface GetVoidedStatementParamsWithAttachments
+  extends GetVoidedStatementParamsBase {
   attachments: true;
 }
 
-export interface GetVoidedStatementQueryWithoutAttachments
-  extends BaseGetVoidedStatementQuery {
+export interface GetVoidedStatementParamsWithoutAttachments
+  extends GetVoidedStatementParamsBase {
   attachments?: false;
 }
 
-export type GetVoidedStatementQuery =
-  | GetVoidedStatementQueryWithAttachments
-  | GetVoidedStatementQueryWithoutAttachments;
+export type GetVoidedStatementParams =
+  | GetVoidedStatementParamsWithAttachments
+  | GetVoidedStatementParamsWithoutAttachments;
 
-interface BaseGetStatementsQuery extends BaseQuery {
+interface GetStatementsParamsBase extends StatementParamsBase {
   /**
    * JSON encoded object containing an IFI to match an agent or group.
    */
@@ -100,16 +100,40 @@ interface BaseGetStatementsQuery extends BaseQuery {
   ascending?: boolean;
 }
 
-export interface GetStatementsQueryWithAttachments
-  extends BaseGetStatementsQuery {
+export interface GetStatementsParamsWithAttachments
+  extends GetStatementsParamsBase {
   attachments: true;
 }
 
-export interface GetStatementsQueryWithoutAttachments
-  extends BaseGetStatementsQuery {
+export interface GetStatementsParamsWithoutAttachments
+  extends GetStatementsParamsBase {
   attachments?: false;
 }
 
-export type GetStatementsQuery =
-  | GetStatementsQueryWithAttachments
-  | GetStatementsQueryWithoutAttachments;
+export type GetStatementsParams =
+  | GetStatementsParamsWithAttachments
+  | GetStatementsParamsWithoutAttachments;
+
+export interface GetMoreStatementsParams {
+  more: string;
+}
+
+export interface SendStatementParams {
+  statement: Statement;
+  attachments?: ArrayBuffer[];
+}
+
+export interface SendStatementsParams {
+  statements: Statement[];
+  attachments?: ArrayBuffer[];
+}
+
+export interface VoidStatementParams {
+  actor: Actor;
+  statementId: string;
+}
+
+export interface VoidStatementsParams {
+  actor: Actor;
+  statementIds: string[];
+}
