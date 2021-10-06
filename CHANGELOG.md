@@ -1,3 +1,8 @@
+# 1.2.3 (6 Oct 2021)
+
+- Bumped dependencies
+- Improved node testing
+
 # 1.2.2 (7 Sep 2021)
 
 - Bumped `axios` to solve security vulnerability
