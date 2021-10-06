@@ -1,6 +1,6 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Agent } from "../../XAPI";
+import XAPI, { Agent, Document } from "../../XAPI";
 
 export interface SetAgentProfileParams {
   agent: Agent;

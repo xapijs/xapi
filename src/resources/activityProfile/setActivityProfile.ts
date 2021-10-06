@@ -1,6 +1,6 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI from "../../XAPI";
+import XAPI, { Document } from "../../XAPI";
 
 export interface SetActivityProfileParams {
   activityId: string;
