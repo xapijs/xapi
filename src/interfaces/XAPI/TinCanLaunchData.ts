@@ -1,4 +1,4 @@
-import { Actor } from "../Statement";
+import { Actor } from "..";
 
 export interface TinCanLaunchData {
   activity_id?: string;

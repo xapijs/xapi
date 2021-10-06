@@ -1,4 +1,4 @@
-import { Extensions } from "../Statement";
+import { Extensions } from "..";
 
 export interface About {
   /**

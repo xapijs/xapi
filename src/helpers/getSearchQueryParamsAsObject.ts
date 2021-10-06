@@ -1,4 +1,4 @@
-import { Actor } from "../interfaces/Statement";
+import { Actor } from "../XAPI";
 
 function coerceActor(actor: Actor): Actor {
   const actorKeys = ["name", "mbox", "account"];

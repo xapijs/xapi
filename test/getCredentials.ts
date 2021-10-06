@@ -1,9 +1,25 @@
+import XAPI from "../src/XAPI";
+
 interface Credential {
   endpoint: string;
   username: string;
   password: string;
 }
 
-export function getCredentials(): Credential[] {
+function getLRSCredentialsArray(): Credential[] {
   return JSON.parse(process.env.LRS_CREDENTIALS_ARRAY);
+}
+
+export function forEachLRS(
+  callbackfn: (xapi: XAPI, credential: Credential) => void
+): void {
+  const credentials = getLRSCredentialsArray();
+  credentials.forEach((credential) => {
+    const auth: string = XAPI.toBasicAuth(
+      credential.username,
+      credential.password
+    );
+    const xapi: XAPI = new XAPI(credential.endpoint, auth);
+    callbackfn(xapi, credential);
+  });
 }

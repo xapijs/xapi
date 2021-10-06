@@ -1,6 +1,6 @@
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
 import axios from "axios";
-import { XAPILaunchData, XAPILaunchParameters } from "../interfaces/XAPI";
+import { XAPILaunchData, XAPILaunchParameters } from "../XAPI";
 
 export function getXAPILaunchData(): Promise<XAPILaunchData> {
   if (typeof location === "undefined")

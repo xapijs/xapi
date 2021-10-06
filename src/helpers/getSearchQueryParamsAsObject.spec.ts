@@ -1,5 +1,5 @@
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
-import { Actor } from "../interfaces/Statement/Actor";
+import { Actor } from "../XAPI";
 
 test("handles empty querystring", () => {
   return expect(getSearchQueryParamsAsObject("")).toMatchObject({});

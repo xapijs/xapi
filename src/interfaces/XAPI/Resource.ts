@@ -1,3 +1,3 @@
-import { Resources } from "../../constants/Resources";
+import { Resources } from "../../constants";
 
 export type Resource = Resources | string;

@@ -3,9 +3,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const endpoint = process.env.LRS_ENDPOINT || "";
-const username = process.env.LRS_USERNAME || "";
-const password = process.env.LRS_PASSWORD || "";
+const credentials = JSON.parse(process.env.LRS_CREDENTIALS_ARRAY)[0];
+const endpoint = credentials.endpoint;
+const username = credentials.username;
+const password = credentials.password;
 const auth = XAPI.toBasicAuth(username, password);
 const xapi = new XAPI(endpoint, auth);
 

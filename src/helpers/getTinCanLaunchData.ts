@@ -1,4 +1,4 @@
-import { TinCanLaunchData } from "../interfaces/XAPI";
+import { TinCanLaunchData } from "../XAPI";
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
 
 export function getTinCanLaunchData(): TinCanLaunchData {

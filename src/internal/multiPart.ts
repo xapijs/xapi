@@ -1,8 +1,10 @@
-import { Statement, Attachment, MultiPart } from "../interfaces/Statement";
 import {
   StatementResponseWithAttachments,
   StatementsResponseWithAttachments,
-} from "../interfaces/XAPI";
+  Statement,
+  Attachment,
+  MultiPart,
+} from "../XAPI";
 
 const crlf: string = "\r\n";
 
