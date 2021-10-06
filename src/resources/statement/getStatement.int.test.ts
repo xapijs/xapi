@@ -6,7 +6,7 @@ import {
 } from "../../../test/constants";
 import { forEachLRS } from "../../../test/getCredentials";
 import { testIf, isNode } from "../../../test/jestUtils";
-import { Statement } from "../../interfaces";
+import { Statement } from "../../XAPI";
 
 forEachLRS((xapi) => {
   describe("statement resource", () => {

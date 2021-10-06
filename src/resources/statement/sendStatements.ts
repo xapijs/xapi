@@ -1,7 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import { createMultiPart } from "../../internal/multiPart";
-import XAPI, { SendStatementsParams, MultiPart } from "../../XAPI";
+import { createMultiPart, MultiPart } from "../../internal/multiPart";
+import XAPI, { SendStatementsParams } from "../../XAPI";
 
 export function sendStatements(
   this: XAPI,

@@ -1,5 +1,4 @@
-import { TinCanLaunchData } from "../XAPI";
-import { getTinCanLaunchData } from "./getTinCanLaunchData";
+import { getTinCanLaunchData, TinCanLaunchData } from "./getTinCanLaunchData";
 import { testIf, isNode } from "../../test/jestUtils";
 
 testIf(!isNode())("it returns launch data in browser environment", () => {

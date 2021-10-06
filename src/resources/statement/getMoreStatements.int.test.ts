@@ -1,5 +1,5 @@
 import { forEachLRS } from "../../../test/getCredentials";
-import { StatementsResponse } from "../../interfaces";
+import { StatementsResponse } from "../../XAPI";
 
 forEachLRS((xapi) => {
   describe("statement resource", () => {

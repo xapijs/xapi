@@ -1,5 +1,4 @@
-import { ActivityDefinition } from ".";
-import { LanguageMap } from "../..";
+import { ActivityDefinition, LanguageMap } from "..";
 
 interface BaseInteractionActivityDefinition extends ActivityDefinition {
   type: "http://adlnet.gov/expapi/activities/cmi.interaction";

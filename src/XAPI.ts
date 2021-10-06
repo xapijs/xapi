@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
-import { Resource, RequestParams } from "./XAPI";
-import { AttachmentUsages, Verbs, Versions } from "./constants";
+import { Agent } from "./interfaces";
+import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart } from "./internal/multiPart";
 import { formatEndpoint } from "./internal/formatEndpoint";
 import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
@@ -37,6 +37,13 @@ import { voidStatement } from "./resources/statement/voidStatement";
 import { voidStatements } from "./resources/statement/voidStatements";
 
 export * from "./interfaces";
+export { TinCanLaunchData } from "./helpers/getTinCanLaunchData";
+export { XAPILaunchData } from "./helpers/getXAPILaunchData";
+
+interface RequestParams {
+  [key: string]: any;
+  agent?: Agent;
+}
 
 export default class XAPI {
   public static default = XAPI;
@@ -122,7 +129,7 @@ export default class XAPI {
   public voidStatements = voidStatements;
 
   protected requestResource(
-    resource: Resource,
+    resource: Resources,
     params: RequestParams = {},
     initExtras?: AxiosRequestConfig | undefined
   ): AxiosPromise<any> {
@@ -157,7 +164,7 @@ export default class XAPI {
       });
   }
 
-  private generateURL(resource: Resource, params: RequestParams): string {
+  private generateURL(resource: Resources, params: RequestParams): string {
     const queryString = Object.keys(params)
       .map((key) => {
         let val = key === "agent" ? JSON.stringify(params[key]) : params[key];

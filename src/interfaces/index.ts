@@ -6,4 +6,3 @@ export * from "./AgentProfile";
 export * from "./Document";
 export * from "./State";
 export * from "./Statement";
-export * from "./XAPI";

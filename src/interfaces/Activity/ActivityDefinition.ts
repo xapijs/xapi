@@ -1,4 +1,4 @@
-import { Extensions, LanguageMap } from "../..";
+import { Extensions, LanguageMap } from "..";
 
 export interface ActivityDefinition {
   type?: string;
