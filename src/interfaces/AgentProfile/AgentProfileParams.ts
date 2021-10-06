@@ -1,4 +1,4 @@
-import { Agent, DocumentJson, Timestamp } from "..";
+import { Agent, Document, DocumentJson, Timestamp } from "..";
 
 export interface CreateAgentProfileParams {
   agent: Agent;

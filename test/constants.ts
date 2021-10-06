@@ -1,4 +1,10 @@
-import XAPI, { Activity, Agent, Attachment, Statement } from "../src/XAPI";
+import XAPI, {
+  Activity,
+  Agent,
+  Attachment,
+  DocumentJson,
+  Statement,
+} from "../src/XAPI";
 import { arrayBufferToWordArray } from "./arrayBufferToWordArray";
 import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
@@ -103,6 +109,6 @@ export const testStateId: string = `${testActivity.id}/states/test`;
 
 export const testStateIdTextPlain: string = `${testActivity.id}/states/test-text-plain`;
 
-export const testDocument: { [key: string]: any } = {
+export const testDocument: DocumentJson = {
   test: "test",
 };

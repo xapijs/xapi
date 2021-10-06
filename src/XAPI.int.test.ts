@@ -1,7 +1,7 @@
-import { getCredentials } from "../test/getCredentials";
+import { forEachLRS } from "../test/getCredentials";
 import XAPI from "./XAPI";
 
-getCredentials().forEach((credential) => {
+forEachLRS((_xapi, credential) => {
   const endpoint: string = credential.endpoint || "";
 
   describe("xapi constructor", () => {

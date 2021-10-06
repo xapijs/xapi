@@ -1,13 +1,6 @@
-import { getCredentials } from "../../test/getCredentials";
-import XAPI from "../XAPI";
+import { forEachLRS } from "../../../test/getCredentials";
 
-getCredentials().forEach((credential) => {
-  const auth: string = XAPI.toBasicAuth(
-    credential.username,
-    credential.password
-  );
-  const xapi: XAPI = new XAPI(credential.endpoint, auth);
-
+forEachLRS((xapi) => {
   describe("about resource", () => {
     test("can get about", () => {
       return xapi.getAbout().then((result) => {

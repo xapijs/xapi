@@ -8,41 +8,33 @@ import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
 import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData";
 import { toBasicAuth } from "./helpers/toBasicAuth";
-import { getAbout } from "./resources/About";
-import { getActivity } from "./resources/Activities";
-import {
-  createActivityProfile,
-  deleteActivityProfile,
-  getActivityProfile,
-  getActivityProfiles,
-  setActivityProfile,
-} from "./resources/ActivityProfile";
-import {
-  createAgentProfile,
-  deleteAgentProfile,
-  getAgentProfile,
-  getAgentProfiles,
-  setAgentProfile,
-} from "./resources/AgentProfile";
-import { getAgent } from "./resources/Agents";
-import {
-  createState,
-  deleteState,
-  deleteStates,
-  getState,
-  getStates,
-  setState,
-} from "./resources/State";
-import {
-  getMoreStatements,
-  getStatement,
-  getStatements,
-  getVoidedStatement,
-  sendStatement,
-  sendStatements,
-  voidStatement,
-  voidStatements,
-} from "./resources/Statement";
+import { getAbout } from "./resources/about/getAbout";
+import { getActivity } from "./resources/activities/getActivity";
+import { createActivityProfile } from "./resources/activityProfile/createActivityProfile";
+import { deleteActivityProfile } from "./resources/activityProfile/deleteActivityProfile";
+import { getActivityProfile } from "./resources/activityProfile/getActivityProfile";
+import { getActivityProfiles } from "./resources/activityProfile/getActivityProfiles";
+import { setActivityProfile } from "./resources/activityProfile/setActivityProfile";
+import { createAgentProfile } from "./resources/agentProfile/createAgentProfile";
+import { deleteAgentProfile } from "./resources/agentProfile/deleteAgentProfile";
+import { getAgentProfile } from "./resources/agentProfile/getAgentProfile";
+import { getAgentProfiles } from "./resources/agentProfile/getAgentProfiles";
+import { setAgentProfile } from "./resources/agentProfile/setAgentProfile";
+import { getAgent } from "./resources/agents/getAgent";
+import { createState } from "./resources/state/createState";
+import { deleteState } from "./resources/state/deleteState";
+import { deleteStates } from "./resources/state/deleteStates";
+import { getState } from "./resources/state/getState";
+import { getStates } from "./resources/state/getStates";
+import { setState } from "./resources/state/setState";
+import { getMoreStatements } from "./resources/statement/getMoreStatements";
+import { getStatement } from "./resources/statement/getStatement";
+import { getStatements } from "./resources/statement/getStatements";
+import { getVoidedStatement } from "./resources/statement/getVoidedStatement";
+import { sendStatement } from "./resources/statement/sendStatement";
+import { sendStatements } from "./resources/statement/sendStatements";
+import { voidStatement } from "./resources/statement/voidStatement";
+import { voidStatements } from "./resources/statement/voidStatements";
 
 export * from "./interfaces";
 
@@ -77,36 +69,6 @@ export default class XAPI {
 
   public getAbout = getAbout;
 
-  public getAgent = getAgent;
-
-  public getStatement = getStatement;
-
-  public getVoidedStatement = getVoidedStatement;
-
-  public getStatements = getStatements;
-
-  public getMoreStatements = getMoreStatements;
-
-  public sendStatement = sendStatement;
-
-  public sendStatements = sendStatements;
-
-  public voidStatement = voidStatement;
-
-  public voidStatements = voidStatements;
-
-  public createState = createState;
-
-  public setState = setState;
-
-  public getStates = getStates;
-
-  public getState = getState;
-
-  public deleteState = deleteState;
-
-  public deleteStates = deleteStates;
-
   public getActivity = getActivity;
 
   public createActivityProfile = createActivityProfile;
@@ -128,6 +90,36 @@ export default class XAPI {
   public getAgentProfile = getAgentProfile;
 
   public deleteAgentProfile = deleteAgentProfile;
+
+  public getAgent = getAgent;
+
+  public createState = createState;
+
+  public setState = setState;
+
+  public getStates = getStates;
+
+  public getState = getState;
+
+  public deleteState = deleteState;
+
+  public deleteStates = deleteStates;
+
+  public getStatement = getStatement;
+
+  public getVoidedStatement = getVoidedStatement;
+
+  public getStatements = getStatements;
+
+  public getMoreStatements = getMoreStatements;
+
+  public sendStatement = sendStatement;
+
+  public sendStatements = sendStatements;
+
+  public voidStatement = voidStatement;
+
+  public voidStatements = voidStatements;
 
   protected requestResource(
     resource: Resource,

@@ -1,4 +1,4 @@
-import { DocumentJson, Timestamp } from "..";
+import { Document, DocumentJson, Timestamp } from "..";
 
 export interface CreateActivityProfileParams {
   activityId: string;
