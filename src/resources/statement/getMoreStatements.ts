@@ -1,9 +1,12 @@
 import { AxiosPromise } from "axios";
 import XAPI, {
-  GetMoreStatementsParams,
   StatementsResponse,
   StatementsResponseWithAttachments,
 } from "../../XAPI";
+
+export interface GetMoreStatementsParams {
+  more: string;
+}
 
 export function getMoreStatements(
   this: XAPI,

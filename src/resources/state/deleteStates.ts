@@ -1,7 +1,13 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import { DeleteStatesParams } from "../../interfaces";
-import XAPI from "../../XAPI";
+import XAPI, { Agent } from "../../XAPI";
+
+export interface DeleteStatesParams {
+  agent: Agent;
+  activityId: string;
+  registration?: string;
+  etag?: string;
+}
 
 export function deleteStates(
   this: XAPI,

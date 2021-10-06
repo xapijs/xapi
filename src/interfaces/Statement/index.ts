@@ -13,7 +13,6 @@ export * from "./Result";
 export * from "./RFC5646LanguageCodes";
 export * from "./Statement";
 export * from "./StatementObject";
-export * from "./StatementParams";
 export * from "./StatementRef";
 export * from "./StatementResponseWithAttachments";
 export * from "./StatementsResponse";

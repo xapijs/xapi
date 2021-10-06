@@ -1,7 +1,12 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
 import { createMultiPart, MultiPart } from "../../internal/multiPart";
-import XAPI, { SendStatementParams } from "../../XAPI";
+import XAPI, { Statement } from "../../XAPI";
+
+export interface SendStatementParams {
+  statement: Statement;
+  attachments?: ArrayBuffer[];
+}
 
 export function sendStatement(
   this: XAPI,

@@ -1,6 +1,10 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Activity, GetActivityParams } from "../../XAPI";
+import XAPI, { Activity } from "../../XAPI";
+
+export interface GetActivityParams {
+  activityId: string;
+}
 
 export function getActivity(
   this: XAPI,

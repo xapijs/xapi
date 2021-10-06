@@ -1,6 +1,15 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { SetAgentProfileParams } from "../../XAPI";
+import XAPI, { Agent } from "../../XAPI";
+
+export interface SetAgentProfileParams {
+  agent: Agent;
+  profileId: string;
+  profile: Document;
+  etag: string;
+  matchHeader: "If-Match" | "If-None-Match";
+  contentType?: string;
+}
 
 export function setAgentProfile(
   this: XAPI,

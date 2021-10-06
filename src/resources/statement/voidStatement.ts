@@ -1,6 +1,11 @@
 import { AxiosPromise } from "axios";
 import { Verbs } from "../../constants";
-import XAPI, { VoidStatementParams, Statement } from "../../XAPI";
+import XAPI, { Actor, Statement } from "../../XAPI";
+
+export interface VoidStatementParams {
+  actor: Actor;
+  statementId: string;
+}
 
 export function voidStatement(
   this: XAPI,

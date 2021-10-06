@@ -39,6 +39,44 @@ import { voidStatements } from "./resources/statement/voidStatements";
 export * from "./interfaces";
 export { TinCanLaunchData } from "./helpers/getTinCanLaunchData";
 export { XAPILaunchData } from "./helpers/getXAPILaunchData";
+export { GetActivityParams } from "./resources/activities/getActivity";
+export { CreateActivityProfileParams } from "./resources/activityProfile/createActivityProfile";
+export { DeleteActivityProfileParams } from "./resources/activityProfile/DeleteActivityProfile";
+export { GetActivityProfileParams } from "./resources/activityProfile/GetActivityProfile";
+export { GetActivityProfilesParams } from "./resources/activityProfile/GetActivityProfiles";
+export { SetActivityProfileParams } from "./resources/activityProfile/SetActivityProfile";
+export { CreateAgentProfileParams } from "./resources/agentProfile/createAgentProfile";
+export { DeleteAgentProfileParams } from "./resources/agentProfile/deleteAgentProfile";
+export { GetAgentProfileParams } from "./resources/agentProfile/getAgentProfile";
+export { GetAgentProfilesParams } from "./resources/agentProfile/getAgentProfiles";
+export { SetAgentProfileParams } from "./resources/agentProfile/setAgentProfile";
+export { GetAgentParams } from "./resources/agents/getAgent";
+export { CreateStateParams } from "./resources/state/createState";
+export { DeleteStateParams } from "./resources/state/deleteState";
+export { DeleteStatesParams } from "./resources/state/deleteStates";
+export { GetStateParams } from "./resources/state/getState";
+export { GetStatesParams } from "./resources/state/getStates";
+export { SetStateParams } from "./resources/state/setState";
+export { GetMoreStatementsParams } from "./resources/statement/getMoreStatements";
+export {
+  GetStatementParams,
+  GetStatementParamsWithAttachments,
+  GetStatementParamsWithoutAttachments,
+} from "./resources/statement/getStatement";
+export {
+  GetStatementsParams,
+  GetStatementsParamsWithAttachments,
+  GetStatementsParamsWithoutAttachments,
+} from "./resources/statement/getStatements";
+export {
+  GetVoidedStatementParams,
+  GetVoidedStatementParamsWithAttachments,
+  GetVoidedStatementParamsWithoutAttachments,
+} from "./resources/statement/getVoidedStatement";
+export { SendStatementParams } from "./resources/statement/sendStatement";
+export { SendStatementsParams } from "./resources/statement/sendStatements";
+export { VoidStatementParams } from "./resources/statement/voidStatement";
+export { VoidStatementsParams } from "./resources/statement/voidStatements";
 
 interface RequestParams {
   [key: string]: any;

@@ -1,7 +1,13 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import { GetStateParams } from "../../interfaces";
-import XAPI from "../../XAPI";
+import XAPI, { Agent } from "../../XAPI";
+
+export interface GetStateParams {
+  agent: Agent;
+  activityId: string;
+  stateId: string;
+  registration?: string;
+}
 
 export function getState(
   this: XAPI,

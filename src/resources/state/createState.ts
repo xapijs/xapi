@@ -1,7 +1,16 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import { CreateStateParams } from "../../interfaces";
-import XAPI from "../../XAPI";
+import XAPI, { Agent, DocumentJson } from "../../XAPI";
+
+export interface CreateStateParams {
+  agent: Agent;
+  activityId: string;
+  stateId: string;
+  state: DocumentJson;
+  registration?: string;
+  etag?: string;
+  matchHeader?: "If-Match" | "If-None-Match";
+}
 
 export function createState(
   this: XAPI,
