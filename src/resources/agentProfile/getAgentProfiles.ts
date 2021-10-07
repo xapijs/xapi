@@ -1,11 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Agent, Timestamp } from "../../XAPI";
-
-export interface GetAgentProfilesParams {
-  agent: Agent;
-  since?: Timestamp;
-}
+import XAPI from "../../XAPI";
+import { GetAgentProfilesParams } from "./getAgentProfilesParams";
 
 export function getAgentProfiles(
   this: XAPI,

@@ -40,43 +40,31 @@ export * from "./interfaces";
 export * from "./helpers/getTinCanLaunchData/TinCanLaunchData";
 export * from "./helpers/getXAPILaunchData/XAPILaunchData";
 export * from "./resources/activities/getActivityParams";
-export { CreateActivityProfileParams } from "./resources/activityProfile/createActivityProfile";
-export { DeleteActivityProfileParams } from "./resources/activityProfile/deleteActivityProfile";
-export { GetActivityProfileParams } from "./resources/activityProfile/getActivityProfile";
-export { GetActivityProfilesParams } from "./resources/activityProfile/getActivityProfiles";
-export { SetActivityProfileParams } from "./resources/activityProfile/setActivityProfile";
-export { CreateAgentProfileParams } from "./resources/agentProfile/createAgentProfile";
-export { DeleteAgentProfileParams } from "./resources/agentProfile/deleteAgentProfile";
-export { GetAgentProfileParams } from "./resources/agentProfile/getAgentProfile";
-export { GetAgentProfilesParams } from "./resources/agentProfile/getAgentProfiles";
-export { SetAgentProfileParams } from "./resources/agentProfile/setAgentProfile";
-export { GetAgentParams } from "./resources/agents/getAgent";
-export { CreateStateParams } from "./resources/state/createState";
-export { DeleteStateParams } from "./resources/state/deleteState";
-export { DeleteStatesParams } from "./resources/state/deleteStates";
-export { GetStateParams } from "./resources/state/getState";
-export { GetStatesParams } from "./resources/state/getStates";
-export { SetStateParams } from "./resources/state/setState";
-export { GetMoreStatementsParams } from "./resources/statement/getMoreStatements";
-export {
-  GetStatementParams,
-  GetStatementParamsWithAttachments,
-  GetStatementParamsWithoutAttachments,
-} from "./resources/statement/getStatement";
-export {
-  GetStatementsParams,
-  GetStatementsParamsWithAttachments,
-  GetStatementsParamsWithoutAttachments,
-} from "./resources/statement/getStatements";
-export {
-  GetVoidedStatementParams,
-  GetVoidedStatementParamsWithAttachments,
-  GetVoidedStatementParamsWithoutAttachments,
-} from "./resources/statement/getVoidedStatement";
-export { SendStatementParams } from "./resources/statement/sendStatement";
-export { SendStatementsParams } from "./resources/statement/sendStatements";
-export { VoidStatementParams } from "./resources/statement/voidStatement";
-export { VoidStatementsParams } from "./resources/statement/voidStatements";
+export * from "./resources/activityProfile/createActivityProfileParams";
+export * from "./resources/activityProfile/deleteActivityProfileParams";
+export * from "./resources/activityProfile/getActivityProfileParams";
+export * from "./resources/activityProfile/getActivityProfilesParams";
+export * from "./resources/activityProfile/setActivityProfileParams";
+export * from "./resources/agentProfile/createAgentProfileParams";
+export * from "./resources/agentProfile/deleteAgentProfileParams";
+export * from "./resources/agentProfile/getAgentProfileParams";
+export * from "./resources/agentProfile/getAgentProfilesParams";
+export * from "./resources/agentProfile/setAgentProfileParams";
+export * from "./resources/agents/getAgentParams";
+export * from "./resources/state/createStateParams";
+export * from "./resources/state/deleteStateParams";
+export * from "./resources/state/deleteStatesParams";
+export * from "./resources/state/getStateParams";
+export * from "./resources/state/getStatesParams";
+export * from "./resources/state/setStateParams";
+export * from "./resources/statement/getMoreStatementsParams";
+export * from "./resources/statement/getStatementParams";
+export * from "./resources/statement/getStatementsParams";
+export * from "./resources/statement/getVoidedStatementParams";
+export * from "./resources/statement/sendStatementParams";
+export * from "./resources/statement/sendStatementsParams";
+export * from "./resources/statement/voidStatementParams";
+export * from "./resources/statement/voidStatementsParams";
 
 interface RequestParams {
   [key: string]: any;

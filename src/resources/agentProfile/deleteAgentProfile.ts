@@ -1,12 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Agent } from "../../XAPI";
-
-export interface DeleteAgentProfileParams {
-  agent: Agent;
-  profileId: string;
-  etag?: string;
-}
+import XAPI from "../../XAPI";
+import { DeleteAgentProfileParams } from "./deleteAgentProfileParams";
 
 export function deleteAgentProfile(
   this: XAPI,

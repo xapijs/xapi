@@ -1,10 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Agent, Person } from "../../XAPI";
-
-export interface GetAgentParams {
-  agent: Agent;
-}
+import XAPI, { Person } from "../../XAPI";
+import { GetAgentParams } from "./getAgentParams";
 
 export function getAgent(
   this: XAPI,

@@ -1,15 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Document } from "../../XAPI";
-
-export interface SetActivityProfileParams {
-  activityId: string;
-  profileId: string;
-  profile: Document;
-  etag: string;
-  matchHeader: "If-Match" | "If-None-Match";
-  contentType?: string;
-}
+import XAPI from "../../XAPI";
+import { SetActivityProfileParams } from "./setActivityProfileParams";
 
 export function setActivityProfile(
   this: XAPI,

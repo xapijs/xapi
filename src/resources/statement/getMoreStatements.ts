@@ -3,10 +3,7 @@ import XAPI, {
   StatementsResponse,
   StatementsResponseWithAttachments,
 } from "../../XAPI";
-
-export interface GetMoreStatementsParams {
-  more: string;
-}
+import { GetMoreStatementsParams } from "./getMoreStatementsParams";
 
 export function getMoreStatements(
   this: XAPI,

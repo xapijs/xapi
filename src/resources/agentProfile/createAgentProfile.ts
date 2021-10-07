@@ -1,14 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Agent, DocumentJson } from "../../XAPI";
-
-export interface CreateAgentProfileParams {
-  agent: Agent;
-  profileId: string;
-  profile: DocumentJson;
-  etag?: string;
-  matchHeader?: "If-Match" | "If-None-Match";
-}
+import XAPI from "../../XAPI";
+import { CreateAgentProfileParams } from "./createAgentProfileParams";
 
 export function createAgentProfile(
   this: XAPI,

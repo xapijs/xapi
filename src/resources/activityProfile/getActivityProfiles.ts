@@ -1,11 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../constants";
-import XAPI, { Timestamp } from "../../XAPI";
-
-export interface GetActivityProfilesParams {
-  activityId: string;
-  since?: Timestamp;
-}
+import XAPI from "../../XAPI";
+import { GetActivityProfilesParams } from "./getActivityProfilesParams";
 
 export function getActivityProfiles(
   this: XAPI,
