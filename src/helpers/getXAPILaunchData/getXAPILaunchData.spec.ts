@@ -1,5 +1,5 @@
 import { getXAPILaunchData } from "./getXAPILaunchData";
-import { testIf, isNode } from "../../test/jestUtils";
+import { testIf, isNode } from "../../../test/jestUtils";
 
 testIf(isNode())("return error in node environment", () => {
   return getXAPILaunchData().catch((error: Error) => {

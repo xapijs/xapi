@@ -1,17 +1,7 @@
-import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
+import { getSearchQueryParamsAsObject } from "../getSearchQueryParamsAsObject/getSearchQueryParamsAsObject";
 import axios from "axios";
-import { Actor } from "../XAPI";
-
-export interface XAPILaunchData {
-  endpoint: string;
-  actor: Actor;
-}
-
-interface XAPILaunchParameters {
-  xAPILaunchKey?: string;
-  xAPILaunchService?: string;
-  encrypted?: string;
-}
+import { XAPILaunchData } from "./XAPILaunchData";
+import { XAPILaunchParameters } from "./XAPILaunchParameters";
 
 export function getXAPILaunchData(): Promise<XAPILaunchData> {
   if (typeof location === "undefined")
