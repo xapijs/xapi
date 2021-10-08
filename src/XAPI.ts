@@ -446,27 +446,19 @@ export default class XAPI {
             since,
           }
         : {}),
-      ...(useCacheBuster
-        ? {
-            cachebuster: Math.round(new Date().getTime() / 1000)
-          }
-        : {}),
-    });
+        ...(useCacheBuster ? {cachebuster: Math.round(new Date().getTime() / 1000)} : {}),
+      });
   }
 
   public getActivityProfile(
     activityId: string,
-    profileId: string
+    profileId: string,
     useCacheBuster?: boolean,
   ): AxiosPromise<Document> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId,
-      ...(useCacheBuster
-        ? {
-            cachebuster: Math.round(new Date().getTime() / 1000)
-          }
-        : {}),
+      ...(useCacheBuster ? {cachebuster: Math.round(new Date().getTime() / 1000)} : {}),
     });
   }
 
