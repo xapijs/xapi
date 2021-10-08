@@ -435,13 +435,20 @@ export default class XAPI {
 
   public getActivityProfiles(
     activityId: string,
-    since?: Timestamp
+    since?: Timestamp,
+    useCacheBuster?: boolean,
   ): AxiosPromise<string[]> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
+
       ...(since
         ? {
             since,
+          }
+        : {}),
+      ...(useCacheBuster
+        ? {
+            cachebuster: Math.round(new Date().getTime() / 1000)
           }
         : {}),
     });
@@ -450,10 +457,16 @@ export default class XAPI {
   public getActivityProfile(
     activityId: string,
     profileId: string
+    useCacheBuster?: boolean,
   ): AxiosPromise<Document> {
     return this.requestResource(Resources.ACTIVITY_PROFILE, {
       activityId: activityId,
       profileId: profileId,
+      ...(useCacheBuster
+        ? {
+            cachebuster: Math.round(new Date().getTime() / 1000)
+          }
+        : {}),
     });
   }
 
