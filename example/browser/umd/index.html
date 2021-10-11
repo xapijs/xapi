@@ -4,7 +4,10 @@
 
   <script type="text/javascript">
     const { endpoint, auth } = XAPI.getTinCanLaunchData();
-    const xapi = new XAPI(endpoint, auth);
+    const xapi = new XAPI({
+      endpoint: endpoint,
+      auth: auth
+    });
     xapi.getAbout().then((result) => {
       console.log(result.data);
     });

@@ -19,7 +19,10 @@ export function forEachLRS(
       credential.username,
       credential.password
     );
-    const xapi: XAPI = new XAPI(credential.endpoint, auth);
+    const xapi: XAPI = new XAPI({
+      endpoint: credential.endpoint,
+      auth: auth,
+    });
     callbackfn(xapi, credential);
   });
 }

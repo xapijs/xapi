@@ -3,7 +3,10 @@
   <script type="module">
     import XAPI from "https://unpkg.com/@xapi/xapi?module";
     const { endpoint, auth } = XAPI.getTinCanLaunchData();
-    const xapi = new XAPI(endpoint, auth);
+    const xapi = new XAPI({
+      endpoint: endpoint,
+      auth: auth
+    });
     xapi.getAbout().then((result) => {
       console.log(result.data);
     });

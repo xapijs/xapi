@@ -6,7 +6,9 @@ forEachLRS((_xapi, credential) => {
 
   describe("xapi constructor", () => {
     test("can perform basic authentication challenges when no authorization process is required", () => {
-      const noAuthXapi = new XAPI(endpoint);
+      const noAuthXapi = new XAPI({
+        endpoint: endpoint,
+      });
       expect(noAuthXapi.getAbout()).resolves.toBeDefined();
     });
   });

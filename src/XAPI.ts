@@ -35,6 +35,7 @@ import { sendStatement } from "./resources/statement/sendStatement/sendStatement
 import { sendStatements } from "./resources/statement/sendStatements/sendStatements";
 import { voidStatement } from "./resources/statement/voidStatement/voidStatement";
 import { voidStatements } from "./resources/statement/voidStatements/voidStatements";
+import { XAPIConfig } from "./XAPIConfig";
 
 export * from "./helpers/getTinCanLaunchData/TinCanLaunchData";
 export * from "./helpers/getXAPILaunchData/XAPILaunchData";
@@ -91,17 +92,14 @@ export default class XAPI {
   protected endpoint: string;
   private headers: { [key: string]: string };
 
-  public constructor(
-    endpoint: string,
-    auth?: string,
-    version: Versions = "1.0.3"
-  ) {
-    this.endpoint = formatEndpoint(endpoint);
+  public constructor(params: XAPIConfig) {
+    const version: Versions = params.version || "1.0.3";
+    this.endpoint = formatEndpoint(params.endpoint);
     this.headers = {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",
       // No Authorization Process and Requirements - https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
-      Authorization: auth ? auth : toBasicAuth("", ""),
+      Authorization: params.auth ? params.auth : toBasicAuth("", ""),
     };
   }
 

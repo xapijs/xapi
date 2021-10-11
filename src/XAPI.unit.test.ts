@@ -26,7 +26,9 @@ import { testAgent, testActivity } from "../test/constants";
       jest.restoreAllMocks();
     });
 
-    const xapi = new XAPI(ex.endpoint);
+    const xapi = new XAPI({
+      endpoint: ex.endpoint,
+    });
 
     // helper function mocks axios with defaults
     function _mockAxios<T extends any>(
