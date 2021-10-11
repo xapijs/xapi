@@ -1,4 +1,5 @@
-import { Agent, DocumentJson } from "../../../../XAPI";
+import { Agent } from "../../../../XAPI";
+import { DocumentJson } from "../../Document";
 
 export interface CreateAgentProfileParams {
   agent: Agent;

@@ -1,4 +1,4 @@
-import { Extensions } from "..";
+import { Extensions } from "../../XAPI";
 
 export interface About {
   /**

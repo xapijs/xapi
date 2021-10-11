@@ -1,4 +1,5 @@
-import { Agent, Document } from "../../../../XAPI";
+import { Agent } from "../../../../XAPI";
+import { Document } from "../../Document";
 
 export interface SetStateParams {
   agent: Agent;
