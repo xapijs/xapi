@@ -1,5 +1,6 @@
-import { getTinCanLaunchData, TinCanLaunchData } from "./getTinCanLaunchData";
-import { testIf, isNode } from "../../test/jestUtils";
+import { getTinCanLaunchData } from "./getTinCanLaunchData";
+import { TinCanLaunchData } from "./TinCanLaunchData";
+import { testIf, isNode } from "../../../test/jestUtils";
 
 testIf(!isNode())("it returns launch data in browser environment", () => {
   const params: TinCanLaunchData = {
