@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
-import { Agent } from "./interfaces";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart } from "./internal/multiPart";
 import { formatEndpoint } from "./internal/formatEndpoint";
@@ -8,63 +7,69 @@ import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration/cal
 import { getXAPILaunchData } from "./helpers/getXAPILaunchData/getXAPILaunchData";
 import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData/getTinCanLaunchData";
 import { toBasicAuth } from "./helpers/toBasicAuth/toBasicAuth";
-import { getAbout } from "./resources/about/getAbout";
-import { getActivity } from "./resources/activities/getActivity";
-import { createActivityProfile } from "./resources/activityProfile/createActivityProfile";
-import { deleteActivityProfile } from "./resources/activityProfile/deleteActivityProfile";
-import { getActivityProfile } from "./resources/activityProfile/getActivityProfile";
-import { getActivityProfiles } from "./resources/activityProfile/getActivityProfiles";
-import { setActivityProfile } from "./resources/activityProfile/setActivityProfile";
-import { createAgentProfile } from "./resources/agentProfile/createAgentProfile";
-import { deleteAgentProfile } from "./resources/agentProfile/deleteAgentProfile";
-import { getAgentProfile } from "./resources/agentProfile/getAgentProfile";
-import { getAgentProfiles } from "./resources/agentProfile/getAgentProfiles";
-import { setAgentProfile } from "./resources/agentProfile/setAgentProfile";
-import { getAgent } from "./resources/agents/getAgent";
-import { createState } from "./resources/state/createState";
-import { deleteState } from "./resources/state/deleteState";
-import { deleteStates } from "./resources/state/deleteStates";
-import { getState } from "./resources/state/getState";
-import { getStates } from "./resources/state/getStates";
-import { setState } from "./resources/state/setState";
-import { getMoreStatements } from "./resources/statement/getMoreStatements";
-import { getStatement } from "./resources/statement/getStatement";
-import { getStatements } from "./resources/statement/getStatements";
-import { getVoidedStatement } from "./resources/statement/getVoidedStatement";
-import { sendStatement } from "./resources/statement/sendStatement";
-import { sendStatements } from "./resources/statement/sendStatements";
-import { voidStatement } from "./resources/statement/voidStatement";
-import { voidStatements } from "./resources/statement/voidStatements";
+import { getAbout } from "./resources/about/getAbout/getAbout";
+import { getActivity } from "./resources/activities/getActivity/getActivity";
+import { getAgent } from "./resources/agents/getAgent/getAgent";
+import { createActivityProfile } from "./resources/document/activityProfile/createActivityProfile/createActivityProfile";
+import { deleteActivityProfile } from "./resources/document/activityProfile/deleteActivityProfile/deleteActivityProfile";
+import { getActivityProfile } from "./resources/document/activityProfile/getActivityProfile/getActivityProfile";
+import { getActivityProfiles } from "./resources/document/activityProfile/getActivityProfiles/getActivityProfiles";
+import { setActivityProfile } from "./resources/document/activityProfile/setActivityProfile/setActivityProfile";
+import { createAgentProfile } from "./resources/document/agentProfile/createAgentProfile/createAgentProfile";
+import { deleteAgentProfile } from "./resources/document/agentProfile/deleteAgentProfile/deleteAgentProfile";
+import { getAgentProfile } from "./resources/document/agentProfile/getAgentProfile/getAgentProfile";
+import { getAgentProfiles } from "./resources/document/agentProfile/getAgentProfiles/getAgentProfiles";
+import { setAgentProfile } from "./resources/document/agentProfile/setAgentProfile/setAgentProfile";
+import { createState } from "./resources/document/state/createState/createState";
+import { deleteState } from "./resources/document/state/deleteState/deleteState";
+import { deleteStates } from "./resources/document/state/deleteStates/deleteStates";
+import { getState } from "./resources/document/state/getState/getState";
+import { getStates } from "./resources/document/state/getStates/getStates";
+import { setState } from "./resources/document/state/setState/setState";
+import { Agent } from "./resources/statement";
+import { getMoreStatements } from "./resources/statement/getMoreStatements/getMoreStatements";
+import { getStatement } from "./resources/statement/getStatement/getStatement";
+import { getStatements } from "./resources/statement/getStatements/getStatements";
+import { getVoidedStatement } from "./resources/statement/getVoidedStatement/getVoidedStatement";
+import { sendStatement } from "./resources/statement/sendStatement/sendStatement";
+import { sendStatements } from "./resources/statement/sendStatements/sendStatements";
+import { voidStatement } from "./resources/statement/voidStatement/voidStatement";
+import { voidStatements } from "./resources/statement/voidStatements/voidStatements";
 
-export * from "./interfaces";
 export * from "./helpers/getTinCanLaunchData/TinCanLaunchData";
 export * from "./helpers/getXAPILaunchData/XAPILaunchData";
-export * from "./resources/activities/getActivityParams";
-export * from "./resources/activityProfile/createActivityProfileParams";
-export * from "./resources/activityProfile/deleteActivityProfileParams";
-export * from "./resources/activityProfile/getActivityProfileParams";
-export * from "./resources/activityProfile/getActivityProfilesParams";
-export * from "./resources/activityProfile/setActivityProfileParams";
-export * from "./resources/agentProfile/createAgentProfileParams";
-export * from "./resources/agentProfile/deleteAgentProfileParams";
-export * from "./resources/agentProfile/getAgentProfileParams";
-export * from "./resources/agentProfile/getAgentProfilesParams";
-export * from "./resources/agentProfile/setAgentProfileParams";
-export * from "./resources/agents/getAgentParams";
-export * from "./resources/state/createStateParams";
-export * from "./resources/state/deleteStateParams";
-export * from "./resources/state/deleteStatesParams";
-export * from "./resources/state/getStateParams";
-export * from "./resources/state/getStatesParams";
-export * from "./resources/state/setStateParams";
-export * from "./resources/statement/getMoreStatementsParams";
-export * from "./resources/statement/getStatementParams";
-export * from "./resources/statement/getStatementsParams";
-export * from "./resources/statement/getVoidedStatementParams";
-export * from "./resources/statement/sendStatementParams";
-export * from "./resources/statement/sendStatementsParams";
-export * from "./resources/statement/voidStatementParams";
-export * from "./resources/statement/voidStatementsParams";
+export * from "./resources/about/About";
+export * from "./resources/activities/Activity";
+export * from "./resources/activities/ActivityDefinition";
+export * from "./resources/activities/getActivity/getActivityParams";
+export * from "./resources/agents/Person";
+export * from "./resources/agents/getAgent/getAgentParams";
+export * from "./resources/document/Document";
+export * from "./resources/document/activityProfile/createActivityProfile/createActivityProfileParams";
+export * from "./resources/document/activityProfile/deleteActivityProfile/deleteActivityProfileParams";
+export * from "./resources/document/activityProfile/getActivityProfile/getActivityProfileParams";
+export * from "./resources/document/activityProfile/getActivityProfiles/getActivityProfilesParams";
+export * from "./resources/document/activityProfile/setActivityProfile/setActivityProfileParams";
+export * from "./resources/document/agentProfile/createAgentProfile/createAgentProfileParams";
+export * from "./resources/document/agentProfile/deleteAgentProfile/deleteAgentProfileParams";
+export * from "./resources/document/agentProfile/getAgentProfile/getAgentProfileParams";
+export * from "./resources/document/agentProfile/getAgentProfiles/getAgentProfilesParams";
+export * from "./resources/document/agentProfile/setAgentProfile/setAgentProfileParams";
+export * from "./resources/document/state/createState/createStateParams";
+export * from "./resources/document/state/deleteState/deleteStateParams";
+export * from "./resources/document/state/deleteStates/deleteStatesParams";
+export * from "./resources/document/state/getState/getStateParams";
+export * from "./resources/document/state/getStates/getStatesParams";
+export * from "./resources/document/state/setState/setStateParams";
+export * from "./resources/statement";
+export * from "./resources/statement/getMoreStatements/getMoreStatementsParams";
+export * from "./resources/statement/getStatement/getStatementParams";
+export * from "./resources/statement/getStatements/getStatementsParams";
+export * from "./resources/statement/getVoidedStatement/getVoidedStatementParams";
+export * from "./resources/statement/sendStatement/sendStatementParams";
+export * from "./resources/statement/sendStatements/sendStatementsParams";
+export * from "./resources/statement/voidStatement/voidStatementParams";
+export * from "./resources/statement/voidStatements/voidStatementsParams";
 
 interface RequestParams {
   [key: string]: any;
@@ -104,6 +109,8 @@ export default class XAPI {
 
   public getActivity = getActivity;
 
+  public getAgent = getAgent;
+
   public createActivityProfile = createActivityProfile;
 
   public setActivityProfile = setActivityProfile;
@@ -123,8 +130,6 @@ export default class XAPI {
   public getAgentProfile = getAgentProfile;
 
   public deleteAgentProfile = deleteAgentProfile;
-
-  public getAgent = getAgent;
 
   public createState = createState;
 
