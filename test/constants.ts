@@ -10,6 +10,8 @@ import CryptoJS from "crypto-js";
 import { TextEncoder } from "util";
 import axios from "axios";
 
+export const testEndpoint = "https://www.example/com/lrs/";
+
 export const testAgent: Agent = {
   objectType: "Agent",
   name: "Jest",
