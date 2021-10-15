@@ -55,18 +55,21 @@ describe("activity profile resource", () => {
     });
     const testEtag = "my-etag";
     const testMatchHeader = "If-Match";
+    const plainTextContentType = "text/plain";
     await xapi.setActivityProfile({
       activityId: testActivity.id,
       profileId: testProfileIdTextPlain,
       profile: testDocument.test,
       etag: testEtag,
       matchHeader: testMatchHeader,
+      contentType: plainTextContentType,
     });
     expect(axios.request).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "PUT",
         headers: expect.objectContaining({
           [testMatchHeader]: testEtag,
+          "Content-Type": plainTextContentType,
         }),
         url: `${testEndpoint}${
           Resources.ACTIVITY_PROFILE
