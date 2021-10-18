@@ -2,7 +2,6 @@ import XAPI from "../../../../XAPI";
 import axios from "axios";
 import {
   testAgent,
-  testDocument,
   testEndpoint,
   testProfileId,
 } from "../../../../../test/constants";
@@ -19,52 +18,46 @@ describe("agent profile resource", () => {
     });
   });
 
-  test("can create agent profile", async () => {
+  test("can delete an agent profile", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
     });
-    await xapi.createAgentProfile({
+    await xapi.deleteAgentProfile({
       agent: testAgent,
       profileId: testProfileId,
-      profile: testDocument,
     });
     expect(axios.request).toHaveBeenCalledWith(
       expect.objectContaining({
-        method: "POST",
+        method: "DELETE",
         url: `${testEndpoint}${
           Resources.AGENT_PROFILE
         }?agent=${encodeURIComponent(
           JSON.stringify(testAgent)
         )}&profileId=${encodeURIComponent(testProfileId)}`,
-        data: testDocument,
       })
     );
   });
 
-  test("can create agent profile with an etag", async () => {
+  test("can delete an agent profile with an etag", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
     });
     const testEtag = "my-etag";
-    const testMatchHeader = "If-Match";
-    await xapi.createAgentProfile({
+    await xapi.deleteAgentProfile({
       agent: testAgent,
       profileId: testProfileId,
-      profile: testDocument,
       etag: testEtag,
-      matchHeader: testMatchHeader,
     });
     expect(axios.request).toHaveBeenCalledWith(
       expect.objectContaining({
-        method: "POST",
+        method: "DELETE",
         url: `${testEndpoint}${
           Resources.AGENT_PROFILE
         }?agent=${encodeURIComponent(
           JSON.stringify(testAgent)
         )}&profileId=${encodeURIComponent(testProfileId)}`,
-        data: testDocument,
         headers: expect.objectContaining({
-          [testMatchHeader]: testEtag,
+          ["If-Match"]: testEtag,
         }),
       })
     );

@@ -19,35 +19,13 @@ describe("agent profile resource", () => {
     });
   });
 
-  test("can create agent profile", async () => {
-    const xapi = new XAPI({
-      endpoint: testEndpoint,
-    });
-    await xapi.createAgentProfile({
-      agent: testAgent,
-      profileId: testProfileId,
-      profile: testDocument,
-    });
-    expect(axios.request).toHaveBeenCalledWith(
-      expect.objectContaining({
-        method: "POST",
-        url: `${testEndpoint}${
-          Resources.AGENT_PROFILE
-        }?agent=${encodeURIComponent(
-          JSON.stringify(testAgent)
-        )}&profileId=${encodeURIComponent(testProfileId)}`,
-        data: testDocument,
-      })
-    );
-  });
-
-  test("can create agent profile with an etag", async () => {
+  test("can set agent profile", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
     });
     const testEtag = "my-etag";
     const testMatchHeader = "If-Match";
-    await xapi.createAgentProfile({
+    await xapi.setAgentProfile({
       agent: testAgent,
       profileId: testProfileId,
       profile: testDocument,
@@ -56,7 +34,7 @@ describe("agent profile resource", () => {
     });
     expect(axios.request).toHaveBeenCalledWith(
       expect.objectContaining({
-        method: "POST",
+        method: "PUT",
         url: `${testEndpoint}${
           Resources.AGENT_PROFILE
         }?agent=${encodeURIComponent(
@@ -65,6 +43,38 @@ describe("agent profile resource", () => {
         data: testDocument,
         headers: expect.objectContaining({
           [testMatchHeader]: testEtag,
+        }),
+      })
+    );
+  });
+
+  test("can set agent profile with content type", async () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    const testEtag = "my-etag";
+    const testMatchHeader = "If-Match";
+    const plainTextContentType = "text/plain";
+    await xapi.setAgentProfile({
+      agent: testAgent,
+      profileId: testProfileId,
+      profile: testDocument.test,
+      etag: testEtag,
+      matchHeader: testMatchHeader,
+      contentType: plainTextContentType,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "PUT",
+        url: `${testEndpoint}${
+          Resources.AGENT_PROFILE
+        }?agent=${encodeURIComponent(
+          JSON.stringify(testAgent)
+        )}&profileId=${encodeURIComponent(testProfileId)}`,
+        data: testDocument.test,
+        headers: expect.objectContaining({
+          [testMatchHeader]: testEtag,
+          "Content-Type": plainTextContentType,
         }),
       })
     );

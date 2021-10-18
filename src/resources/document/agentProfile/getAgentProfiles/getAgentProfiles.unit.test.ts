@@ -1,11 +1,6 @@
 import XAPI from "../../../../XAPI";
 import axios from "axios";
-import {
-  testAgent,
-  testDocument,
-  testEndpoint,
-  testProfileId,
-} from "../../../../../test/constants";
+import { testAgent, testEndpoint } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
 jest.mock("axios");
@@ -19,53 +14,41 @@ describe("agent profile resource", () => {
     });
   });
 
-  test("can create agent profile", async () => {
+  test("can get all agent profiles", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
     });
-    await xapi.createAgentProfile({
+    await xapi.getAgentProfiles({
       agent: testAgent,
-      profileId: testProfileId,
-      profile: testDocument,
     });
     expect(axios.request).toHaveBeenCalledWith(
       expect.objectContaining({
-        method: "POST",
+        method: "GET",
         url: `${testEndpoint}${
           Resources.AGENT_PROFILE
-        }?agent=${encodeURIComponent(
-          JSON.stringify(testAgent)
-        )}&profileId=${encodeURIComponent(testProfileId)}`,
-        data: testDocument,
+        }?agent=${encodeURIComponent(JSON.stringify(testAgent))}`,
       })
     );
   });
 
-  test("can create agent profile with an etag", async () => {
+  test("can get all agent profiles since a certain date", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
     });
-    const testEtag = "my-etag";
-    const testMatchHeader = "If-Match";
-    await xapi.createAgentProfile({
+    const since = new Date();
+    since.setDate(since.getDate() - 1); // yesterday
+    await xapi.getAgentProfiles({
       agent: testAgent,
-      profileId: testProfileId,
-      profile: testDocument,
-      etag: testEtag,
-      matchHeader: testMatchHeader,
+      since: since.toISOString(),
     });
     expect(axios.request).toHaveBeenCalledWith(
       expect.objectContaining({
-        method: "POST",
+        method: "GET",
         url: `${testEndpoint}${
           Resources.AGENT_PROFILE
         }?agent=${encodeURIComponent(
           JSON.stringify(testAgent)
-        )}&profileId=${encodeURIComponent(testProfileId)}`,
-        data: testDocument,
-        headers: expect.objectContaining({
-          [testMatchHeader]: testEtag,
-        }),
+        )}&since=${encodeURIComponent(since.toISOString())}`,
       })
     );
   });
