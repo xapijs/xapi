@@ -4,6 +4,7 @@ import XAPI, {
   Attachment,
   DocumentJson,
   Statement,
+  Verb,
 } from "../src/XAPI";
 import { arrayBufferToWordArray } from "./arrayBufferToWordArray";
 import CryptoJS from "crypto-js";
@@ -23,14 +24,16 @@ export const testActivity: Activity = {
   id: "https://github.com/xapijs/xapi",
 };
 
+export const testVerb: Verb = {
+  id: "http://example.com/verbs/tested",
+  display: {
+    "en-GB": "tested",
+  },
+};
+
 export const testStatement: Statement = {
   actor: testAgent,
-  verb: {
-    id: "http://example.com/verbs/tested",
-    display: {
-      "en-GB": "tested",
-    },
-  },
+  verb: testVerb,
   object: testActivity,
 };
 
