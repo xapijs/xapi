@@ -15,14 +15,16 @@ export function forEachLRS(
 ): void {
   const credentials = getLRSCredentialsArray();
   credentials.forEach((credential) => {
-    const auth: string = XAPI.toBasicAuth(
-      credential.username,
-      credential.password
-    );
-    const xapi: XAPI = new XAPI({
-      endpoint: credential.endpoint,
-      auth: auth,
+    describe(`LRS: ${credential.endpoint}`, () => {
+      const auth: string = XAPI.toBasicAuth(
+        credential.username,
+        credential.password
+      );
+      const xapi: XAPI = new XAPI({
+        endpoint: credential.endpoint,
+        auth: auth,
+      });
+      callbackfn(xapi, credential);
     });
-    callbackfn(xapi, credential);
   });
 }
