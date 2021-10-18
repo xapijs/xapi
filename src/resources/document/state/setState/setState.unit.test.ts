@@ -66,7 +66,7 @@ describe("state resource", () => {
         )}&activityId=${encodeURIComponent(
           testActivity.id
         )}&stateId=${encodeURIComponent(testStateId)}`,
-        data: testDocument,
+        data: testDocument.test,
       })
     );
   });
