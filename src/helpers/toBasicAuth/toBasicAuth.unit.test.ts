@@ -24,6 +24,7 @@ test("converts username and password into Basic Auth header", () => {
 
 test("throws error if environment not supported", () => {
   if (typeof window !== "undefined") window.btoa = undefined;
+  // eslint-disable-next-line no-global-assign
   if (Buffer) Buffer = undefined;
   expect(() => toBasicAuth("", "")).toThrowError();
 });
