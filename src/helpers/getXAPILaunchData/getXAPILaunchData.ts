@@ -21,10 +21,12 @@ export function getXAPILaunchData(): Promise<XAPILaunchData> {
 
   const launchURL: URL = new URL(params.xAPILaunchService);
   launchURL.pathname += `launch/${params.xAPILaunchKey}`;
-  return axios({
-    method: "POST",
-    url: launchURL.toString(),
-  }).then((response) => {
-    return response.data;
-  });
+  return axios
+    .request({
+      method: "POST",
+      url: launchURL.toString(),
+    })
+    .then((response) => {
+      return response.data;
+    });
 }

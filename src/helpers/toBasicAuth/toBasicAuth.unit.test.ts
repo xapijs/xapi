@@ -21,3 +21,9 @@ test("converts username and password into Basic Auth header", () => {
 
   return expect(results).not.toContain(false);
 });
+
+test("throws error if environment not supported", () => {
+  if (typeof window !== "undefined") window.btoa = undefined;
+  if (Buffer) Buffer = undefined;
+  expect(() => toBasicAuth("", "")).toThrowError();
+});
