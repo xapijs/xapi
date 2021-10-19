@@ -5,7 +5,6 @@ import {
   testEndpoint,
   testStatement,
   testStatementWithEmbeddedAttachments,
-  testVerb,
 } from "../../../../test/constants";
 import { Resources } from "../../../constants";
 import { createMultiPart } from "../../../internal/multiPart";
