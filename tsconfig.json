@@ -10,5 +10,5 @@
     "noImplicitThis": true
   },
   "include": ["src"],
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.test.ts"]
 }
