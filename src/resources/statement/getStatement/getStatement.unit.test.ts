@@ -1,6 +1,11 @@
 import XAPI from "../../../XAPI";
 import axios from "axios";
-import { testEndpoint } from "../../../../test/constants";
+import {
+  testAttachmentContent,
+  testEndpoint,
+  testMultiPartData,
+  testStatementWithEmbeddedAttachments,
+} from "../../../../test/constants";
 import { Resources } from "../../../constants";
 
 jest.mock("axios");
@@ -31,11 +36,18 @@ describe("statement resource", () => {
   });
 
   test("can get a single statement with attachments", async () => {
+    jest.resetAllMocks();
+    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+      headers: {
+        "content-type": "multipart/mixed; boundary=",
+      },
+      data: testMultiPartData,
+    });
     const xapi = new XAPI({
       endpoint: testEndpoint,
     });
     const testStatementId = "test-statement-id";
-    await xapi.getStatement({
+    const result = await xapi.getStatement({
       statementId: testStatementId,
       attachments: true,
     });
@@ -45,6 +57,8 @@ describe("statement resource", () => {
         url: `${testEndpoint}${Resources.STATEMENT}?statementId=${testStatementId}&attachments=true`,
       })
     );
+    expect(result.data[0]).toEqual(testStatementWithEmbeddedAttachments);
+    expect(result.data[1]).toEqual(testAttachmentContent);
   });
 
   test("can get a single statement with chosen format", async () => {

@@ -66,6 +66,15 @@ export const testStatementWithEmbeddedAttachments = Object.assign(
   } as Partial<Statement>
 );
 
+export const testMultiPartData: string = `--testboundaryidentifier\r\nContent-Type:application/json; charset=UTF-8\r\n\r\n${JSON.stringify(
+  testStatementWithEmbeddedAttachments
+)}\r\n--testboundaryidentifier\r\nX-Experience-API-Hash:${
+  testAttachment.sha2
+}\r\nContent-Transfer-Encoding:binary\r\nContent-Type:${
+  testAttachment.contentType
+}\r\n\r\n${testAttachmentContent}\r\n--testboundaryidentifier--\r\n`;
+
+/* istanbul ignore next */
 export const returnTestStatementWithRemoteAttachment =
   (): Promise<Statement> => {
     const imageURL: string =
