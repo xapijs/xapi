@@ -93,3 +93,47 @@ test("can coerce TinCan launch actor account if string array", () => {
     } as Actor,
   });
 });
+
+test("can coerce TinCan launch actor account if string array with only account homepage", () => {
+  const actor: Actor = {
+    objectType: "Agent",
+    account: [
+      {
+        accountServiceHomePage: "http://www.example.com",
+      },
+    ] as any,
+  };
+  const stringifyEncoded: string = encodeURIComponent(JSON.stringify(actor));
+  return expect(
+    getSearchQueryParamsAsObject(`?actor=${stringifyEncoded}`)
+  ).toMatchObject({
+    actor: {
+      objectType: "Agent",
+      account: {
+        homePage: "http://www.example.com",
+      },
+    } as Actor,
+  });
+});
+
+test("can coerce TinCan launch actor account if string array with only account name", () => {
+  const actor: Actor = {
+    objectType: "Agent",
+    account: [
+      {
+        accountName: "ABCDEFGH|test@test.com",
+      },
+    ] as any,
+  };
+  const stringifyEncoded: string = encodeURIComponent(JSON.stringify(actor));
+  return expect(
+    getSearchQueryParamsAsObject(`?actor=${stringifyEncoded}`)
+  ).toMatchObject({
+    actor: {
+      objectType: "Agent",
+      account: {
+        name: "ABCDEFGH|test@test.com",
+      },
+    } as Actor,
+  });
+});
