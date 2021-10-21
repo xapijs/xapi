@@ -160,8 +160,12 @@ export default class XAPI {
   protected requestResource(
     resource: Resources,
     params: RequestParams = {},
-    initExtras?: AxiosRequestConfig | undefined
+    initExtras?: AxiosRequestConfig | undefined,
+    useCacheBuster?: boolean
   ): AxiosPromise<any> {
+    if (useCacheBuster) {
+      params["cachebuster"] = Math.round(new Date().getTime() / 1000);
+    }
     const url = this.generateURL(resource, params);
     return this.requestURL(url, initExtras);
   }
