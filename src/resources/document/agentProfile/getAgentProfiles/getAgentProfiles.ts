@@ -11,15 +11,9 @@ export function getAgentProfiles(
     Resources.AGENT_PROFILE,
     {
       agent: params.agent,
-      ...(params.since !== undefined
-        ? {
-            since: params.since,
-          }
-        : {}),
+      ...(!!params.since && { since: params.since }),
     },
     undefined,
-    {
-      useCacheBuster: params.useCacheBuster,
-    }
+    { useCacheBuster: params.useCacheBuster }
   );
 }

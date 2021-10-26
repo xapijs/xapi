@@ -7,12 +7,12 @@ function coerceActor(actor: Actor): Actor {
       switch (actorKey) {
         case "account": {
           actor[actorKey] = {
-            ...(actor.account[0].accountServiceHomePage
-              ? { homePage: actor.account[0].accountServiceHomePage }
-              : null),
-            ...(actor.account[0].accountName
-              ? { name: actor.account[0].accountName }
-              : null),
+            ...(!!actor.account[0].accountServiceHomePage && {
+              homePage: actor.account[0].accountServiceHomePage,
+            }),
+            ...(!!actor.account[0].accountName && {
+              name: actor.account[0].accountName,
+            }),
           };
           break;
         }

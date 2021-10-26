@@ -25,32 +25,24 @@ export function getStatements(
   return this.requestResource(
     Resources.STATEMENT,
     {
-      ...(params?.activity !== undefined ? { activity: params.activity } : {}),
-      ...(params?.agent !== undefined ? { agent: params.agent } : {}),
-      ...(params?.ascending !== undefined
-        ? { ascending: params.ascending }
-        : {}),
-      ...(params?.attachments !== undefined
-        ? { attachments: params.attachments }
-        : {}),
-      ...(params?.format !== undefined ? { format: params.format } : {}),
-      ...(params?.limit !== undefined ? { limit: params.limit } : {}),
-      ...(params?.registration !== undefined
-        ? { registration: params.registration }
-        : {}),
-      ...(params?.related_activities !== undefined
-        ? { related_activities: params.related_activities }
-        : {}),
-      ...(params?.related_agents !== undefined
-        ? { related_agents: params.related_agents }
-        : {}),
-      ...(params?.since !== undefined ? { since: params.since } : {}),
-      ...(params?.until !== undefined ? { until: params.until } : {}),
-      ...(params?.verb !== undefined ? { verb: params.verb } : {}),
+      ...(!!params?.activity && { activity: params.activity }),
+      ...(!!params?.agent && { agent: params.agent }),
+      ...(!!params?.ascending && { ascending: params.ascending }),
+      ...(!!params?.attachments && { attachments: params.attachments }),
+      ...(!!params?.format && { format: params.format }),
+      ...(!!params?.limit && { limit: params.limit }),
+      ...(!!params?.registration && { registration: params.registration }),
+      ...(!!params?.related_activities && {
+        related_activities: params.related_activities,
+      }),
+      ...(!!params?.related_agents && {
+        related_agents: params.related_agents,
+      }),
+      ...(!!params?.since && { since: params.since }),
+      ...(!!params?.until && { until: params.until }),
+      ...(!!params?.verb && { verb: params.verb }),
     },
     undefined,
-    {
-      useCacheBuster: params?.useCacheBuster,
-    }
+    { useCacheBuster: params?.useCacheBuster }
   );
 }

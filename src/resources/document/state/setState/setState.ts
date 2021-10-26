@@ -17,11 +17,7 @@ export function setState(
       agent: params.agent,
       activityId: params.activityId,
       stateId: params.stateId,
-      ...(params.registration !== undefined
-        ? {
-            registration: params.registration,
-          }
-        : {}),
+      ...(!!params.registration && { registration: params.registration }),
     },
     {
       method: "PUT",

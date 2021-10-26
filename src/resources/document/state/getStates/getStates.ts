@@ -12,20 +12,10 @@ export function getStates(
     {
       agent: params.agent,
       activityId: params.activityId,
-      ...(params.registration !== undefined
-        ? {
-            registration: params.registration,
-          }
-        : {}),
-      ...(params.since !== undefined
-        ? {
-            since: params.since,
-          }
-        : {}),
+      ...(!!params.registration && { registration: params.registration }),
+      ...(!!params.since && { since: params.since }),
     },
     undefined,
-    {
-      useCacheBuster: params.useCacheBuster,
-    }
+    { useCacheBuster: params.useCacheBuster }
   );
 }

@@ -11,15 +11,9 @@ export function getActivityProfiles(
     Resources.ACTIVITY_PROFILE,
     {
       activityId: params.activityId,
-      ...(params.since !== undefined
-        ? {
-            since: params.since,
-          }
-        : {}),
+      ...(!!params.since && { since: params.since }),
     },
     undefined,
-    {
-      useCacheBuster: params.useCacheBuster,
-    }
+    { useCacheBuster: params.useCacheBuster }
   );
 }

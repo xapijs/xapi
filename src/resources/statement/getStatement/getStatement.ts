@@ -26,14 +26,10 @@ export function getStatement(
     Resources.STATEMENT,
     {
       statementId: params.statementId,
-      ...(params.attachments !== undefined
-        ? { attachments: params.attachments }
-        : {}),
-      ...(params.format !== undefined ? { format: params.format } : {}),
+      ...(!!params.attachments && { attachments: params.attachments }),
+      ...(!!params.format && { format: params.format }),
     },
     undefined,
-    {
-      useCacheBuster: params.useCacheBuster,
-    }
+    { useCacheBuster: params.useCacheBuster }
   );
 }

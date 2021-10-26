@@ -13,15 +13,9 @@ export function getState(
       agent: params.agent,
       activityId: params.activityId,
       stateId: params.stateId,
-      ...(params.registration !== undefined
-        ? {
-            registration: params.registration,
-          }
-        : {}),
+      ...(!!params.registration && { registration: params.registration }),
     },
     undefined,
-    {
-      useCacheBuster: params.useCacheBuster,
-    }
+    { useCacheBuster: params.useCacheBuster }
   );
 }

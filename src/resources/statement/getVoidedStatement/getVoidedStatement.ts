@@ -26,8 +26,8 @@ export function getVoidedStatement(
     Resources.STATEMENT,
     {
       voidedStatementId: params.voidedStatementId,
-      ...(params.attachments ? { attachments: params.attachments } : {}),
-      ...(params.format ? { format: params.format } : {}),
+      ...(!!params.attachments ? { attachments: params.attachments } : {}),
+      ...(!!params.format ? { format: params.format } : {}),
     },
     undefined,
     {

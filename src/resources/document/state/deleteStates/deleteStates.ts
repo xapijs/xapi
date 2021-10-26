@@ -14,11 +14,7 @@ export function deleteStates(
     {
       agent: params.agent,
       activityId: params.activityId,
-      ...(params.registration !== undefined
-        ? {
-            registration: params.registration,
-          }
-        : {}),
+      ...(!!params.registration && { registration: params.registration }),
     },
     {
       method: "DELETE",
