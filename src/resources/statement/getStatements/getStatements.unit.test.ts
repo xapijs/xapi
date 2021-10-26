@@ -85,4 +85,21 @@ describe("statement resource", () => {
       })
     );
   });
+
+  test("can get multiple statements with cache buster", async () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    await xapi.getStatements({
+      useCacheBuster: true,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "GET",
+        url: expect.stringContaining(
+          `${testEndpoint}${Resources.STATEMENT}?cachebuster=`
+        ),
+      })
+    );
+  });
 });

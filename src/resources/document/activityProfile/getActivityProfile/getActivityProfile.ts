@@ -6,13 +6,17 @@ import { Document } from "../../Document";
 
 export function getActivityProfile(
   this: XAPI,
-  params: GetActivityProfileParams,
-  useCacheBuster?: boolean
+  params: GetActivityProfileParams
 ): AxiosPromise<Document> {
-  return this.requestResource(Resources.ACTIVITY_PROFILE, {
-    activityId: params.activityId,
-    profileId: params.profileId,
+  return this.requestResource(
+    Resources.ACTIVITY_PROFILE,
+    {
+      activityId: params.activityId,
+      profileId: params.profileId,
+    },
     undefined,
-    useCacheBuster,
-  });
+    {
+      useCacheBuster: params.useCacheBuster,
+    }
+  );
 }

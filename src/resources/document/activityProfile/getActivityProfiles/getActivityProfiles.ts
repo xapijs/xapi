@@ -7,12 +7,19 @@ export function getActivityProfiles(
   this: XAPI,
   params: GetActivityProfilesParams
 ): AxiosPromise<string[]> {
-  return this.requestResource(Resources.ACTIVITY_PROFILE, {
-    activityId: params.activityId,
-    ...(params.since
-      ? {
-          since: params.since,
-        }
-      : {}),
-  });
+  return this.requestResource(
+    Resources.ACTIVITY_PROFILE,
+    {
+      activityId: params.activityId,
+      ...(params.since !== undefined
+        ? {
+            since: params.since,
+          }
+        : {}),
+    },
+    undefined,
+    {
+      useCacheBuster: params.useCacheBuster,
+    }
+  );
 }

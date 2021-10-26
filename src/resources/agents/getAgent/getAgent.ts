@@ -8,7 +8,14 @@ export function getAgent(
   this: XAPI,
   params: GetAgentParams
 ): AxiosPromise<Person> {
-  return this.requestResource(Resources.AGENTS, {
-    agent: params.agent,
-  });
+  return this.requestResource(
+    Resources.AGENTS,
+    {
+      agent: params.agent,
+    },
+    undefined,
+    {
+      useCacheBuster: params.useCacheBuster,
+    }
+  );
 }

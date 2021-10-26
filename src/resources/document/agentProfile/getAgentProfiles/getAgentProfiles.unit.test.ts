@@ -52,4 +52,24 @@ describe("agent profile resource", () => {
       })
     );
   });
+
+  test("can get all agent profiles with cache buster", async () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    await xapi.getAgentProfiles({
+      agent: testAgent,
+      useCacheBuster: true,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "GET",
+        url: expect.stringContaining(
+          `${testEndpoint}${Resources.AGENT_PROFILE}?agent=${encodeURIComponent(
+            JSON.stringify(testAgent)
+          )}&cachebuster=`
+        ),
+      })
+    );
+  });
 });

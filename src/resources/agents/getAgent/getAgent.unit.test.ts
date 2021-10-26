@@ -31,5 +31,25 @@ describe("agent resource", () => {
         })
       );
     });
+
+    test("can get person by agent with cache buster", async () => {
+      const xapi = new XAPI({
+        endpoint: testEndpoint,
+      });
+      await xapi.getAgent({
+        agent: testAgent,
+        useCacheBuster: true,
+      });
+      expect(axios.request).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: "GET",
+          url: expect.stringContaining(
+            `${testEndpoint}${Resources.AGENTS}?agent=${encodeURIComponent(
+              JSON.stringify(testAgent)
+            )}&cachebuster=`
+          ),
+        })
+      );
+    });
   });
 });

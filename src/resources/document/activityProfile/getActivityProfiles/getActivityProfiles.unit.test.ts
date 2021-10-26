@@ -52,4 +52,24 @@ describe("activity profile resource", () => {
       })
     );
   });
+
+  test("can get all activity profiles with cache buster", async () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    await xapi.getActivityProfiles({
+      activityId: testActivity.id,
+      useCacheBuster: true,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "GET",
+        url: expect.stringContaining(
+          `${testEndpoint}${
+            Resources.ACTIVITY_PROFILE
+          }?activityId=${encodeURIComponent(testActivity.id)}&cachebuster=`
+        ),
+      })
+    );
+  });
 });

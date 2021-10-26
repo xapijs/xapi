@@ -22,5 +22,16 @@ export function getVoidedStatement(
   this: XAPI,
   params: GetVoidedStatementParams
 ): AxiosPromise<Statement | StatementResponseWithAttachments> {
-  return this.requestResource(Resources.STATEMENT, params);
+  return this.requestResource(
+    Resources.STATEMENT,
+    {
+      voidedStatementId: params.voidedStatementId,
+      ...(params.attachments ? { attachments: params.attachments } : {}),
+      ...(params.format ? { format: params.format } : {}),
+    },
+    undefined,
+    {
+      useCacheBuster: params.useCacheBuster,
+    }
+  );
 }

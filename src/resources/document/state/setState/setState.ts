@@ -17,7 +17,7 @@ export function setState(
       agent: params.agent,
       activityId: params.activityId,
       stateId: params.stateId,
-      ...(params.registration
+      ...(params.registration !== undefined
         ? {
             registration: params.registration,
           }

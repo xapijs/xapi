@@ -8,8 +8,15 @@ export function getAgentProfile(
   this: XAPI,
   params: GetAgentProfileParams
 ): AxiosPromise<Document> {
-  return this.requestResource(Resources.AGENT_PROFILE, {
-    agent: params.agent,
-    profileId: params.profileId,
-  });
+  return this.requestResource(
+    Resources.AGENT_PROFILE,
+    {
+      agent: params.agent,
+      profileId: params.profileId,
+    },
+    undefined,
+    {
+      useCacheBuster: params.useCacheBuster,
+    }
+  );
 }

@@ -36,6 +36,7 @@ import { sendStatements } from "./resources/statement/sendStatements/sendStateme
 import { voidStatement } from "./resources/statement/voidStatement/voidStatement";
 import { voidStatements } from "./resources/statement/voidStatements/voidStatements";
 import { XAPIConfig } from "./XAPIConfig";
+import { GetParamsBase } from "./resources/GetParamsBase";
 
 export * from "./helpers/getTinCanLaunchData/TinCanLaunchData";
 export * from "./helpers/getXAPILaunchData/XAPILaunchData";
@@ -159,30 +160,31 @@ export default class XAPI {
 
   protected requestResource(
     resource: Resources,
-    params: RequestParams = {},
-    initExtras?: AxiosRequestConfig | undefined,
-    useCacheBuster?: boolean
+    queryParams: RequestParams = {},
+    requestConfig?: AxiosRequestConfig | undefined,
+    requestOptions?: GetParamsBase
   ): AxiosPromise<any> {
-    if (useCacheBuster) {
-      params["cachebuster"] = Math.round(new Date().getTime() / 1000);
+    let extendedQueryParams = Object.assign({}, queryParams);
+    if (requestOptions?.useCacheBuster) {
+      extendedQueryParams["cachebuster"] = new Date().getTime().toString();
     }
-    const url = this.generateURL(resource, params);
-    return this.requestURL(url, initExtras);
+    const url = this.generateURL(resource, extendedQueryParams);
+    return this.requestURL(url, requestConfig);
   }
 
   protected requestURL(
     url: string,
-    initExtras?: AxiosRequestConfig | undefined
+    requestConfig?: AxiosRequestConfig | undefined
   ): AxiosPromise<any> {
     return axios
       .request({
-        method: initExtras?.method || "GET",
+        method: requestConfig?.method || "GET",
         url: url,
         headers: {
           ...this.headers,
-          ...initExtras?.headers,
+          ...requestConfig?.headers,
         },
-        data: initExtras?.data,
+        data: requestConfig?.data,
       })
       .then((response) => {
         const contentType = response.headers["content-type"];

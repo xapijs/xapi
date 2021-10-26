@@ -26,4 +26,20 @@ describe("about resource", () => {
       })
     );
   });
+
+  test("can get about with cache buster", () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    xapi.getAbout({
+      useCacheBuster: true,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: expect.stringContaining(
+          `${testEndpoint}${Resources.ABOUT}?cachebuster=`
+        ),
+      })
+    );
+  });
 });

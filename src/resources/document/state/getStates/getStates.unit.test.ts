@@ -80,4 +80,25 @@ describe("state resource", () => {
       })
     );
   });
+
+  test("can get all states with cache buster", async () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    await xapi.getStates({
+      agent: testAgent,
+      activityId: testActivity.id,
+      useCacheBuster: true,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "GET",
+        url: expect.stringContaining(
+          `${testEndpoint}${Resources.STATE}?agent=${encodeURIComponent(
+            JSON.stringify(testAgent)
+          )}&activityId=${encodeURIComponent(testActivity.id)}&cachebuster=`
+        ),
+      })
+    );
+  });
 });

@@ -30,4 +30,24 @@ describe("activities resource", () => {
       })
     );
   });
+
+  test("can get activity with cache buster", async () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    await xapi.getActivity({
+      activityId: testActivity.id,
+      useCacheBuster: true,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "GET",
+        url: expect.stringContaining(
+          `${testEndpoint}${
+            Resources.ACTIVITIES
+          }?activityId=${encodeURIComponent(testActivity.id)}&cachebuster=`
+        ),
+      })
+    );
+  });
 });

@@ -1,6 +1,6 @@
 import { Agent } from "../../../XAPI";
 import { Timestamp } from "..";
-import { StatementParamsBase } from "../getStatement/getStatementParams";
+import { StatementParamsBase } from "../StatementParamsBase";
 
 interface GetStatementsParamsBase extends StatementParamsBase {
   /**

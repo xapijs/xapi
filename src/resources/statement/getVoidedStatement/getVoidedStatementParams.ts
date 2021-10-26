@@ -1,4 +1,4 @@
-import { StatementParamsBase } from "../getStatement/getStatementParams";
+import { StatementParamsBase } from "../StatementParamsBase";
 
 interface GetVoidedStatementParamsBase extends StatementParamsBase {
   /**

@@ -7,14 +7,21 @@ export function getState(
   this: XAPI,
   params: GetStateParams
 ): AxiosPromise<Document> {
-  return this.requestResource(Resources.STATE, {
-    agent: params.agent,
-    activityId: params.activityId,
-    stateId: params.stateId,
-    ...(params.registration
-      ? {
-          registration: params.registration,
-        }
-      : {}),
-  });
+  return this.requestResource(
+    Resources.STATE,
+    {
+      agent: params.agent,
+      activityId: params.activityId,
+      stateId: params.stateId,
+      ...(params.registration !== undefined
+        ? {
+            registration: params.registration,
+          }
+        : {}),
+    },
+    undefined,
+    {
+      useCacheBuster: params.useCacheBuster,
+    }
+  );
 }

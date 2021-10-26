@@ -63,4 +63,23 @@ describe("statement resource", () => {
       })
     );
   });
+
+  test("can get a voided statement with cache buster", async () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+    });
+    const testStatementId = "test-statement-id";
+    await xapi.getVoidedStatement({
+      voidedStatementId: testStatementId,
+      useCacheBuster: true,
+    });
+    expect(axios.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "GET",
+        url: expect.stringContaining(
+          `${testEndpoint}${Resources.STATEMENT}?voidedStatementId=${testStatementId}&cachebuster=`
+        ),
+      })
+    );
+  });
 });
