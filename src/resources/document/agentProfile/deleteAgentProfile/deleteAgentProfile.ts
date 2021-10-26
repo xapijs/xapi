@@ -9,15 +9,15 @@ export function deleteAgentProfile(
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;
-  return this.requestResource(
-    Resources.AGENT_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.AGENT_PROFILE,
+    queryParams: {
       agent: params.agent,
       profileId: params.profileId,
     },
-    {
+    requestConfig: {
       method: "DELETE",
       headers: headers,
-    }
-  );
+    },
+  });
 }

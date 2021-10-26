@@ -14,23 +14,21 @@ export function sendStatements(
       params.statements,
       params.attachments
     );
-    return this.requestResource(
-      Resources.STATEMENT,
-      {},
-      {
+    return this.requestResource({
+      resource: Resources.STATEMENT,
+      requestConfig: {
         method: "POST",
         headers: multiPart.header,
         data: multiPart.blob,
-      }
-    );
+      },
+    });
   } else {
-    return this.requestResource(
-      Resources.STATEMENT,
-      {},
-      {
+    return this.requestResource({
+      resource: Resources.STATEMENT,
+      requestConfig: {
         method: "POST",
         data: params.statements,
-      }
-    );
+      },
+    });
   }
 }

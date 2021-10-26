@@ -9,15 +9,15 @@ export function deleteActivityProfile(
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;
-  return this.requestResource(
-    Resources.ACTIVITY_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.ACTIVITY_PROFILE,
+    queryParams: {
       activityId: params.activityId,
       profileId: params.profileId,
     },
-    {
+    requestConfig: {
       method: "DELETE",
       headers: headers,
-    }
-  );
+    },
+  });
 }

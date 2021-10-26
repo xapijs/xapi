@@ -8,14 +8,13 @@ export function getActivity(
   this: XAPI,
   params: GetActivityParams
 ): AxiosPromise<Activity> {
-  return this.requestResource(
-    Resources.ACTIVITIES,
-    {
+  return this.requestResource({
+    resource: Resources.ACTIVITIES,
+    queryParams: {
       activityId: params.activityId,
     },
-    undefined,
-    {
+    requestOptions: {
       useCacheBuster: params.useCacheBuster,
-    }
-  );
+    },
+  });
 }

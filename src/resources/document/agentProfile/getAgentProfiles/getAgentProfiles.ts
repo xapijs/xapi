@@ -7,13 +7,12 @@ export function getAgentProfiles(
   this: XAPI,
   params: GetAgentProfilesParams
 ): AxiosPromise<string[]> {
-  return this.requestResource(
-    Resources.AGENT_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.AGENT_PROFILE,
+    queryParams: {
       agent: params.agent,
       ...(!!params.since && { since: params.since }),
     },
-    undefined,
-    { useCacheBuster: params.useCacheBuster }
-  );
+    requestOptions: { useCacheBuster: params.useCacheBuster },
+  });
 }

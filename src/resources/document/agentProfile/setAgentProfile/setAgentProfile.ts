@@ -10,16 +10,16 @@ export function setAgentProfile(
   const headers = {};
   headers[params.matchHeader] = params.etag;
   if (params.contentType) headers["Content-Type"] = params.contentType;
-  return this.requestResource(
-    Resources.AGENT_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.AGENT_PROFILE,
+    queryParams: {
       agent: params.agent,
       profileId: params.profileId,
     },
-    {
+    requestConfig: {
       method: "PUT",
       data: params.profile,
       headers: headers,
-    }
-  );
+    },
+  });
 }

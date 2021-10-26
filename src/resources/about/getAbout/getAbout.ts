@@ -8,7 +8,10 @@ export function getAbout(
   this: XAPI,
   params?: GetAboutParams
 ): AxiosPromise<About> {
-  return this.requestResource(Resources.ABOUT, undefined, undefined, {
-    useCacheBuster: params?.useCacheBuster,
+  return this.requestResource({
+    resource: Resources.ABOUT,
+    requestOptions: {
+      useCacheBuster: params?.useCacheBuster,
+    },
   });
 }

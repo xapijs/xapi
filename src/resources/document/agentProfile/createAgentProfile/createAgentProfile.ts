@@ -9,16 +9,16 @@ export function createAgentProfile(
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers[params.matchHeader] = params.etag;
-  return this.requestResource(
-    Resources.AGENT_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.AGENT_PROFILE,
+    queryParams: {
       agent: params.agent,
       profileId: params.profileId,
     },
-    {
+    requestConfig: {
       method: "POST",
       data: params.profile,
       headers: headers,
-    }
-  );
+    },
+  });
 }

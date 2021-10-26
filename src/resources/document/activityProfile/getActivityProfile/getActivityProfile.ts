@@ -8,15 +8,14 @@ export function getActivityProfile(
   this: XAPI,
   params: GetActivityProfileParams
 ): AxiosPromise<Document> {
-  return this.requestResource(
-    Resources.ACTIVITY_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.ACTIVITY_PROFILE,
+    queryParams: {
       activityId: params.activityId,
       profileId: params.profileId,
     },
-    undefined,
-    {
+    requestOptions: {
       useCacheBuster: params.useCacheBuster,
-    }
-  );
+    },
+  });
 }

@@ -10,16 +10,16 @@ export function setActivityProfile(
   const headers = {};
   headers[params.matchHeader] = params.etag;
   if (params.contentType) headers["Content-Type"] = params.contentType;
-  return this.requestResource(
-    Resources.ACTIVITY_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.ACTIVITY_PROFILE,
+    queryParams: {
       activityId: params.activityId,
       profileId: params.profileId,
     },
-    {
+    requestConfig: {
       method: "PUT",
       data: params.profile,
       headers: headers,
-    }
-  );
+    },
+  });
 }

@@ -10,18 +10,18 @@ export function createState(
   const headers = {};
   if (params.etag && params.matchHeader)
     headers[params.matchHeader] = params.etag;
-  return this.requestResource(
-    Resources.STATE,
-    {
+  return this.requestResource({
+    resource: Resources.STATE,
+    queryParams: {
       agent: params.agent,
       activityId: params.activityId,
       stateId: params.stateId,
       ...(!!params.registration && { registration: params.registration }),
     },
-    {
+    requestConfig: {
       method: "POST",
       data: params.state,
       headers: headers,
-    }
-  );
+    },
+  });
 }

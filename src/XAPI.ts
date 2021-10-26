@@ -158,18 +158,18 @@ export default class XAPI {
 
   public voidStatements = voidStatements;
 
-  protected requestResource(
-    resource: Resources,
-    queryParams: RequestParams = {},
-    requestConfig?: AxiosRequestConfig | undefined,
-    requestOptions?: GetParamsBase
-  ): AxiosPromise<any> {
-    const extendedQueryParams = Object.assign({}, queryParams);
-    if (requestOptions?.useCacheBuster) {
+  protected requestResource(params: {
+    resource: Resources;
+    queryParams?: RequestParams;
+    requestConfig?: AxiosRequestConfig | undefined;
+    requestOptions?: GetParamsBase;
+  }): AxiosPromise<any> {
+    const extendedQueryParams = Object.assign({}, params.queryParams);
+    if (params.requestOptions?.useCacheBuster) {
       extendedQueryParams["cachebuster"] = new Date().getTime().toString();
     }
-    const url = this.generateURL(resource, extendedQueryParams);
-    return this.requestURL(url, requestConfig);
+    const url = this.generateURL(params.resource, extendedQueryParams);
+    return this.requestURL(url, params.requestConfig);
   }
 
   protected requestURL(

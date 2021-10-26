@@ -22,14 +22,13 @@ export function getStatement(
   this: XAPI,
   params: GetStatementParams
 ): AxiosPromise<Statement | StatementResponseWithAttachments> {
-  return this.requestResource(
-    Resources.STATEMENT,
-    {
+  return this.requestResource({
+    resource: Resources.STATEMENT,
+    queryParams: {
       statementId: params.statementId,
       ...(!!params.attachments && { attachments: params.attachments }),
       ...(!!params.format && { format: params.format }),
     },
-    undefined,
-    { useCacheBuster: params.useCacheBuster }
-  );
+    requestOptions: { useCacheBuster: params.useCacheBuster },
+  });
 }

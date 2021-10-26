@@ -9,16 +9,16 @@ export function createActivityProfile(
 ): AxiosPromise<void> {
   const headers = {};
   if (params.etag) headers[params.matchHeader] = params.etag;
-  return this.requestResource(
-    Resources.ACTIVITY_PROFILE,
-    {
+  return this.requestResource({
+    resource: Resources.ACTIVITY_PROFILE,
+    queryParams: {
       activityId: params.activityId,
       profileId: params.profileId,
     },
-    {
+    requestConfig: {
       method: "POST",
       data: params.profile,
       headers: headers,
-    }
-  );
+    },
+  });
 }

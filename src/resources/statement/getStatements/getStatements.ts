@@ -22,9 +22,9 @@ export function getStatements(
   this: XAPI,
   params?: GetStatementsParams
 ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
-  return this.requestResource(
-    Resources.STATEMENT,
-    {
+  return this.requestResource({
+    resource: Resources.STATEMENT,
+    queryParams: {
       ...(!!params?.activity && { activity: params.activity }),
       ...(!!params?.agent && { agent: params.agent }),
       ...(!!params?.ascending && { ascending: params.ascending }),
@@ -42,7 +42,6 @@ export function getStatements(
       ...(!!params?.until && { until: params.until }),
       ...(!!params?.verb && { verb: params.verb }),
     },
-    undefined,
-    { useCacheBuster: params?.useCacheBuster }
-  );
+    requestOptions: { useCacheBuster: params?.useCacheBuster },
+  });
 }
