@@ -164,7 +164,7 @@ export default class XAPI {
     requestConfig?: AxiosRequestConfig | undefined,
     requestOptions?: GetParamsBase
   ): AxiosPromise<any> {
-    let extendedQueryParams = Object.assign({}, queryParams);
+    const extendedQueryParams = Object.assign({}, queryParams);
     if (requestOptions?.useCacheBuster) {
       extendedQueryParams["cachebuster"] = new Date().getTime().toString();
     }
