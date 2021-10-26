@@ -1,6 +1,6 @@
 {
   "name": "@xapi/xapi",
-  "version": "1.2.2",
+  "version": "2.0.0-beta.0",
   "description": "Communicate over xAPI using JavaScript.",
   "main": "dist/XAPI.cjs.js",
   "module": "dist/XAPI.esm.js",
