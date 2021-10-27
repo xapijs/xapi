@@ -45,7 +45,7 @@ export * from "./resources/activities/Activity";
 export * from "./resources/activities/ActivityDefinition";
 export * from "./resources/activities/getActivity/GetActivityParams";
 export * from "./resources/agents/Person";
-export * from "./resources/agents/getAgent/getAgentParams";
+export * from "./resources/agents/getAgent/GetAgentParams";
 export * from "./resources/document/Document";
 export * from "./resources/document/activityProfile/createActivityProfile/CreateActivityProfileParams";
 export * from "./resources/document/activityProfile/deleteActivityProfile/DeleteActivityProfileParams";
