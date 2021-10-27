@@ -6,8 +6,9 @@
     "target": "es2015",
     "module": "es2015",
     "declarationDir": "./dist/types",
-    "declaration": true
+    "declaration": true,
+    "noImplicitThis": true
   },
   "include": ["src"],
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.test.ts"]
 }

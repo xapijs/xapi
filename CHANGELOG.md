@@ -1,3 +1,11 @@
+# 2.0.0 (27 Oct 2021)
+
+- Changed public API to use single object parameter
+- Added full unit test coverage for node/dom environments
+- Added new `useCacheBuster` feature for GET methods (Thanks [@wuzzo-mike](https://github.com/wuzzo-mike)!)
+- Refactored entire library structure
+- Bumped dependencies
+
 # 1.2.3 (6 Oct 2021)
 
 - Bumped dependencies

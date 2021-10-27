@@ -1,4 +1,4 @@
-import { Verb } from "../interfaces/Statement/Verb";
+import { Verb } from "../XAPI";
 
 export class Verbs {
   public static readonly INITIALIZED: Verb = {

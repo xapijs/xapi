@@ -1,8 +1,14 @@
-import { Statement, Attachment, MultiPart } from "../interfaces/Statement";
 import {
   StatementResponseWithAttachments,
   StatementsResponseWithAttachments,
-} from "../interfaces/XAPI";
+  Statement,
+  Attachment,
+} from "../XAPI";
+
+export interface MultiPart {
+  header: { "Content-Type": string };
+  blob: Blob;
+}
 
 const crlf: string = "\r\n";
 

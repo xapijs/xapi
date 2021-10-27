@@ -1,42 +1,82 @@
-import {
-  Resource,
-  GetStatementQuery,
-  GetVoidedStatementQuery,
-  GetStatementsQuery,
-  StatementsResponse,
-  RequestParams,
-  StatementResponseWithAttachments,
-  StatementsResponseWithAttachments,
-  GetStatementQueryWithAttachments,
-  GetStatementQueryWithoutAttachments,
-  GetVoidedStatementQueryWithAttachments,
-  GetVoidedStatementQueryWithoutAttachments,
-  GetStatementsQueryWithAttachments,
-  GetStatementsQueryWithoutAttachments,
-} from "./interfaces/XAPI";
-import {
-  Statement,
-  Actor,
-  Agent,
-  Person,
-  Activity,
-  Timestamp,
-  MultiPart,
-} from "./interfaces/Statement";
-import { Document, DocumentJson } from "./interfaces/Document";
-import { About } from "./interfaces/About/About";
-import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
-import { parseMultiPart, createMultiPart } from "./internal/multiPart";
-import { formatEndpoint } from "./internal/formatEndpoint";
-import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject";
-import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration";
-import { getXAPILaunchData } from "./helpers/getXAPILaunchData";
-import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData";
-import { toBasicAuth } from "./helpers/toBasicAuth";
 import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
+import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
+import { parseMultiPart } from "./internal/multiPart";
+import { formatEndpoint } from "./internal/formatEndpoint";
+import { getSearchQueryParamsAsObject } from "./helpers/getSearchQueryParamsAsObject/getSearchQueryParamsAsObject";
+import { calculateISO8601Duration } from "./helpers/calculateISO8601Duration/calculateISO8601Duration";
+import { getXAPILaunchData } from "./helpers/getXAPILaunchData/getXAPILaunchData";
+import { getTinCanLaunchData } from "./helpers/getTinCanLaunchData/getTinCanLaunchData";
+import { toBasicAuth } from "./helpers/toBasicAuth/toBasicAuth";
+import { getAbout } from "./resources/about/getAbout/getAbout";
+import { getActivity } from "./resources/activities/getActivity/getActivity";
+import { getAgent } from "./resources/agents/getAgent/getAgent";
+import { createActivityProfile } from "./resources/document/activityProfile/createActivityProfile/createActivityProfile";
+import { deleteActivityProfile } from "./resources/document/activityProfile/deleteActivityProfile/deleteActivityProfile";
+import { getActivityProfile } from "./resources/document/activityProfile/getActivityProfile/getActivityProfile";
+import { getActivityProfiles } from "./resources/document/activityProfile/getActivityProfiles/getActivityProfiles";
+import { setActivityProfile } from "./resources/document/activityProfile/setActivityProfile/setActivityProfile";
+import { createAgentProfile } from "./resources/document/agentProfile/createAgentProfile/createAgentProfile";
+import { deleteAgentProfile } from "./resources/document/agentProfile/deleteAgentProfile/deleteAgentProfile";
+import { getAgentProfile } from "./resources/document/agentProfile/getAgentProfile/getAgentProfile";
+import { getAgentProfiles } from "./resources/document/agentProfile/getAgentProfiles/getAgentProfiles";
+import { setAgentProfile } from "./resources/document/agentProfile/setAgentProfile/setAgentProfile";
+import { createState } from "./resources/document/state/createState/createState";
+import { deleteState } from "./resources/document/state/deleteState/deleteState";
+import { deleteStates } from "./resources/document/state/deleteStates/deleteStates";
+import { getState } from "./resources/document/state/getState/getState";
+import { getStates } from "./resources/document/state/getStates/getStates";
+import { setState } from "./resources/document/state/setState/setState";
+import { Agent } from "./resources/statement";
+import { getMoreStatements } from "./resources/statement/getMoreStatements/getMoreStatements";
+import { getStatement } from "./resources/statement/getStatement/getStatement";
+import { getStatements } from "./resources/statement/getStatements/getStatements";
+import { getVoidedStatement } from "./resources/statement/getVoidedStatement/getVoidedStatement";
+import { sendStatement } from "./resources/statement/sendStatement/sendStatement";
+import { sendStatements } from "./resources/statement/sendStatements/sendStatements";
+import { voidStatement } from "./resources/statement/voidStatement/voidStatement";
+import { voidStatements } from "./resources/statement/voidStatements/voidStatements";
+import { XAPIConfig } from "./XAPIConfig";
+import { GetParamsBase } from "./resources/GetParamsBase";
 
-export * from "./interfaces/XAPI";
-export * from "./interfaces/Statement";
+export * from "./helpers/getTinCanLaunchData/TinCanLaunchData";
+export * from "./helpers/getXAPILaunchData/XAPILaunchData";
+export * from "./resources/about/About";
+export * from "./resources/activities/Activity";
+export * from "./resources/activities/ActivityDefinition";
+export * from "./resources/activities/getActivity/GetActivityParams";
+export * from "./resources/agents/Person";
+export * from "./resources/agents/getAgent/GetAgentParams";
+export * from "./resources/document/Document";
+export * from "./resources/document/activityProfile/createActivityProfile/CreateActivityProfileParams";
+export * from "./resources/document/activityProfile/deleteActivityProfile/DeleteActivityProfileParams";
+export * from "./resources/document/activityProfile/getActivityProfile/GetActivityProfileParams";
+export * from "./resources/document/activityProfile/getActivityProfiles/GetActivityProfilesParams";
+export * from "./resources/document/activityProfile/setActivityProfile/SetActivityProfileParams";
+export * from "./resources/document/agentProfile/createAgentProfile/CreateAgentProfileParams";
+export * from "./resources/document/agentProfile/deleteAgentProfile/DeleteAgentProfileParams";
+export * from "./resources/document/agentProfile/getAgentProfile/GetAgentProfileParams";
+export * from "./resources/document/agentProfile/getAgentProfiles/GetAgentProfilesParams";
+export * from "./resources/document/agentProfile/setAgentProfile/SetAgentProfileParams";
+export * from "./resources/document/state/createState/CreateStateParams";
+export * from "./resources/document/state/deleteState/DeleteStateParams";
+export * from "./resources/document/state/deleteStates/DeleteStatesParams";
+export * from "./resources/document/state/getState/GetStateParams";
+export * from "./resources/document/state/getStates/GetStatesParams";
+export * from "./resources/document/state/setState/SetStateParams";
+export * from "./resources/statement";
+export * from "./resources/statement/getMoreStatements/GetMoreStatementsParams";
+export * from "./resources/statement/getStatement/GetStatementParams";
+export * from "./resources/statement/getStatements/GetStatementsParams";
+export * from "./resources/statement/getVoidedStatement/GetVoidedStatementParams";
+export * from "./resources/statement/sendStatement/SendStatementParams";
+export * from "./resources/statement/sendStatements/SendStatementsParams";
+export * from "./resources/statement/voidStatement/VoidStatementParams";
+export * from "./resources/statement/voidStatements/VoidStatementsParams";
+
+interface RequestParams {
+  [key: string]: any;
+  agent?: Agent;
+}
 
 export default class XAPI {
   public static default = XAPI;
@@ -50,548 +90,101 @@ export default class XAPI {
   public static getTinCanLaunchData = getTinCanLaunchData;
   public static toBasicAuth = toBasicAuth;
 
-  private endpoint: string;
+  protected endpoint: string;
   private headers: { [key: string]: string };
 
-  public constructor(
-    endpoint: string,
-    auth?: string,
-    version: Versions = "1.0.3"
-  ) {
-    this.endpoint = formatEndpoint(endpoint);
+  public constructor(params: XAPIConfig) {
+    const version: Versions = params.version || "1.0.3";
+    this.endpoint = formatEndpoint(params.endpoint);
     this.headers = {
       "X-Experience-API-Version": version,
       "Content-Type": "application/json",
-      // No Authorization Process and Requirements -  https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
-      Authorization: auth ? auth : toBasicAuth("", ""),
+      // No Authorization Process and Requirements - https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
+      Authorization: params.auth ? params.auth : toBasicAuth("", ""),
     };
   }
 
-  // About Resource
-  public getAbout(): AxiosPromise<About> {
-    return this.requestResource(Resources.ABOUT);
-  }
+  public getAbout = getAbout;
 
-  // Agents Resource
-  public getAgent(agent: Agent): AxiosPromise<Person> {
-    return this.requestResource(Resources.AGENTS, {
-      agent: agent,
-    });
-  }
+  public getActivity = getActivity;
 
-  // Statement Resource
-  public getStatement(
-    query: GetStatementQueryWithAttachments
-  ): AxiosPromise<StatementResponseWithAttachments>;
+  public getAgent = getAgent;
 
-  public getStatement(
-    query: GetStatementQueryWithoutAttachments
-  ): AxiosPromise<Statement>;
+  public createActivityProfile = createActivityProfile;
 
-  public getStatement(
-    query: GetStatementQuery
-  ): AxiosPromise<Statement | StatementResponseWithAttachments> {
-    return this.requestResource(Resources.STATEMENT, query);
-  }
+  public setActivityProfile = setActivityProfile;
 
-  public getVoidedStatement(
-    query: GetVoidedStatementQueryWithAttachments
-  ): AxiosPromise<StatementResponseWithAttachments>;
+  public getActivityProfiles = getActivityProfiles;
 
-  public getVoidedStatement(
-    query: GetVoidedStatementQueryWithoutAttachments
-  ): AxiosPromise<Statement>;
+  public getActivityProfile = getActivityProfile;
 
-  public getVoidedStatement(
-    query: GetVoidedStatementQuery
-  ): AxiosPromise<Statement | StatementResponseWithAttachments> {
-    return this.requestResource(Resources.STATEMENT, query);
-  }
+  public deleteActivityProfile = deleteActivityProfile;
 
-  public getStatements(
-    query: GetStatementsQueryWithAttachments
-  ): AxiosPromise<StatementsResponseWithAttachments>;
+  public createAgentProfile = createAgentProfile;
 
-  public getStatements(
-    query?: GetStatementsQueryWithoutAttachments
-  ): AxiosPromise<StatementsResponse>;
+  public setAgentProfile = setAgentProfile;
 
-  public getStatements(
-    query?: GetStatementsQuery
-  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
-    return this.requestResource(Resources.STATEMENT, query);
-  }
+  public getAgentProfiles = getAgentProfiles;
 
-  public getMoreStatements(
-    more: string
-  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments> {
-    const endpoint = new URL(this.endpoint);
-    const url = `${endpoint.protocol}//${endpoint.host}${more}`;
-    return this.requestURL(url);
-  }
+  public getAgentProfile = getAgentProfile;
 
-  public sendStatement(
-    statement: Statement,
-    attachments?: ArrayBuffer[]
-  ): AxiosPromise<string[]> {
-    const hasAttachments = attachments?.length;
-    if (hasAttachments) {
-      const multiPart: MultiPart = createMultiPart(statement, attachments);
-      return this.requestResource(
-        Resources.STATEMENT,
-        {},
-        {
-          method: "POST",
-          headers: multiPart.header,
-          data: multiPart.blob,
-        }
-      );
-    } else {
-      return this.requestResource(
-        Resources.STATEMENT,
-        {},
-        {
-          method: "POST",
-          data: statement,
-        }
-      );
+  public deleteAgentProfile = deleteAgentProfile;
+
+  public createState = createState;
+
+  public setState = setState;
+
+  public getStates = getStates;
+
+  public getState = getState;
+
+  public deleteState = deleteState;
+
+  public deleteStates = deleteStates;
+
+  public getStatement = getStatement;
+
+  public getVoidedStatement = getVoidedStatement;
+
+  public getStatements = getStatements;
+
+  public getMoreStatements = getMoreStatements;
+
+  public sendStatement = sendStatement;
+
+  public sendStatements = sendStatements;
+
+  public voidStatement = voidStatement;
+
+  public voidStatements = voidStatements;
+
+  protected requestResource(params: {
+    resource: Resources;
+    queryParams?: RequestParams;
+    requestConfig?: AxiosRequestConfig | undefined;
+    requestOptions?: GetParamsBase;
+  }): AxiosPromise<any> {
+    const extendedQueryParams = Object.assign({}, params.queryParams);
+    if (params.requestOptions?.useCacheBuster) {
+      extendedQueryParams["cachebuster"] = new Date().getTime().toString();
     }
+    const url = this.generateURL(params.resource, extendedQueryParams);
+    return this.requestURL(url, params.requestConfig);
   }
 
-  public sendStatements(
-    statements: Statement[],
-    attachments?: ArrayBuffer[]
-  ): AxiosPromise<string[]> {
-    const hasAttachments = attachments?.length;
-    if (hasAttachments) {
-      const multiPart: MultiPart = createMultiPart(statements, attachments);
-      return this.requestResource(
-        Resources.STATEMENT,
-        {},
-        {
-          method: "POST",
-          headers: multiPart.header,
-          data: multiPart.blob,
-        }
-      );
-    } else {
-      return this.requestResource(
-        Resources.STATEMENT,
-        {},
-        {
-          method: "POST",
-          data: statements,
-        }
-      );
-    }
-  }
-
-  public voidStatement(
-    actor: Actor,
-    statementId: string
-  ): AxiosPromise<string[]> {
-    const voidStatement: Statement = {
-      actor,
-      verb: Verbs.VOIDED,
-      object: {
-        objectType: "StatementRef",
-        id: statementId,
-      },
-    };
-    return this.sendStatement(voidStatement);
-  }
-
-  public voidStatements(
-    actor: Actor,
-    statementIds: string[]
-  ): AxiosPromise<string[]> {
-    const voidStatements: Statement[] = statementIds.map((statementId) => {
-      return {
-        actor,
-        verb: Verbs.VOIDED,
-        object: {
-          objectType: "StatementRef",
-          id: statementId,
-        },
-      };
-    });
-    return this.sendStatements(voidStatements);
-  }
-
-  // State Resource
-  public createState(
-    agent: Agent,
-    activityId: string,
-    stateId: string,
-    state: DocumentJson,
-    registration?: string,
-    etag?: string,
-    matchHeader?: "If-Match" | "If-None-Match"
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers[matchHeader] = etag;
-    return this.requestResource(
-      Resources.STATE,
-      {
-        agent: agent,
-        activityId: activityId,
-        stateId: stateId,
-        ...(registration
-          ? {
-              registration,
-            }
-          : {}),
-      },
-      {
-        method: "POST",
-        data: state,
-        headers: headers,
-      }
-    );
-  }
-
-  public setState(
-    agent: Agent,
-    activityId: string,
-    stateId: string,
-    state: Document,
-    registration?: string,
-    etag?: string,
-    matchHeader?: "If-Match" | "If-None-Match",
-    contentType?: string
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers[matchHeader] = etag;
-    if (contentType) headers["Content-Type"] = contentType;
-    return this.requestResource(
-      Resources.STATE,
-      {
-        agent: agent,
-        activityId: activityId,
-        stateId: stateId,
-        ...(registration
-          ? {
-              registration,
-            }
-          : {}),
-      },
-      {
-        method: "PUT",
-        data: state,
-        headers: headers,
-      }
-    );
-  }
-
-  public getStates(
-    agent: Agent,
-    activityId: string,
-    registration?: string,
-    since?: Timestamp
-  ): AxiosPromise<string[]> {
-    return this.requestResource(Resources.STATE, {
-      agent: agent,
-      activityId: activityId,
-      ...(registration
-        ? {
-            registration,
-          }
-        : {}),
-      ...(since
-        ? {
-            since,
-          }
-        : {}),
-    });
-  }
-
-  public getState(
-    agent: Agent,
-    activityId: string,
-    stateId: string,
-    registration?: string
-  ): AxiosPromise<Document> {
-    return this.requestResource(Resources.STATE, {
-      agent: agent,
-      activityId: activityId,
-      stateId: stateId,
-      ...(registration
-        ? {
-            registration,
-          }
-        : {}),
-    });
-  }
-
-  public deleteState(
-    agent: Agent,
-    activityId: string,
-    stateId: string,
-    registration?: string,
-    etag?: string
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers["If-Match"] = etag;
-    return this.requestResource(
-      Resources.STATE,
-      {
-        agent: agent,
-        activityId: activityId,
-        stateId: stateId,
-        ...(registration
-          ? {
-              registration,
-            }
-          : {}),
-      },
-      {
-        method: "DELETE",
-        headers: headers,
-      }
-    );
-  }
-
-  public deleteStates(
-    agent: Agent,
-    activityId: string,
-    registration?: string,
-    etag?: string
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers["If-Match"] = etag;
-    return this.requestResource(
-      Resources.STATE,
-      {
-        agent: agent,
-        activityId: activityId,
-        ...(registration
-          ? {
-              registration,
-            }
-          : {}),
-      },
-      {
-        method: "DELETE",
-        headers: headers,
-      }
-    );
-  }
-
-  // Activities Resource
-  public getActivity(activityId: string): AxiosPromise<Activity> {
-    return this.requestResource(Resources.ACTIVITIES, {
-      activityId: activityId,
-    });
-  }
-
-  // Activity Profile Resource
-  public createActivityProfile(
-    activityId: string,
-    profileId: string,
-    profile: DocumentJson,
-    etag?: string,
-    matchHeader?: "If-Match" | "If-None-Match"
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers[matchHeader] = etag;
-    return this.requestResource(
-      Resources.ACTIVITY_PROFILE,
-      {
-        activityId: activityId,
-        profileId: profileId,
-      },
-      {
-        method: "POST",
-        data: profile,
-        headers: headers,
-      }
-    );
-  }
-
-  public setActivityProfile(
-    activityId: string,
-    profileId: string,
-    profile: Document,
-    etag: string,
-    matchHeader: "If-Match" | "If-None-Match",
-    contentType?: string
-  ): AxiosPromise<void> {
-    const headers = {};
-    headers[matchHeader] = etag;
-    if (contentType) headers["Content-Type"] = contentType;
-    return this.requestResource(
-      Resources.ACTIVITY_PROFILE,
-      {
-        activityId: activityId,
-        profileId: profileId,
-      },
-      {
-        method: "PUT",
-        data: profile,
-        headers: headers,
-      }
-    );
-  }
-
-  public getActivityProfiles(
-    activityId: string,
-    since?: Timestamp
-  ): AxiosPromise<string[]> {
-    return this.requestResource(Resources.ACTIVITY_PROFILE, {
-      activityId: activityId,
-      ...(since
-        ? {
-            since,
-          }
-        : {}),
-    });
-  }
-
-  public getActivityProfile(
-    activityId: string,
-    profileId: string
-  ): AxiosPromise<Document> {
-    return this.requestResource(Resources.ACTIVITY_PROFILE, {
-      activityId: activityId,
-      profileId: profileId,
-    });
-  }
-
-  public deleteActivityProfile(
-    activityId: string,
-    profileId: string,
-    etag?: string
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers["If-Match"] = etag;
-    return this.requestResource(
-      Resources.ACTIVITY_PROFILE,
-      {
-        activityId: activityId,
-        profileId: profileId,
-      },
-      {
-        method: "DELETE",
-        headers: headers,
-      }
-    );
-  }
-
-  // Agent Profile Resource
-  public createAgentProfile(
-    agent: Agent,
-    profileId: string,
-    profile: DocumentJson,
-    etag?: string,
-    matchHeader?: "If-Match" | "If-None-Match"
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers[matchHeader] = etag;
-    return this.requestResource(
-      Resources.AGENT_PROFILE,
-      {
-        agent: agent,
-        profileId: profileId,
-      },
-      {
-        method: "POST",
-        data: profile,
-        headers: headers,
-      }
-    );
-  }
-
-  public setAgentProfile(
-    agent: Agent,
-    profileId: string,
-    profile: Document,
-    etag: string,
-    matchHeader: "If-Match" | "If-None-Match",
-    contentType?: string
-  ): AxiosPromise<void> {
-    const headers = {};
-    headers[matchHeader] = etag;
-    if (contentType) headers["Content-Type"] = contentType;
-    return this.requestResource(
-      Resources.AGENT_PROFILE,
-      {
-        agent: agent,
-        profileId: profileId,
-      },
-      {
-        method: "PUT",
-        data: profile,
-        headers: headers,
-      }
-    );
-  }
-
-  public getAgentProfiles(
-    agent: Agent,
-    since?: Timestamp
-  ): AxiosPromise<string[]> {
-    return this.requestResource(Resources.AGENT_PROFILE, {
-      agent: agent,
-      ...(since
-        ? {
-            since,
-          }
-        : {}),
-    });
-  }
-
-  public getAgentProfile(
-    agent: Agent,
-    profileId: string
-  ): AxiosPromise<Document> {
-    return this.requestResource(Resources.AGENT_PROFILE, {
-      agent: agent,
-      profileId: profileId,
-    });
-  }
-
-  public deleteAgentProfile(
-    agent: Agent,
-    profileId: string,
-    etag?: string
-  ): AxiosPromise<void> {
-    const headers = {};
-    if (etag) headers["If-Match"] = etag;
-    return this.requestResource(
-      Resources.AGENT_PROFILE,
-      {
-        agent: agent,
-        profileId: profileId,
-      },
-      {
-        method: "DELETE",
-        headers: headers,
-      }
-    );
-  }
-
-  private requestResource(
-    resource: Resource,
-    params: RequestParams = {},
-    initExtras?: AxiosRequestConfig | undefined
-  ): AxiosPromise<any> {
-    const url = this.generateURL(resource, params);
-    return this.requestURL(url, initExtras);
-  }
-
-  private requestURL(
+  protected requestURL(
     url: string,
-    initExtras?: AxiosRequestConfig | undefined
+    requestConfig?: AxiosRequestConfig | undefined
   ): AxiosPromise<any> {
     return axios
       .request({
-        method: initExtras?.method || "GET",
+        method: requestConfig?.method || "GET",
         url: url,
         headers: {
           ...this.headers,
-          ...initExtras?.headers,
+          ...requestConfig?.headers,
         },
-        data: initExtras?.data,
+        data: requestConfig?.data,
       })
       .then((response) => {
         const contentType = response.headers["content-type"];
@@ -606,10 +199,7 @@ export default class XAPI {
       });
   }
 
-  private generateURL(
-    resource: Resource,
-    params: { [key: string]: any }
-  ): string {
+  private generateURL(resource: Resources, params: RequestParams): string {
     const queryString = Object.keys(params)
       .map((key) => {
         let val = key === "agent" ? JSON.stringify(params[key]) : params[key];
