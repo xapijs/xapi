@@ -1,7 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
-import { CreateActivityProfileParams } from "./createActivityProfileParams";
+import { CreateActivityProfileParams } from "./CreateActivityProfileParams";
 
 export function createActivityProfile(
   this: XAPI,

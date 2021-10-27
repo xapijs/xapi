@@ -2,7 +2,7 @@ import { AxiosPromise } from "axios";
 import { Resources } from "../../../constants";
 import XAPI from "../../../XAPI";
 import { Activity } from "../Activity";
-import { GetActivityParams } from "./getActivityParams";
+import { GetActivityParams } from "./GetActivityParams";
 
 export function getActivity(
   this: XAPI,

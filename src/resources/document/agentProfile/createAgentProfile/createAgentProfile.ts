@@ -1,7 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
-import { CreateAgentProfileParams } from "./createAgentProfileParams";
+import { CreateAgentProfileParams } from "./CreateAgentProfileParams";
 
 export function createAgentProfile(
   this: XAPI,

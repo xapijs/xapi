@@ -6,7 +6,7 @@ import {
   GetVoidedStatementParams,
   GetVoidedStatementParamsWithAttachments,
   GetVoidedStatementParamsWithoutAttachments,
-} from "./getVoidedStatementParams";
+} from "./GetVoidedStatementParams";
 
 export function getVoidedStatement(
   this: XAPI,

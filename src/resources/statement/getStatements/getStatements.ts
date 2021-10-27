@@ -6,7 +6,7 @@ import {
   GetStatementsParams,
   GetStatementsParamsWithAttachments,
   GetStatementsParamsWithoutAttachments,
-} from "./getStatementsParams";
+} from "./GetStatementsParams";
 
 export function getStatements(
   this: XAPI,

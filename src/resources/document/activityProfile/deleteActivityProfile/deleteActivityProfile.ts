@@ -1,7 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
-import { DeleteActivityProfileParams } from "./deleteActivityProfileParams";
+import { DeleteActivityProfileParams } from "./DeleteActivityProfileParams";
 
 export function deleteActivityProfile(
   this: XAPI,

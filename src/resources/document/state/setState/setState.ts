@@ -1,7 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
-import { SetStateParams } from "./setStateParams";
+import { SetStateParams } from "./SetStateParams";
 
 export function setState(
   this: XAPI,

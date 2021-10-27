@@ -2,7 +2,7 @@ import { AxiosPromise } from "axios";
 import { Verbs } from "../../../constants";
 import XAPI from "../../../XAPI";
 import { Statement } from "..";
-import { VoidStatementsParams } from "./voidStatementsParams";
+import { VoidStatementsParams } from "./VoidStatementsParams";
 
 export function voidStatements(
   this: XAPI,

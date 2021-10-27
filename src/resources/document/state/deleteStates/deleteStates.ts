@@ -1,7 +1,7 @@
 import { AxiosPromise } from "axios";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
-import { DeleteStatesParams } from "./deleteStatesParams";
+import { DeleteStatesParams } from "./DeleteStatesParams";
 
 export function deleteStates(
   this: XAPI,
