@@ -1,3 +1,8 @@
+# 2.0.1 (1 Nov 2021)
+
+- Fixed issue with incorrect Document return type on getState
+- Bumped dependencies
+
 # 2.0.0 (27 Oct 2021)
 
 - Changed public API to use single object parameter
