@@ -1,3 +1,7 @@
+# 2.0.2 (13 Sep 2022)
+
+- Fixed security vulnerabilities in dependencies
+
 # 2.0.1 (1 Nov 2021)
 
 - Fixed issue with incorrect Document return type on getState
