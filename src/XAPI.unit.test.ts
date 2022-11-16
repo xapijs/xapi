@@ -58,4 +58,13 @@ describe("xapi constructor", () => {
       })
     );
   });
+
+  test("can return the internal axios instance", () => {
+    const xapi = new XAPI({
+      endpoint: testEndpoint,
+      version: "1.0.0",
+    });
+    const axiosStatic = xapi.getAxios();
+    expect(axiosStatic).toEqual(axios);
+  });
 });

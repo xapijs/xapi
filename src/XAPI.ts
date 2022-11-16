@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosPromise, AxiosInstance } from "axios";
+import axios, { AxiosRequestConfig, AxiosPromise, AxiosStatic } from "axios";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart } from "./internal/multiPart";
 import { formatEndpoint } from "./internal/formatEndpoint";
@@ -104,7 +104,7 @@ export default class XAPI {
     };
   }
 
-  public getAxios(): AxiosInstance {
+  public getAxios(): AxiosStatic {
     return axios;
   }
 
