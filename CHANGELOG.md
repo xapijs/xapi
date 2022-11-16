@@ -1,3 +1,7 @@
+# 2.1.0 (16 Nov 2022)
+
+- Added new `getAxios()` helper method ([#289](https://github.com/xapijs/xapi/pull/289))
+
 # 2.0.2 (13 Sep 2022)
 
 - Fixed security vulnerabilities in dependencies
