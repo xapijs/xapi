@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosPromise } from "axios";
+import axios, { AxiosRequestConfig, AxiosPromise, AxiosStatic } from "axios";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart } from "./internal/multiPart";
 import { formatEndpoint } from "./internal/formatEndpoint";
@@ -102,6 +102,10 @@ export default class XAPI {
       // No Authorization Process and Requirements - https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
       Authorization: params.auth ? params.auth : toBasicAuth("", ""),
     };
+  }
+
+  public getAxios(): AxiosStatic {
+    return axios;
   }
 
   public getAbout = getAbout;
