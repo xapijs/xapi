@@ -1,4 +1,9 @@
-import axios, { AxiosRequestConfig, AxiosPromise, AxiosStatic } from "axios";
+import axios, {
+  AxiosRequestConfig,
+  AxiosPromise,
+  AxiosStatic,
+  RawAxiosRequestHeaders,
+} from "axios";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart } from "./internal/multiPart";
 import { formatEndpoint } from "./internal/formatEndpoint";
@@ -186,7 +191,7 @@ export default class XAPI {
         url: url,
         headers: {
           ...this.headers,
-          ...requestConfig?.headers,
+          ...(requestConfig?.headers as RawAxiosRequestHeaders),
         },
         data: requestConfig?.data,
       })
