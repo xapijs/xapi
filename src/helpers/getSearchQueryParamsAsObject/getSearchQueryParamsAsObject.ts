@@ -29,9 +29,9 @@ export function getSearchQueryParamsAsObject(str: string): {
   [key: string]: any;
 } {
   const obj: { [key: string]: any } = {};
-  let queryString = str.split("?")[1] || "";
-  queryString = queryString.split("#")[0] || "";
-  if (queryString === "") return obj;
+  let queryString = str.substring(str.indexOf("?"));
+  queryString = queryString.split("#").shift();
+  if (!queryString) return obj;
   const usp = new URLSearchParams(queryString);
   usp.forEach((val, key) => {
     try {

@@ -19,6 +19,15 @@ test("converts querystring with hash into object", () => {
   });
 });
 
+test("converts querystring with multiple question marks into object", () => {
+  return expect(
+    getSearchQueryParamsAsObject("??test=test?&he?llo=wor?ld")
+  ).toMatchObject({
+    "?test": "test?",
+    "he?llo": "wor?ld",
+  });
+});
+
 test("can decode plus signs into spaces", () => {
   return expect(getSearchQueryParamsAsObject("?test=Test+User")).toMatchObject({
     test: "Test User",
