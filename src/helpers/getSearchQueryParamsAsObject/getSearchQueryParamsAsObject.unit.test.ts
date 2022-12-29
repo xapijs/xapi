@@ -11,6 +11,14 @@ test("converts querystring into object", () => {
   });
 });
 
+test("converts querystring with hash into object", () => {
+  return expect(
+    getSearchQueryParamsAsObject("https://www.example.com?test=test#hash")
+  ).toMatchObject({
+    test: "test",
+  });
+});
+
 test("can decode plus signs into spaces", () => {
   return expect(getSearchQueryParamsAsObject("?test=Test+User")).toMatchObject({
     test: "Test User",
