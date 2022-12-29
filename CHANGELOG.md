@@ -1,3 +1,8 @@
+# 2.1.1 (29 Dec 2022)
+
+- Updated dependencies
+- Improved handling of query parameters for `getSearchQueryParamsAsObject` helper
+
 # 2.1.0 (16 Nov 2022)
 
 - Added new `getAxios()` helper method ([#289](https://github.com/xapijs/xapi/pull/289))
