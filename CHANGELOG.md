@@ -1,3 +1,7 @@
+# 2.1.2 (29 Dec 2022)
+
+- Moved `XAPI` subclass methods to prototype to improve external testability
+
 # 2.1.1 (29 Dec 2022)
 
 - Updated dependencies
