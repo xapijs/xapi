@@ -31,7 +31,13 @@ import { deleteStates } from "./resources/document/state/deleteStates/deleteStat
 import { getState } from "./resources/document/state/getState/getState";
 import { getStates } from "./resources/document/state/getStates/getStates";
 import { setState } from "./resources/document/state/setState/setState";
-import { Agent } from "./resources/statement";
+import {
+  Agent,
+  Statement,
+  StatementResponseWithAttachments,
+  StatementsResponse,
+  StatementsResponseWithAttachments,
+} from "./resources/statement";
 import { getMoreStatements } from "./resources/statement/getMoreStatements/getMoreStatements";
 import { getStatement } from "./resources/statement/getStatement/getStatement";
 import { getStatements } from "./resources/statement/getStatements/getStatements";
@@ -42,6 +48,49 @@ import { voidStatement } from "./resources/statement/voidStatement/voidStatement
 import { voidStatements } from "./resources/statement/voidStatements/voidStatements";
 import { XAPIConfig } from "./XAPIConfig";
 import { GetParamsBase } from "./resources/GetParamsBase";
+import { About } from "./resources/about/About";
+import { GetAboutParams } from "./resources/about/getAbout/GetAboutParams";
+import { GetActivityParams } from "./resources/activities/getActivity/GetActivityParams";
+import { Activity } from "./resources/activities/Activity";
+import { GetAgentParams } from "./resources/agents/getAgent/GetAgentParams";
+import { Person } from "./resources/agents/Person";
+import { Document } from "./resources/document/Document";
+import { CreateActivityProfileParams } from "./resources/document/activityProfile/createActivityProfile/CreateActivityProfileParams";
+import { DeleteActivityProfileParams } from "./resources/document/activityProfile/deleteActivityProfile/DeleteActivityProfileParams";
+import { GetActivityProfileParams } from "./resources/document/activityProfile/getActivityProfile/GetActivityProfileParams";
+import { GetActivityProfilesParams } from "./resources/document/activityProfile/getActivityProfiles/GetActivityProfilesParams";
+import { SetActivityProfileParams } from "./resources/document/activityProfile/setActivityProfile/SetActivityProfileParams";
+import { CreateAgentProfileParams } from "./resources/document/agentProfile/createAgentProfile/CreateAgentProfileParams";
+import { DeleteAgentProfileParams } from "./resources/document/agentProfile/deleteAgentProfile/DeleteAgentProfileParams";
+import { GetAgentProfileParams } from "./resources/document/agentProfile/getAgentProfile/GetAgentProfileParams";
+import { GetAgentProfilesParams } from "./resources/document/agentProfile/getAgentProfiles/GetAgentProfilesParams";
+import { SetAgentProfileParams } from "./resources/document/agentProfile/setAgentProfile/SetAgentProfileParams";
+import { CreateStateParams } from "./resources/document/state/createState/CreateStateParams";
+import { DeleteStateParams } from "./resources/document/state/deleteState/DeleteStateParams";
+import { DeleteStatesParams } from "./resources/document/state/deleteStates/DeleteStatesParams";
+import { GetStateParams } from "./resources/document/state/getState/GetStateParams";
+import { GetStatesParams } from "./resources/document/state/getStates/GetStatesParams";
+import { SetStateParams } from "./resources/document/state/setState/SetStateParams";
+import { GetMoreStatementsParams } from "./resources/statement/getMoreStatements/GetMoreStatementsParams";
+import {
+  GetStatementParams,
+  GetStatementParamsWithAttachments,
+  GetStatementParamsWithoutAttachments,
+} from "./resources/statement/getStatement/GetStatementParams";
+import {
+  GetStatementsParams,
+  GetStatementsParamsWithAttachments,
+  GetStatementsParamsWithoutAttachments,
+} from "./resources/statement/getStatements/GetStatementsParams";
+import {
+  GetVoidedStatementParams,
+  GetVoidedStatementParamsWithAttachments,
+  GetVoidedStatementParamsWithoutAttachments,
+} from "./resources/statement/getVoidedStatement/GetVoidedStatementParams";
+import { SendStatementParams } from "./resources/statement/sendStatement/SendStatementParams";
+import { SendStatementsParams } from "./resources/statement/sendStatements/SendStatementsParams";
+import { VoidStatementParams } from "./resources/statement/voidStatement/VoidStatementParams";
+import { VoidStatementsParams } from "./resources/statement/voidStatements/VoidStatementsParams";
 
 export * from "./helpers/getTinCanLaunchData/TinCanLaunchData";
 export * from "./helpers/getXAPILaunchData/XAPILaunchData";
@@ -83,7 +132,7 @@ interface RequestParams {
   agent?: Agent;
 }
 
-export default class XAPI {
+class XAPI {
   public static default = XAPI;
 
   public static AttachmentUsages = AttachmentUsages;
@@ -112,60 +161,6 @@ export default class XAPI {
   public getAxios(): AxiosStatic {
     return axios;
   }
-
-  public getAbout = getAbout;
-
-  public getActivity = getActivity;
-
-  public getAgent = getAgent;
-
-  public createActivityProfile = createActivityProfile;
-
-  public setActivityProfile = setActivityProfile;
-
-  public getActivityProfiles = getActivityProfiles;
-
-  public getActivityProfile = getActivityProfile;
-
-  public deleteActivityProfile = deleteActivityProfile;
-
-  public createAgentProfile = createAgentProfile;
-
-  public setAgentProfile = setAgentProfile;
-
-  public getAgentProfiles = getAgentProfiles;
-
-  public getAgentProfile = getAgentProfile;
-
-  public deleteAgentProfile = deleteAgentProfile;
-
-  public createState = createState;
-
-  public setState = setState;
-
-  public getStates = getStates;
-
-  public getState = getState;
-
-  public deleteState = deleteState;
-
-  public deleteStates = deleteStates;
-
-  public getStatement = getStatement;
-
-  public getVoidedStatement = getVoidedStatement;
-
-  public getStatements = getStatements;
-
-  public getMoreStatements = getMoreStatements;
-
-  public sendStatement = sendStatement;
-
-  public sendStatements = sendStatements;
-
-  public voidStatement = voidStatement;
-
-  public voidStatements = voidStatements;
 
   protected requestResource(params: {
     resource: Resources;
@@ -222,3 +217,95 @@ export default class XAPI {
     return url;
   }
 }
+
+interface XAPI {
+  getAbout(params?: GetAboutParams): AxiosPromise<About>;
+  getActivity(params: GetActivityParams): AxiosPromise<Activity>;
+  getAgent(params: GetAgentParams): AxiosPromise<Person>;
+  createActivityProfile(
+    params: CreateActivityProfileParams
+  ): AxiosPromise<void>;
+  setActivityProfile(params: SetActivityProfileParams): AxiosPromise<void>;
+  getActivityProfiles(
+    params: GetActivityProfilesParams
+  ): AxiosPromise<string[]>;
+  getActivityProfile(params: GetActivityProfileParams): AxiosPromise<Document>;
+  deleteActivityProfile(
+    params: DeleteActivityProfileParams
+  ): AxiosPromise<void>;
+  createAgentProfile(params: CreateAgentProfileParams): AxiosPromise<void>;
+  setAgentProfile(params: SetAgentProfileParams): AxiosPromise<void>;
+  getAgentProfiles(params: GetAgentProfilesParams): AxiosPromise<string[]>;
+  getAgentProfile(params: GetAgentProfileParams): AxiosPromise<Document>;
+  deleteAgentProfile(params: DeleteAgentProfileParams): AxiosPromise<void>;
+  createState(params: CreateStateParams): AxiosPromise<void>;
+  setState(params: SetStateParams): AxiosPromise<void>;
+  getStates(params: GetStatesParams): AxiosPromise<string[]>;
+  getState(params: GetStateParams): AxiosPromise<Document>;
+  deleteState(params: DeleteStateParams): AxiosPromise<void>;
+  deleteStates(params: DeleteStatesParams): AxiosPromise<void>;
+  getStatement(
+    params: GetStatementParamsWithAttachments
+  ): AxiosPromise<StatementResponseWithAttachments>;
+  getStatement(
+    params: GetStatementParamsWithoutAttachments
+  ): AxiosPromise<Statement>;
+  getStatement(
+    params: GetStatementParams
+  ): AxiosPromise<Statement | StatementResponseWithAttachments>;
+  getVoidedStatement(
+    params: GetVoidedStatementParamsWithAttachments
+  ): AxiosPromise<StatementResponseWithAttachments>;
+  getVoidedStatement(
+    params: GetVoidedStatementParamsWithoutAttachments
+  ): AxiosPromise<Statement>;
+  getVoidedStatement(
+    params: GetVoidedStatementParams
+  ): AxiosPromise<Statement | StatementResponseWithAttachments>;
+  getStatements(
+    params: GetStatementsParamsWithAttachments
+  ): AxiosPromise<StatementsResponseWithAttachments>;
+  getStatements(
+    params: GetStatementsParamsWithoutAttachments
+  ): AxiosPromise<StatementsResponse>;
+  getStatements(
+    params: GetStatementsParams
+  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments>;
+  getMoreStatements(
+    params: GetMoreStatementsParams
+  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments>;
+  sendStatement(params: SendStatementParams): AxiosPromise<string[]>;
+  sendStatements(params: SendStatementsParams): AxiosPromise<string[]>;
+  voidStatement(params: VoidStatementParams): AxiosPromise<string[]>;
+  voidStatements(params: VoidStatementsParams): AxiosPromise<string[]>;
+}
+
+XAPI.prototype.getAbout = getAbout;
+XAPI.prototype.getActivity = getActivity;
+XAPI.prototype.getAgent = getAgent;
+XAPI.prototype.createActivityProfile = createActivityProfile;
+XAPI.prototype.setActivityProfile = setActivityProfile;
+XAPI.prototype.getActivityProfiles = getActivityProfiles;
+XAPI.prototype.getActivityProfile = getActivityProfile;
+XAPI.prototype.deleteActivityProfile = deleteActivityProfile;
+XAPI.prototype.createAgentProfile = createAgentProfile;
+XAPI.prototype.setAgentProfile = setAgentProfile;
+XAPI.prototype.getAgentProfiles = getAgentProfiles;
+XAPI.prototype.getAgentProfile = getAgentProfile;
+XAPI.prototype.deleteAgentProfile = deleteAgentProfile;
+XAPI.prototype.createState = createState;
+XAPI.prototype.setState = setState;
+XAPI.prototype.getStates = getStates;
+XAPI.prototype.getState = getState;
+XAPI.prototype.deleteState = deleteState;
+XAPI.prototype.deleteStates = deleteStates;
+XAPI.prototype.getStatement = getStatement;
+XAPI.prototype.getVoidedStatement = getVoidedStatement;
+XAPI.prototype.getStatements = getStatements;
+XAPI.prototype.getMoreStatements = getMoreStatements;
+XAPI.prototype.sendStatement = sendStatement;
+XAPI.prototype.sendStatements = sendStatements;
+XAPI.prototype.voidStatement = voidStatement;
+XAPI.prototype.voidStatements = voidStatements;
+
+export default XAPI;
