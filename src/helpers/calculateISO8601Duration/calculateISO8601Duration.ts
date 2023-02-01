@@ -1,19 +1,20 @@
-const secondsInMinute = 60;
-const secondsInHour = secondsInMinute * 60;
-const secondsInDay = secondsInHour * 24;
+const millisecondsInMinute = 60000;
+const millisecondsInHour = millisecondsInMinute * 60;
+const millisecondsInDay = millisecondsInHour * 24;
 
 export function calculateISO8601Duration(
   startDate: Date,
   endDate: Date
 ): string {
-  const differenceSeconds = (endDate.getTime() - startDate.getTime()) / 1000;
-  const days = Math.floor(differenceSeconds / secondsInDay);
-  const hoursSeconds = differenceSeconds % secondsInDay;
-  const hours = Math.floor(hoursSeconds / secondsInHour);
-  const minuteSeconds = hoursSeconds % secondsInHour;
-  const minutes = Math.floor(minuteSeconds / secondsInMinute);
-  const remainingSeconds = minuteSeconds % secondsInMinute;
-  const seconds = Math.ceil(remainingSeconds);
+  const differenceMilliseconds = endDate.getTime() - startDate.getTime();
+  if (differenceMilliseconds <= 0) return "PT0S";
+  const days = Math.floor(differenceMilliseconds / millisecondsInDay);
+  const hoursMilliseconds = differenceMilliseconds % millisecondsInDay;
+  const hours = Math.floor(hoursMilliseconds / millisecondsInHour);
+  const minuteMilliseconds = hoursMilliseconds % millisecondsInHour;
+  const minutes = Math.floor(minuteMilliseconds / millisecondsInMinute);
+  const remainingMilliseconds = minuteMilliseconds % millisecondsInMinute;
+  const seconds = remainingMilliseconds / 1000;
   return `P${days ? days + "D" : ""}T${hours ? hours + "H" : ""}${
     minutes ? minutes + "M" : ""
   }${seconds ? seconds + "S" : ""}`;
