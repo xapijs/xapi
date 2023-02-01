@@ -1,3 +1,9 @@
+# 2.2.0 (01 Feb 2023)
+
+- Improved `calculateISO8601Duration` to return durations including milliseconds
+- Fixed `calculateISO8601Duration` incorrectly returning `PT` when the duration was 0 seconds (It now returns `PT0S`)
+- Fixed `calculateISO8601Duration` incorrectly handling negative durations (It now returns `PT0S`)
+
 # 2.1.2 (29 Dec 2022)
 
 - Moved `XAPI` subclass methods to prototype to improve external testability
