@@ -11,16 +11,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
       - uses: actions/checkout@master
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@master
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 16.x
       - name: Use npm 9
         run: npm i -g npm@9
       - name: Install Dependencies
