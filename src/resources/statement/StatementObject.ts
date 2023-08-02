@@ -1,6 +1,6 @@
 import {
   StatementRef,
-  Statement,
+  SubStatement,
   InteractionActivity,
   ObjectiveActivity,
   Actor,
@@ -13,4 +13,4 @@ export type StatementObject =
   | ObjectiveActivity
   | Actor
   | StatementRef
-  | Statement;
+  | SubStatement;
