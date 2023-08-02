@@ -1,3 +1,12 @@
+# 2.2.1 (02 Aug 2023)
+
+- Added missing `version` property to `Statement`
+- Corrected to `Timestamp` type for `stored` and `timestamp` properties on `Statement`
+- Added missing `SubStatement` interface (See https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Data.md#substatements)
+- Corrected `StatementObject` union type to use `SubStatement` instead of `Statement`
+- Updated dependencies
+- Updated CI to test against node v16.x
+
 # 2.2.0 (01 Feb 2023)
 
 - Improved `calculateISO8601Duration` to return durations including milliseconds
