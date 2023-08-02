@@ -1,14 +1,24 @@
-import { Verb, StatementObject, Result, Context, Attachment, Actor } from ".";
+import {
+  Verb,
+  StatementObject,
+  Result,
+  Context,
+  Attachment,
+  Actor,
+  Timestamp,
+} from ".";
+import { Versions } from "../../constants";
 
 export interface Statement {
+  id?: string;
   actor: Actor;
   verb: Verb;
   object: StatementObject;
   result?: Result;
   context?: Context;
-  timestamp?: string;
-  stored?: string;
+  timestamp?: Timestamp;
+  stored?: Timestamp;
   authority?: Actor;
-  id?: string;
+  version?: Versions;
   attachments?: Attachment[];
 }

@@ -20,5 +20,6 @@ export * from "./StatementRef";
 export * from "./StatementResponseWithAttachments";
 export * from "./StatementsResponse";
 export * from "./StatementsResponseWithAttachments";
+export * from "./SubStatement";
 export * from "./Timestamp";
 export * from "./Verb";
