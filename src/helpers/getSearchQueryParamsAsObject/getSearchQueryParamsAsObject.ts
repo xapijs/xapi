@@ -1,6 +1,6 @@
-import { Actor } from "../../XAPI";
+import { Agent, IdentifiedGroup } from "../../XAPI";
 
-function coerceActor(actor: Actor): Actor {
+function coerceActor(actor: Agent | IdentifiedGroup): Agent | IdentifiedGroup {
   const actorKeys = ["name", "mbox", "account"];
   actorKeys.forEach((actorKey) => {
     if (Array.isArray(actor[actorKey])) {
