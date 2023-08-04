@@ -1,5 +1,6 @@
-import { ActorBase } from "./ActorBase";
+import { InverseFunctionalIdentifier } from ".";
 
-export interface Agent extends ActorBase {
-  objectType: "Agent";
+export interface Agent extends InverseFunctionalIdentifier {
+  objectType?: "Agent";
+  name?: string;
 }

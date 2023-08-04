@@ -1,7 +1,6 @@
 import { Account } from "./Account";
 
-export interface ActorBase {
-  name?: string;
+export interface InverseFunctionalIdentifier {
   mbox?: string;
   mbox_sha1sum?: string;
   account?: Account;

@@ -1,7 +1,3 @@
-import { ActorBase } from "./ActorBase";
-import { Agent } from ".";
+import { AnonymousGroup, IdentifiedGroup } from ".";
 
-export interface Group extends ActorBase {
-  objectType: "Group";
-  members?: Agent[];
-}
+export type Group = AnonymousGroup | IdentifiedGroup;
