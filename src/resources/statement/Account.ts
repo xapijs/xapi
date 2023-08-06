@@ -1,4 +1,4 @@
 export interface Account {
-  homePage?: string;
-  name?: string;
+  homePage: string;
+  name: string;
 }

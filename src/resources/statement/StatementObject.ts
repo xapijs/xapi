@@ -3,14 +3,17 @@ import {
   SubStatement,
   InteractionActivity,
   ObjectiveActivity,
-  Actor,
+  Agent,
+  Group,
 } from ".";
 import { Activity } from "../../XAPI";
+import type { WithRequiredProperty } from "../../internal/WithRequiredProperty";
 
 export type StatementObject =
   | Activity
   | InteractionActivity
   | ObjectiveActivity
-  | Actor
+  | WithRequiredProperty<Agent, "objectType">
+  | Group
   | StatementRef
   | SubStatement;

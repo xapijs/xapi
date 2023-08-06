@@ -1,4 +1,4 @@
-import { Actor } from "../../XAPI";
+import { Actor, Agent, IdentifiedGroup } from "../../XAPI";
 
 function coerceActor(actor: Actor): Actor {
   const actorKeys = ["name", "mbox", "account"];
@@ -6,6 +6,7 @@ function coerceActor(actor: Actor): Actor {
     if (Array.isArray(actor[actorKey])) {
       switch (actorKey) {
         case "account": {
+          actor = actor as Agent | IdentifiedGroup;
           actor[actorKey] = {
             ...(!!actor.account[0].accountServiceHomePage && {
               homePage: actor.account[0].accountServiceHomePage,
