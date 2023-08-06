@@ -1,3 +1,14 @@
+# 2.2.2 (06 Aug 2023)
+
+- Added `moreInfo` property to `ActivityDefinition` interface
+- Changed `display` property on `Verb` interface to be optional
+- Changed `homePage` and `name` properties on `Account` Interface to be required
+- Changed incorrect property `members` to `member` on `Group`
+- Divided `Group` Interface into `AnonymousGroup` and `IdentifiedGroup`
+- Added `InverseFunctionalIdentifier` interface
+- Changed `objectType` property on `Activity` interface to be optional
+- Changed `objectType` property on `Agent` interface to be required when used as `Statement` `object`
+
 # 2.2.1 (02 Aug 2023)
 
 - Added missing `version` property to `Statement`
