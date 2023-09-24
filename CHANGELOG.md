@@ -1,3 +1,8 @@
+# 2.2.3 (24 Sep 2023)
+
+- Fixed `getSearchQueryParamsAsObject` helper returning incorrect value when no query params present
+- Updated dependencies
+
 # 2.2.2 (06 Aug 2023)
 
 - Added `moreInfo` property to `ActivityDefinition` interface
