@@ -30,6 +30,7 @@ export function getSearchQueryParamsAsObject(str: string): {
   [key: string]: any;
 } {
   const obj: { [key: string]: any } = {};
+  if (str.indexOf("?") === -1) return obj;
   let queryString = str.substring(str.indexOf("?"));
   queryString = queryString.split("#").shift();
   if (!queryString) return obj;

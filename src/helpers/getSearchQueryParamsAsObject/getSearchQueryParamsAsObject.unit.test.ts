@@ -1,8 +1,16 @@
 import { getSearchQueryParamsAsObject } from "./getSearchQueryParamsAsObject";
 import { Actor } from "../../XAPI";
 
+test("handles url with no query parameters", () => {
+  return expect(
+    Object.keys(getSearchQueryParamsAsObject("http://localhost:1234/")).length
+  ).toEqual(0);
+});
+
 test("handles empty querystring", () => {
-  return expect(getSearchQueryParamsAsObject("")).toMatchObject({});
+  return expect(Object.keys(getSearchQueryParamsAsObject("")).length).toEqual(
+    0
+  );
 });
 
 test("converts querystring into object", () => {
