@@ -1,3 +1,7 @@
+# 2.2.4 (4 Nov 2023)
+
+- Updated dependencies
+
 # 2.2.3 (24 Sep 2023)
 
 - Fixed `getSearchQueryParamsAsObject` helper returning incorrect value when no query params present
