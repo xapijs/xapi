@@ -1,0 +1,42 @@
+name: Test
+
+on:
+  push:
+    branches: [develop, version/2.x.x]
+  pull_request:
+    branches: [develop, version/2.x.x]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Prettier
+        run: npm run test:format
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Test
+        run: npm run test
+        env:
+          CI: true
+          LRS_CREDENTIALS_ARRAY: ${{ secrets.LRS_CREDENTIALS_ARRAY }}
+      
+      - name: Coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
