@@ -1,13 +1,26 @@
 version: 2
+
 updates:
   - package-ecosystem: "npm"
     directory: /
     target-branch: develop
     schedule:
       interval: "monthly"
+    groups:
+      all-deps:
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "npm"
     directory: /
     target-branch: version/2.x.x
     schedule:
       interval: "monthly"
+    groups:
+      all-deps:
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
