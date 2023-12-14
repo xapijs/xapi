@@ -2,21 +2,25 @@ name: Test
 
 on:
   push:
-    branches: [develop, version/2.x.x]
+    branches:
+      - 'develop'
+      - 'version/2.x.x'
   pull_request:
-    branches: [develop, version/2.x.x]
+    branches:
+      - 'develop'
+      - 'version/2.x.x'
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Use Node.js 18
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 18
 
       - name: Install Dependencies
         run: npm ci
