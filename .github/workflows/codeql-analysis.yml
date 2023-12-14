@@ -7,10 +7,14 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [develop, version/2.x.x]
+    branches:
+      - 'develop'
+      - 'version/2.x.x'
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [develop, version/2.x.x]
+    branches:
+      - 'develop'
+      - 'version/2.x.x'
   schedule:
     - cron: '0 3 * * 3'
 
@@ -30,7 +34,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         # We must fetch at least the immediate parents so that if this is
         # a pull request then we can checkout the head.
