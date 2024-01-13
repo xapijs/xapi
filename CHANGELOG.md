@@ -1,3 +1,8 @@
+# 2.2.5 (13 Jan 2024)
+
+- Updated dependencies
+- Updated `follow-redirects` to patch security vulnerability
+
 # 2.2.4 (4 Nov 2023)
 
 - Updated dependencies
