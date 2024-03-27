@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { GetActivityProfilesParams } from "./GetActivityProfilesParams";
@@ -6,7 +6,7 @@ import { GetActivityProfilesParams } from "./GetActivityProfilesParams";
 export function getActivityProfiles(
   this: XAPI,
   params: GetActivityProfilesParams
-): AxiosPromise<string[]> {
+): AdapterPromise<string[]> {
   return this.requestResource({
     resource: Resources.ACTIVITY_PROFILE,
     queryParams: {

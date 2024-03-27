@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { CreateAgentProfileParams } from "./CreateAgentProfileParams";
@@ -6,7 +6,7 @@ import { CreateAgentProfileParams } from "./CreateAgentProfileParams";
 export function createAgentProfile(
   this: XAPI,
   params: CreateAgentProfileParams
-): AxiosPromise<void> {
+): AdapterPromise<void> {
   const headers = {};
   if (params.etag) headers[params.matchHeader] = params.etag;
   return this.requestResource({

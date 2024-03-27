@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { SetStateParams } from "./SetStateParams";
@@ -6,7 +6,7 @@ import { SetStateParams } from "./SetStateParams";
 export function setState(
   this: XAPI,
   params: SetStateParams
-): AxiosPromise<void> {
+): AdapterPromise<void> {
   const headers = {};
   if (params.etag && params.matchHeader)
     headers[params.matchHeader] = params.etag;

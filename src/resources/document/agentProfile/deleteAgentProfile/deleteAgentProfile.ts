@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { DeleteAgentProfileParams } from "./DeleteAgentProfileParams";
@@ -6,7 +6,7 @@ import { DeleteAgentProfileParams } from "./DeleteAgentProfileParams";
 export function deleteAgentProfile(
   this: XAPI,
   params: DeleteAgentProfileParams
-): AxiosPromise<void> {
+): AdapterPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;
   return this.requestResource({

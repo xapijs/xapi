@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../adapters";
 import { Resources } from "../../../constants";
 import XAPI from "../../../XAPI";
 import { StatementResponseWithAttachments, Statement } from "..";
@@ -11,17 +11,17 @@ import {
 export function getStatement(
   this: XAPI,
   params: GetStatementParamsWithAttachments
-): AxiosPromise<StatementResponseWithAttachments>;
+): AdapterPromise<StatementResponseWithAttachments>;
 
 export function getStatement(
   this: XAPI,
   params: GetStatementParamsWithoutAttachments
-): AxiosPromise<Statement>;
+): AdapterPromise<Statement>;
 
 export function getStatement(
   this: XAPI,
   params: GetStatementParams
-): AxiosPromise<Statement | StatementResponseWithAttachments> {
+): AdapterPromise<Statement | StatementResponseWithAttachments> {
   return this.requestResource({
     resource: Resources.STATEMENT,
     queryParams: {

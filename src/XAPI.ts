@@ -1,9 +1,3 @@
-import axios, {
-  AxiosRequestConfig,
-  AxiosPromise,
-  AxiosStatic,
-  RawAxiosRequestHeaders,
-} from "axios";
 import { AttachmentUsages, Resources, Verbs, Versions } from "./constants";
 import { parseMultiPart } from "./internal/multiPart";
 import { formatEndpoint } from "./internal/formatEndpoint";
@@ -91,7 +85,12 @@ import { SendStatementParams } from "./resources/statement/sendStatement/SendSta
 import { SendStatementsParams } from "./resources/statement/sendStatements/SendStatementsParams";
 import { VoidStatementParams } from "./resources/statement/voidStatement/VoidStatementParams";
 import { VoidStatementsParams } from "./resources/statement/voidStatements/VoidStatementsParams";
-
+import {
+  AdapterFunction,
+  AdapterPromise,
+  AdapterRequest,
+  resolveAdapterFunction,
+} from "./adapters";
 export * from "./helpers/getTinCanLaunchData/TinCanLaunchData";
 export * from "./helpers/getXAPILaunchData/XAPILaunchData";
 export * from "./resources/about/About";
@@ -146,6 +145,7 @@ class XAPI {
 
   protected endpoint: string;
   private headers: { [key: string]: string };
+  private adapter: AdapterFunction;
 
   public constructor(params: XAPIConfig) {
     const version: Versions = params.version || "1.0.3";
@@ -156,18 +156,15 @@ class XAPI {
       // No Authorization Process and Requirements - https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#no-authorization-process-and-requirements
       Authorization: params.auth ? params.auth : toBasicAuth("", ""),
     };
-  }
-
-  public getAxios(): AxiosStatic {
-    return axios;
+    this.adapter = resolveAdapterFunction(params.adapter);
   }
 
   protected requestResource(params: {
     resource: Resources;
     queryParams?: RequestParams;
-    requestConfig?: AxiosRequestConfig | undefined;
+    requestConfig?: AdapterRequest | undefined;
     requestOptions?: GetParamsBase;
-  }): AxiosPromise<any> {
+  }): AdapterPromise<any> {
     const extendedQueryParams = Object.assign({}, params.queryParams);
     if (params.requestOptions?.useCacheBuster) {
       extendedQueryParams["cachebuster"] = new Date().getTime().toString();
@@ -178,29 +175,27 @@ class XAPI {
 
   protected requestURL(
     url: string,
-    requestConfig?: AxiosRequestConfig | undefined
-  ): AxiosPromise<any> {
-    return axios
-      .request({
-        method: requestConfig?.method || "GET",
-        url: url,
-        headers: {
-          ...this.headers,
-          ...(requestConfig?.headers as RawAxiosRequestHeaders),
-        },
-        data: requestConfig?.data,
-      })
-      .then((response) => {
-        const contentType = response.headers["content-type"];
-        if (
-          !!response.data &&
-          contentType &&
-          contentType.indexOf("multipart/mixed") !== -1
-        ) {
-          response.data = parseMultiPart(response.data);
-        }
-        return response;
-      });
+    requestConfig?: AdapterRequest | undefined
+  ): AdapterPromise<any> {
+    return this.adapter({
+      url,
+      method: requestConfig?.method || "GET",
+      headers: {
+        ...this.headers,
+        ...requestConfig?.headers,
+      },
+      data: requestConfig?.data,
+    }).then((response) => {
+      const contentType = response.headers["content-type"];
+      if (
+        !!response.data &&
+        contentType &&
+        contentType.indexOf("multipart/mixed") !== -1
+      ) {
+        response.data = parseMultiPart(response.data);
+      }
+      return response;
+    });
   }
 
   private generateURL(resource: Resources, params: RequestParams): string {
@@ -219,65 +214,67 @@ class XAPI {
 }
 
 interface XAPI {
-  getAbout(params?: GetAboutParams): AxiosPromise<About>;
-  getActivity(params: GetActivityParams): AxiosPromise<Activity>;
-  getAgent(params: GetAgentParams): AxiosPromise<Person>;
+  getAbout(params?: GetAboutParams): AdapterPromise<About>;
+  getActivity(params: GetActivityParams): AdapterPromise<Activity>;
+  getAgent(params: GetAgentParams): AdapterPromise<Person>;
   createActivityProfile(
     params: CreateActivityProfileParams
-  ): AxiosPromise<void>;
-  setActivityProfile(params: SetActivityProfileParams): AxiosPromise<void>;
+  ): AdapterPromise<void>;
+  setActivityProfile(params: SetActivityProfileParams): AdapterPromise<void>;
   getActivityProfiles(
     params: GetActivityProfilesParams
-  ): AxiosPromise<string[]>;
-  getActivityProfile(params: GetActivityProfileParams): AxiosPromise<Document>;
+  ): AdapterPromise<string[]>;
+  getActivityProfile(
+    params: GetActivityProfileParams
+  ): AdapterPromise<Document>;
   deleteActivityProfile(
     params: DeleteActivityProfileParams
-  ): AxiosPromise<void>;
-  createAgentProfile(params: CreateAgentProfileParams): AxiosPromise<void>;
-  setAgentProfile(params: SetAgentProfileParams): AxiosPromise<void>;
-  getAgentProfiles(params: GetAgentProfilesParams): AxiosPromise<string[]>;
-  getAgentProfile(params: GetAgentProfileParams): AxiosPromise<Document>;
-  deleteAgentProfile(params: DeleteAgentProfileParams): AxiosPromise<void>;
-  createState(params: CreateStateParams): AxiosPromise<void>;
-  setState(params: SetStateParams): AxiosPromise<void>;
-  getStates(params: GetStatesParams): AxiosPromise<string[]>;
-  getState(params: GetStateParams): AxiosPromise<Document>;
-  deleteState(params: DeleteStateParams): AxiosPromise<void>;
-  deleteStates(params: DeleteStatesParams): AxiosPromise<void>;
+  ): AdapterPromise<void>;
+  createAgentProfile(params: CreateAgentProfileParams): AdapterPromise<void>;
+  setAgentProfile(params: SetAgentProfileParams): AdapterPromise<void>;
+  getAgentProfiles(params: GetAgentProfilesParams): AdapterPromise<string[]>;
+  getAgentProfile(params: GetAgentProfileParams): AdapterPromise<Document>;
+  deleteAgentProfile(params: DeleteAgentProfileParams): AdapterPromise<void>;
+  createState(params: CreateStateParams): AdapterPromise<void>;
+  setState(params: SetStateParams): AdapterPromise<void>;
+  getStates(params: GetStatesParams): AdapterPromise<string[]>;
+  getState(params: GetStateParams): AdapterPromise<Document>;
+  deleteState(params: DeleteStateParams): AdapterPromise<void>;
+  deleteStates(params: DeleteStatesParams): AdapterPromise<void>;
   getStatement(
     params: GetStatementParamsWithAttachments
-  ): AxiosPromise<StatementResponseWithAttachments>;
+  ): AdapterPromise<StatementResponseWithAttachments>;
   getStatement(
     params: GetStatementParamsWithoutAttachments
-  ): AxiosPromise<Statement>;
+  ): AdapterPromise<Statement>;
   getStatement(
     params: GetStatementParams
-  ): AxiosPromise<Statement | StatementResponseWithAttachments>;
+  ): AdapterPromise<Statement | StatementResponseWithAttachments>;
   getVoidedStatement(
     params: GetVoidedStatementParamsWithAttachments
-  ): AxiosPromise<StatementResponseWithAttachments>;
+  ): AdapterPromise<StatementResponseWithAttachments>;
   getVoidedStatement(
     params: GetVoidedStatementParamsWithoutAttachments
-  ): AxiosPromise<Statement>;
+  ): AdapterPromise<Statement>;
   getVoidedStatement(
     params: GetVoidedStatementParams
-  ): AxiosPromise<Statement | StatementResponseWithAttachments>;
+  ): AdapterPromise<Statement | StatementResponseWithAttachments>;
   getStatements(
     params: GetStatementsParamsWithAttachments
-  ): AxiosPromise<StatementsResponseWithAttachments>;
+  ): AdapterPromise<StatementsResponseWithAttachments>;
   getStatements(
     params: GetStatementsParamsWithoutAttachments
-  ): AxiosPromise<StatementsResponse>;
+  ): AdapterPromise<StatementsResponse>;
   getStatements(
     params: GetStatementsParams
-  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments>;
+  ): AdapterPromise<StatementsResponse | StatementsResponseWithAttachments>;
   getMoreStatements(
     params: GetMoreStatementsParams
-  ): AxiosPromise<StatementsResponse | StatementsResponseWithAttachments>;
-  sendStatement(params: SendStatementParams): AxiosPromise<string[]>;
-  sendStatements(params: SendStatementsParams): AxiosPromise<string[]>;
-  voidStatement(params: VoidStatementParams): AxiosPromise<string[]>;
-  voidStatements(params: VoidStatementsParams): AxiosPromise<string[]>;
+  ): AdapterPromise<StatementsResponse | StatementsResponseWithAttachments>;
+  sendStatement(params: SendStatementParams): AdapterPromise<string[]>;
+  sendStatements(params: SendStatementsParams): AdapterPromise<string[]>;
+  voidStatement(params: VoidStatementParams): AdapterPromise<string[]>;
+  voidStatements(params: VoidStatementsParams): AdapterPromise<string[]>;
 }
 
 XAPI.prototype.getAbout = getAbout;

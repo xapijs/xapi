@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { GetStateParams } from "./GetStateParams";
@@ -7,7 +7,7 @@ import { Document } from "../../Document";
 export function getState(
   this: XAPI,
   params: GetStateParams
-): AxiosPromise<Document> {
+): AdapterPromise<Document> {
   return this.requestResource({
     resource: Resources.STATE,
     queryParams: {
