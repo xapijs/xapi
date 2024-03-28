@@ -1,12 +1,10 @@
 import XAPI from "../../../XAPI";
-import axios from "axios";
 import { testEndpoint } from "../../../../test/constants";
-
-jest.mock("axios");
 
 describe("statement resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -16,13 +14,14 @@ describe("statement resource", () => {
   test("can get more statements", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const endpoint = new URL(testEndpoint);
     const testMoreIrl = "?more=test-more-irl";
     await xapi.getMoreStatements({
       more: testMoreIrl,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${endpoint.protocol}//${endpoint.host}${testMoreIrl}`,

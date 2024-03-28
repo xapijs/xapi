@@ -1,5 +1,4 @@
 import XAPI from "../../../XAPI";
-import axios from "axios";
 import {
   testActivity,
   testAgent,
@@ -8,11 +7,10 @@ import {
 } from "../../../../test/constants";
 import { Resources } from "../../../constants";
 
-jest.mock("axios");
-
 describe("statement resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -22,9 +20,10 @@ describe("statement resource", () => {
   test("can get multiple statements", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getStatements();
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${Resources.STATEMENT}`,
@@ -35,11 +34,12 @@ describe("statement resource", () => {
   test("can get multiple statements with attachments", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getStatements({
       attachments: true,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${Resources.STATEMENT}?attachments=true`,
@@ -50,6 +50,7 @@ describe("statement resource", () => {
   test("can get multiple statements with all query parameters", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testRegistration = "test-registration";
     const since = new Date();
@@ -68,7 +69,7 @@ describe("statement resource", () => {
       until: since.toISOString(),
       verb: testVerb.id,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${
@@ -89,11 +90,12 @@ describe("statement resource", () => {
   test("can get multiple statements with cache buster", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getStatements({
       useCacheBuster: true,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: expect.stringContaining(

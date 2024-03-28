@@ -1,5 +1,4 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import {
   testActivity,
   testAgent,
@@ -8,11 +7,10 @@ import {
 } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("state resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -22,13 +20,14 @@ describe("state resource", () => {
   test("can delete a state", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.deleteState({
       agent: testAgent,
       activityId: testActivity.id,
       stateId: testStateId,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "DELETE",
         url: `${testEndpoint}${Resources.STATE}?agent=${encodeURIComponent(
@@ -43,6 +42,7 @@ describe("state resource", () => {
   test("can delete a state with registration", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testRegistration = "test-registration";
     await xapi.deleteState({
@@ -51,7 +51,7 @@ describe("state resource", () => {
       stateId: testStateId,
       registration: testRegistration,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "DELETE",
         url: `${testEndpoint}${Resources.STATE}?agent=${encodeURIComponent(
@@ -68,6 +68,7 @@ describe("state resource", () => {
   test("can delete a state with etag", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testEtag = "my-etag";
     await xapi.deleteState({
@@ -76,7 +77,7 @@ describe("state resource", () => {
       stateId: testStateId,
       etag: testEtag,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "DELETE",
         headers: expect.objectContaining({

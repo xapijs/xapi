@@ -13,12 +13,19 @@ module.exports = {
   },
   projects: [
     {
-      displayName: "dom",
+      displayName: "dom-axios",
       testEnvironment: "jsdom",
+      setupFiles: ["./test/setupAxios.ts"],
     },
     {
-      displayName: "node",
+      displayName: "node-axios",
       testEnvironment: "node",
+      setupFiles: ["./test/setupAxios.ts"],
+    },
+    {
+      displayName: "node-fetch",
+      testEnvironment: "node",
+      setupFiles: ["./test/setupFetch.ts"],
     },
   ],
 };

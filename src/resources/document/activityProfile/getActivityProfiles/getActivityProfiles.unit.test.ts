@@ -1,13 +1,11 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import { testActivity, testEndpoint } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("activity profile resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -17,11 +15,12 @@ describe("activity profile resource", () => {
   test("can get all activity profiles", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getActivityProfiles({
       activityId: testActivity.id,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${
@@ -34,6 +33,7 @@ describe("activity profile resource", () => {
   test("can get all activity profiles since a certain date", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const since = new Date();
     since.setDate(since.getDate() - 1); // yesterday
@@ -41,7 +41,7 @@ describe("activity profile resource", () => {
       activityId: testActivity.id,
       since: since.toISOString(),
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${
@@ -56,12 +56,13 @@ describe("activity profile resource", () => {
   test("can get all activity profiles with cache buster", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getActivityProfiles({
       activityId: testActivity.id,
       useCacheBuster: true,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: expect.stringContaining(

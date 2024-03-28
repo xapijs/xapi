@@ -1,5 +1,4 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import {
   testActivity,
   testDocument,
@@ -8,11 +7,10 @@ import {
 } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("activity profile resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -22,13 +20,14 @@ describe("activity profile resource", () => {
   test("can create activity profile", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.createActivityProfile({
       activityId: testActivity.id,
       profileId: testProfileId,
       profile: testDocument,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "POST",
         url: `${testEndpoint}${
@@ -44,6 +43,7 @@ describe("activity profile resource", () => {
   test("can create activity profile with etag and match header", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testEtag = "my-etag";
     const testMatchHeader = "If-Match";
@@ -54,7 +54,7 @@ describe("activity profile resource", () => {
       etag: testEtag,
       matchHeader: testMatchHeader,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({
