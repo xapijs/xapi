@@ -1,9 +1,6 @@
 import { getXAPILaunchData } from "./getXAPILaunchData";
 import { testIf, isNode } from "../../../test/jestUtils";
-import axios from "axios";
 import { XAPILaunchParameters } from "./XAPILaunchParameters";
-
-jest.mock("axios");
 
 testIf(isNode())("return error in node environment", () => {
   return getXAPILaunchData().catch((error: Error) => {
@@ -42,15 +39,16 @@ testIf(!isNode())("can request launch data from url", async () => {
     },
   });
 
-  (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+  global.adapterFn.mockClear();
+  global.adapterFn.mockResolvedValueOnce({
     headers: {
       "content-type": "application/json",
     },
   });
   const launchURL: URL = new URL(params.xAPILaunchService);
   launchURL.pathname += `launch/${params.xAPILaunchKey}`;
-  await getXAPILaunchData();
-  expect(axios.request).toHaveBeenCalledWith(
+  await getXAPILaunchData({ adapter: global.adapter });
+  expect(global.adapterFn).toHaveBeenCalledWith(
     expect.objectContaining({
       method: "POST",
       url: launchURL.toString(),

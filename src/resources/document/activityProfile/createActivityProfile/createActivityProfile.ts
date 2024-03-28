@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { CreateActivityProfileParams } from "./CreateActivityProfileParams";
@@ -6,7 +6,7 @@ import { CreateActivityProfileParams } from "./CreateActivityProfileParams";
 export function createActivityProfile(
   this: XAPI,
   params: CreateActivityProfileParams
-): AxiosPromise<void> {
+): AdapterPromise<void> {
   const headers = {};
   if (params.etag) headers[params.matchHeader] = params.etag;
   return this.requestResource({

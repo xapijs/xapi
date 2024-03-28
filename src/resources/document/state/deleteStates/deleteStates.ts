@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { DeleteStatesParams } from "./DeleteStatesParams";
@@ -6,7 +6,7 @@ import { DeleteStatesParams } from "./DeleteStatesParams";
 export function deleteStates(
   this: XAPI,
   params: DeleteStatesParams
-): AxiosPromise<void> {
+): AdapterPromise<void> {
   const headers = {};
   if (params.etag) headers["If-Match"] = params.etag;
   return this.requestResource({

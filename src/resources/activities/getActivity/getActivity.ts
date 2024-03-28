@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../adapters";
 import { Resources } from "../../../constants";
 import XAPI from "../../../XAPI";
 import { Activity } from "../Activity";
@@ -7,7 +7,7 @@ import { GetActivityParams } from "./GetActivityParams";
 export function getActivity(
   this: XAPI,
   params: GetActivityParams
-): AxiosPromise<Activity> {
+): AdapterPromise<Activity> {
   return this.requestResource({
     resource: Resources.ACTIVITIES,
     queryParams: {

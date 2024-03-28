@@ -1,5 +1,4 @@
 import XAPI from "../../../XAPI";
-import axios from "axios";
 import {
   testAgent,
   testEndpoint,
@@ -9,11 +8,10 @@ import {
 import { Resources, Verbs } from "../../../constants";
 import { Statement } from "..";
 
-jest.mock("axios");
-
 describe("statement resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -23,12 +21,13 @@ describe("statement resource", () => {
   test("can void multiple statements", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.voidStatements({
       actor: testAgent,
       statementIds: [testStatement.id, testStatementWithEmbeddedAttachments.id],
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "POST",
         url: `${testEndpoint}${Resources.STATEMENT}`,

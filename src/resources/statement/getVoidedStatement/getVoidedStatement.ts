@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../adapters";
 import { Resources } from "../../../constants";
 import XAPI from "../../../XAPI";
 import { StatementResponseWithAttachments, Statement } from "..";
@@ -11,17 +11,17 @@ import {
 export function getVoidedStatement(
   this: XAPI,
   params: GetVoidedStatementParamsWithAttachments
-): AxiosPromise<StatementResponseWithAttachments>;
+): AdapterPromise<StatementResponseWithAttachments>;
 
 export function getVoidedStatement(
   this: XAPI,
   params: GetVoidedStatementParamsWithoutAttachments
-): AxiosPromise<Statement>;
+): AdapterPromise<Statement>;
 
 export function getVoidedStatement(
   this: XAPI,
   params: GetVoidedStatementParams
-): AxiosPromise<Statement | StatementResponseWithAttachments> {
+): AdapterPromise<Statement | StatementResponseWithAttachments> {
   return this.requestResource({
     resource: Resources.STATEMENT,
     queryParams: {

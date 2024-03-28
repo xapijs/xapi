@@ -1,13 +1,11 @@
 import XAPI from "../../../XAPI";
-import axios from "axios";
 import { testActivity, testEndpoint } from "../../../../test/constants";
 import { Resources } from "../../../constants";
 
-jest.mock("axios");
-
 describe("activities resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -17,11 +15,12 @@ describe("activities resource", () => {
   test("can get activity", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getActivity({
       activityId: testActivity.id,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${
@@ -34,12 +33,13 @@ describe("activities resource", () => {
   test("can get activity with cache buster", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getActivity({
       activityId: testActivity.id,
       useCacheBuster: true,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: expect.stringContaining(

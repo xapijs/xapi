@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { SetAgentProfileParams } from "./SetAgentProfileParams";
@@ -6,7 +6,7 @@ import { SetAgentProfileParams } from "./SetAgentProfileParams";
 export function setAgentProfile(
   this: XAPI,
   params: SetAgentProfileParams
-): AxiosPromise<void> {
+): AdapterPromise<void> {
   const headers = {};
   headers[params.matchHeader] = params.etag;
   if (params.contentType) headers["Content-Type"] = params.contentType;

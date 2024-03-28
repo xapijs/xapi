@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../../adapters";
 import { Resources } from "../../../../constants";
 import XAPI from "../../../../XAPI";
 import { Document } from "../../Document";
@@ -7,7 +7,7 @@ import { GetAgentProfileParams } from "./GetAgentProfileParams";
 export function getAgentProfile(
   this: XAPI,
   params: GetAgentProfileParams
-): AxiosPromise<Document> {
+): AdapterPromise<Document> {
   return this.requestResource({
     resource: Resources.AGENT_PROFILE,
     queryParams: {

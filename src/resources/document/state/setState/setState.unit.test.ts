@@ -1,5 +1,4 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import {
   testActivity,
   testAgent,
@@ -9,11 +8,10 @@ import {
 } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("state resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -23,6 +21,7 @@ describe("state resource", () => {
   test("can set state", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.setState({
       agent: testAgent,
@@ -30,7 +29,7 @@ describe("state resource", () => {
       stateId: testStateId,
       state: testDocument,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "PUT",
         url: `${testEndpoint}${Resources.STATE}?agent=${encodeURIComponent(
@@ -46,6 +45,7 @@ describe("state resource", () => {
   test("can set state with content type", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const plainTextContentType = "text/plain";
     await xapi.setState({
@@ -55,7 +55,7 @@ describe("state resource", () => {
       state: testDocument.test,
       contentType: plainTextContentType,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "PUT",
         headers: expect.objectContaining({
@@ -74,6 +74,7 @@ describe("state resource", () => {
   test("can set state with registration", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testRegistration = "test-registration";
     await xapi.setState({
@@ -83,7 +84,7 @@ describe("state resource", () => {
       state: testDocument,
       registration: testRegistration,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "PUT",
         url: `${testEndpoint}${Resources.STATE}?agent=${encodeURIComponent(
@@ -101,6 +102,7 @@ describe("state resource", () => {
   test("can set state with etag and match header", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testEtag = "my-etag";
     const testMatchHeader = "If-Match";
@@ -112,7 +114,7 @@ describe("state resource", () => {
       etag: testEtag,
       matchHeader: testMatchHeader,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "PUT",
         headers: expect.objectContaining({

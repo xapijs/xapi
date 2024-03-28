@@ -1,13 +1,11 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import { testAgent, testEndpoint } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("agent profile resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -17,11 +15,12 @@ describe("agent profile resource", () => {
   test("can get all agent profiles", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getAgentProfiles({
       agent: testAgent,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${
@@ -34,6 +33,7 @@ describe("agent profile resource", () => {
   test("can get all agent profiles since a certain date", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const since = new Date();
     since.setDate(since.getDate() - 1); // yesterday
@@ -41,7 +41,7 @@ describe("agent profile resource", () => {
       agent: testAgent,
       since: since.toISOString(),
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${
@@ -56,12 +56,13 @@ describe("agent profile resource", () => {
   test("can get all agent profiles with cache buster", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getAgentProfiles({
       agent: testAgent,
       useCacheBuster: true,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: expect.stringContaining(

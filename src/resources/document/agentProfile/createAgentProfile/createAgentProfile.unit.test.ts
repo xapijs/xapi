@@ -1,5 +1,4 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import {
   testAgent,
   testDocument,
@@ -8,11 +7,10 @@ import {
 } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("agent profile resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -22,13 +20,14 @@ describe("agent profile resource", () => {
   test("can create agent profile", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.createAgentProfile({
       agent: testAgent,
       profileId: testProfileId,
       profile: testDocument,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "POST",
         url: `${testEndpoint}${
@@ -44,6 +43,7 @@ describe("agent profile resource", () => {
   test("can create agent profile with an etag", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testEtag = "my-etag";
     const testMatchHeader = "If-Match";
@@ -54,7 +54,7 @@ describe("agent profile resource", () => {
       etag: testEtag,
       matchHeader: testMatchHeader,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "POST",
         url: `${testEndpoint}${

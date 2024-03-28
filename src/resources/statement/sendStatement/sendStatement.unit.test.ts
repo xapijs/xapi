@@ -1,5 +1,4 @@
 import XAPI from "../../../XAPI";
-import axios from "axios";
 import {
   testAttachmentArrayBuffer,
   testEndpoint,
@@ -10,11 +9,10 @@ import { Resources } from "../../../constants";
 import { createMultiPart } from "../../../internal/multiPart";
 import { testIf, isNode } from "../../../../test/jestUtils";
 
-jest.mock("axios");
-
 describe("statement resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -24,11 +22,12 @@ describe("statement resource", () => {
   test("can send a statement", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.sendStatement({
       statement: testStatement,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "POST",
         url: `${testEndpoint}${Resources.STATEMENT}`,
@@ -42,12 +41,13 @@ describe("statement resource", () => {
     async () => {
       const xapi = new XAPI({
         endpoint: testEndpoint,
+        adapter: global.adapter,
       });
       await xapi.sendStatement({
         statement: testStatementWithEmbeddedAttachments,
         attachments: [testAttachmentArrayBuffer],
       });
-      expect(axios.request).toHaveBeenCalledWith(
+      expect(global.adapterFn).toHaveBeenCalledWith(
         expect.objectContaining({
           method: "POST",
           headers: expect.objectContaining({

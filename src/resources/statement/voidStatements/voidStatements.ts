@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import { AdapterPromise } from "../../../adapters";
 import { Verbs } from "../../../constants";
 import XAPI from "../../../XAPI";
 import { Statement } from "..";
@@ -7,7 +7,7 @@ import { VoidStatementsParams } from "./VoidStatementsParams";
 export function voidStatements(
   this: XAPI,
   params: VoidStatementsParams
-): AxiosPromise<string[]> {
+): AdapterPromise<string[]> {
   const voidStatements: Statement[] = params.statementIds.map((statementId) => {
     return {
       actor: params.actor,

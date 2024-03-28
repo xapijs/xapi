@@ -1,5 +1,4 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import {
   testAgent,
   testEndpoint,
@@ -7,11 +6,10 @@ import {
 } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("agent profile resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -21,12 +19,13 @@ describe("agent profile resource", () => {
   test("can get an agent profile", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getAgentProfile({
       agent: testAgent,
       profileId: testProfileId,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: `${testEndpoint}${
@@ -41,13 +40,14 @@ describe("agent profile resource", () => {
   test("can get an agent profile with cache buster", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.getAgentProfile({
       agent: testAgent,
       profileId: testProfileId,
       useCacheBuster: true,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "GET",
         url: expect.stringContaining(

@@ -1,5 +1,4 @@
 import XAPI from "../../../../XAPI";
-import axios from "axios";
 import {
   testActivity,
   testEndpoint,
@@ -7,11 +6,10 @@ import {
 } from "../../../../../test/constants";
 import { Resources } from "../../../../constants";
 
-jest.mock("axios");
-
 describe("activity profile resource", () => {
   beforeEach(() => {
-    (axios as jest.MockedFunction<any>).request.mockResolvedValueOnce({
+    global.adapterFn.mockClear();
+    global.adapterFn.mockResolvedValueOnce({
       headers: {
         "content-type": "application/json",
       },
@@ -21,12 +19,13 @@ describe("activity profile resource", () => {
   test("can delete an activity profile", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     await xapi.deleteActivityProfile({
       activityId: testActivity.id,
       profileId: testProfileId,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "DELETE",
         url: `${testEndpoint}${
@@ -41,6 +40,7 @@ describe("activity profile resource", () => {
   test("can delete an activity profile with etag and match header", async () => {
     const xapi = new XAPI({
       endpoint: testEndpoint,
+      adapter: global.adapter,
     });
     const testEtag = "my-etag";
     await xapi.deleteActivityProfile({
@@ -48,7 +48,7 @@ describe("activity profile resource", () => {
       profileId: testProfileId,
       etag: testEtag,
     });
-    expect(axios.request).toHaveBeenCalledWith(
+    expect(global.adapterFn).toHaveBeenCalledWith(
       expect.objectContaining({
         method: "DELETE",
         url: `${testEndpoint}${
