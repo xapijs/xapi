@@ -4,7 +4,6 @@ export * from "./AnonymousGroup";
 export * from "./Attachment";
 export * from "./AttachmentUsage";
 export * from "./Context";
-export * from "./ContextActivity";
 export * from "./Extensions";
 export * from "./Group";
 export * from "./IdentifiedGroup";

@@ -1,21 +1,21 @@
 import {
-  ContextActivity,
   StatementRef,
   Extensions,
   RFC5646LanguageCodes,
   Actor,
   Group,
 } from ".";
+import { Activity } from "../activities/Activity";
 
 export interface Context {
   registration?: string;
   instructor?: Actor;
   team?: Group;
   contextActivities?: {
-    parent?: ContextActivity[];
-    grouping?: ContextActivity[];
-    category?: ContextActivity[];
-    other?: ContextActivity[];
+    parent?: Activity[];
+    grouping?: Activity[];
+    category?: Activity[];
+    other?: Activity[];
   };
   statement?: StatementRef;
   revision?: string;
