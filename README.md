@@ -2,7 +2,6 @@
 [![npm version](https://img.shields.io/npm/v/@xapi/xapi.svg)](https://www.npmjs.com/package/@xapi/xapi)
 [![test](https://github.com/xapijs/xapi/actions/workflows/test.yml/badge.svg?branch=develop)](https://github.com/xapijs/xapi/actions/workflows/test.yml)
 [![Coverage Status](https://coveralls.io/repos/github/xapijs/xapi/badge.svg?branch=develop)](https://coveralls.io/github/xapijs/xapi?branch=develop)
-[![maintainability](https://api.codeclimate.com/v1/badges/93dd4331b1fe39ab73d7/maintainability)](https://codeclimate.com/github/xapijs/xapi/maintainability)
 ![minified size](https://img.shields.io/bundlephobia/min/@xapi/xapi)
 ![minzipped size](https://img.shields.io/bundlephobia/minzip/@xapi/xapi)
 
