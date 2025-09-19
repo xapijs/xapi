@@ -1,3 +1,11 @@
+# 3.0.2 (19 Sep 2025)
+
+- Added CLRF support to prettier ([#410](https://github.com/xapijs/xapi/pull/410))
+- Replaced YML CodeQL with GitHub built-in CodeQL ([#415](https://github.com/xapijs/xapi/pull/415))
+- Replaced `ContextActivity` with `Activity` ([#414](https://github.com/xapijs/xapi/issues/414), [#416](https://github.com/xapijs/xapi/pull/416))
+- Removed unused `babel-jest` dev dependency ([#409](https://github.com/xapijs/xapi/pull/409))
+- Removed CodeClimate ([#417](https://github.com/xapijs/xapi/pull/417))
+
 # 3.0.1 (21 Nov 2024)
 
 - Bumped development dependencies
