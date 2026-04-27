@@ -1,3 +1,10 @@
+# 3.0.3 (27 Apr 2026)
+
+- Bumped `axios` to resolve critical security vulnerability ([#424](https://github.com/xapijs/xapi/pull/424))
+- Bumped `@rollup/plugin-terser` to resolve security vulnerability ([#427](https://github.com/xapijs/xapi/pull/427))
+- Bumped `js-yaml` to resolve security vulnerability ([#428](https://github.com/xapijs/xapi/pull/428))
+- Bumped `rimraf` to resolve security vulnerability ([#429](https://github.com/xapijs/xapi/pull/429))
+
 # 3.0.2 (19 Sep 2025)
 
 - Added CLRF support to prettier ([#410](https://github.com/xapijs/xapi/pull/410))
