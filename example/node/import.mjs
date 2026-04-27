@@ -1,4 +1,4 @@
-import XAPI from "../../dist/XAPI.cjs";
+import XAPI from "../../dist/XAPI.cjs.js";
 import dotenv from "dotenv";
 
 dotenv.config();
