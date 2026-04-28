@@ -7,13 +7,11 @@ interface GetVoidedStatementParamsBase extends StatementParamsBase {
   voidedStatementId: string;
 }
 
-export interface GetVoidedStatementParamsWithAttachments
-  extends GetVoidedStatementParamsBase {
+export interface GetVoidedStatementParamsWithAttachments extends GetVoidedStatementParamsBase {
   attachments: true;
 }
 
-export interface GetVoidedStatementParamsWithoutAttachments
-  extends GetVoidedStatementParamsBase {
+export interface GetVoidedStatementParamsWithoutAttachments extends GetVoidedStatementParamsBase {
   attachments?: false;
 }
 

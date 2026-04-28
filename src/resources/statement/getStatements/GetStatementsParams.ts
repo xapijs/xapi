@@ -45,13 +45,11 @@ interface GetStatementsParamsBase extends StatementParamsBase {
   ascending?: boolean;
 }
 
-export interface GetStatementsParamsWithAttachments
-  extends GetStatementsParamsBase {
+export interface GetStatementsParamsWithAttachments extends GetStatementsParamsBase {
   attachments: true;
 }
 
-export interface GetStatementsParamsWithoutAttachments
-  extends GetStatementsParamsBase {
+export interface GetStatementsParamsWithoutAttachments extends GetStatementsParamsBase {
   attachments?: false;
 }
 

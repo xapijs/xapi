@@ -7,13 +7,11 @@ interface GetStatementParamsBase extends StatementParamsBase {
   statementId: string;
 }
 
-export interface GetStatementParamsWithAttachments
-  extends GetStatementParamsBase {
+export interface GetStatementParamsWithAttachments extends GetStatementParamsBase {
   attachments: true;
 }
 
-export interface GetStatementParamsWithoutAttachments
-  extends GetStatementParamsBase {
+export interface GetStatementParamsWithoutAttachments extends GetStatementParamsBase {
   attachments?: false;
 }
 
